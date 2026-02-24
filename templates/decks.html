@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block body %}
+<!-- home page goes here -->
+<h2>Decks</h2>
+<p>Select one deck to view its cards.</p>
+ <!-- a 3 column grid -->
+  <div class="three-column">
+    {% for deck in results %}
+    <a href="{{ url_for('Deck', id=deck[0]) }}">
+        <div class="w3-card-4">
+            <!-- the name then the image -->
+            <h1>{{ deck[1] }}</h1>
+            <p>{{ deck[2] }}</p>
+        </div>
+    </a>
+    {% endfor %}
+  </div>
+{% endblock %}

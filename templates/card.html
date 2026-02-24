@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block body %}
+<h2>Study</h2>
+
+{% if cards %}
+  <div class="card">
+    <h2>{{ cards[0][1] }}</h2>
+  </div>
+{% else %}
+  <p>No cards in this deck.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,24 @@
+link style:
+/decks/:deckId/cards/:cardId
+
+/decks/                         - show all decks
+/decks/:deckId/                 - show inside a deck
+/decks/:deckId/cards/           - show flashcards inside the deck
+/decks/:deckId/cards/:cardId    - show one flashcard
+
+/decks/:deckId/study             - study a deck
+
+/decks/create
+/decks/:deckId/cards/create
+
+/decks/:deckId/edit
+/decks/:deckId/cards/:cardId/edit
+
+
+
+
+layout.html - navbar
+homepage.html - home/landing page
+decks.html - display all decks
+deck.html - display single deck contents
+card.html - show single flashcard
