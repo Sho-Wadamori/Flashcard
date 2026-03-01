@@ -22,3 +22,8 @@ homepage.html - home/landing page
 decks.html - display all decks
 deck.html - display single deck contents
 card.html - show single flashcard
+
+
+
+
+INSERT INTO Flashcards (card_creation, card_question, card_answer, card_deckID) VALUES (datetime('now'), 'What is 2+2?', '4', 2);

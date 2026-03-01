@@ -6,6 +6,7 @@ body,h1,h2,h3,h4,h5,h6 {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 2em;
+    text-align: center;
 }
 
 /* all images at 100% width */
@@ -27,11 +28,12 @@ img {
     display: grid;
     margin: auto;
     background-color: #f1f1f1;
-    padding: 20px;
+    padding: 200px;
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     text-align: center;
     width: 60%;
-    height: auto;
-    place-items: center;
+    height: 500px;
+    cursor: pointer; 
+    border: none;
 }

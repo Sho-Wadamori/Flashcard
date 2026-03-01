@@ -2,11 +2,11 @@
 {% block body %}
 <!-- home page goes here -->
 <h2>Decks</h2>
-<p>Select one deck to view its cards.</p>
+<p>Select a deck to view its cards.</p>
  <!-- a 3 column grid -->
   <div class="three-column">
     {% for deck in results %}
-    <a href="{{ url_for('Deck', id=deck[0]) }}">
+    <a href="{{ url_for('Deck', id=deck[0]) }}" style="text-decoration: none;">
         <div class="w3-card-4">
             <!-- the name then the image -->
             <h1>{{ deck[1] }}</h1>

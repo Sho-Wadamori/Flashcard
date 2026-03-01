@@ -70,8 +70,8 @@ def Deck(id):
     return render_template("deck.html", results=results)
 
 
-@app.route('/decks/<int:id>/study/')
-def Study(id):
+@app.route('/decks/<int:id>/study/<int:index>')
+def Study(id, index):
     # get all flashcard info
     sql = """
             SELECT card_ID, card_question, card_answer, card_creation
@@ -79,7 +79,17 @@ def Study(id):
             WHERE card_deckID = ?;
         """
     results = query_db(sql, (id,))
-    return render_template("card.html", cards=results, deck_id=id)
+    total=len(results)
+
+    card = results[index]
+
+    return render_template(
+        "card.html",
+        cards=card,
+        deck_id=id,
+        total=total,
+        index=index
+        )
 
 
 if __name__ == "__main__":

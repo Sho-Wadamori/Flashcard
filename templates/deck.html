@@ -3,7 +3,9 @@
 <!-- home page goes here -->
 <h2>Decks</h2>
 <p>Cards in this deck:</p>
-<a href="{{ url_for('Study', id=results[0][0]) }}"><button>Click here to start studying!</button></a>
+{% if results %}
+<a href="{{ url_for('Study', id=results[0][0], index=0) }}"><button>Click here to start studying!</button></a>
+<a href="/decks/"><button>Back</button></a>
 
  <!-- a 3 column grid -->
   <div class="three-column">
@@ -12,8 +14,13 @@
         <div class="w3-card-4">
             <!-- the question only -->
             <h1>{{ card[1] }}</h1>
+            <p>{{ card[2] }}</p>
         </div>
     </a>
     {% endfor %}
   </div>
+{% else %}
+<p>This deck has no cards yet.</p>
+{% endif %}
+
 {% endblock %}

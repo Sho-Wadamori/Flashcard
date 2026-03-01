@@ -2,11 +2,62 @@
 {% block body %}
 <h2>Study</h2>
 
+<h3>Card {{ index + 1 }} of {{ total }}</h3>
+
+<!-- Previous card button -->
+{% if index > 0 %}
+    <a href="{{ url_for('Study', id=deck_id, index=index - 1) }}">
+        <button id="prev_button" class="prev">Previous</button>
+    </a>
+{% endif %}
+
+<!-- Next card button -->
+{% if index + 1 < total %}
+    <a href="{{ url_for('Study', id=deck_id, index=index + 1) }}">
+        <button id="next_button" class="next">Next</button>
+    </a>
+{% else %}
+    <p>You've completed the deck!</p>
+    <a href="{{ url_for('Deck', id=deck_id) }}">
+        <button id="exit_button" class="exit">Exit</button>
+    </a>
+{% endif %}
+
+<!-- Show answer -->
 {% if cards %}
-  <div class="card">
-    <h2>{{ cards[0][1] }}</h2>
-  </div>
+  <button class="card" id="card_click">
+    <h2 id="card">{{ cards[1] }}</h2>
+  </button>
 {% else %}
   <p>No cards in this deck.</p>
 {% endif %}
+
+
+
+
+
+<script>
+
+// Show answer when card is clicked
+function clickAction(){
+  if (card.textContent === "{{ cards[1] }}") {
+    card.textContent = "{{ cards[2] }}";
+  } 
+  
+  else {
+    card.textContent = "{{ cards[1] }}";
+  }
+}
+
+card_click.onclick = clickAction;
+
+
+// function nextCard() {
+
+// }
+
+// next_button.onclick = nextCard;
+
+</script>
 {% endblock %}
+
