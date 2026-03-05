@@ -5,6 +5,6 @@
 <!-- <p>Here are some cars for sale.</p> -->
 
  <!-- a 3 column grid -->
-  <a href="/create/"><button>Create Deck</button></a>
-  <a href="/decks/"><button>View Decks</button></a>
+  <a href="{{ url_for('Decks') }}"><button>View Decks</button></a>
+  <a href="{{ url_for('createDeck') }}"><button>Create Deck</button></a>
 {% endblock %}

@@ -14,9 +14,9 @@
         <h1>Flashcard Maker</h1>
     </header>
     <nav class="w3-bar w3-blue-grey">
-        <a href="/" class="w3-bar-item w3-button">Home</a>
-        <a href="/decks/" class="w3-bar-item w3-button">View Decks</a>
-        <a href="/create/" class="w3-bar-item w3-button">Create Deck</a>
+        <a href="{{ url_for('home') }}" class="w3-bar-item w3-button">Home</a>
+        <a href="{{ url_for('Decks') }}" class="w3-bar-item w3-button">View Decks</a>
+        <a href="{{ url_for('createDeck') }}" class="w3-bar-item w3-button">Create Deck</a>
         <!-- <div class="w3-dropdown-hover">
             <button class="w3-button">Dropdown ▾</button>
                 <div class="w3-dropdown-content w3-bar-block w3-card-4">

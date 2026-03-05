@@ -1,5 +1,5 @@
 # import libraries
-from flask import Flask, g, render_template
+from flask import Flask, g, redirect, render_template, request, redirect, url_for
 import sqlite3
 
 DATABASE = 'database.db'
@@ -58,7 +58,7 @@ def Decks():
     return render_template("decks.html", results=result)
 
 
-@app.route('/decks/<int:id>')
+@app.route('/decks/<int:id>/')
 def Deck(id):
     # show all flashcards for a single deck
     sql = """
@@ -66,11 +66,16 @@ def Deck(id):
             FROM Flashcards
             WHERE card_deckID = ?;
         """
+    sql_deck = """
+                SELECT deck_name FROM Decks WHERE deck_ID = ?;
+            """
+
+    deck_name = query_db(sql_deck, (id,), True)[0]
     results = query_db(sql, (id,))
-    return render_template("deck.html", results=results)
+    return render_template("deck.html", results=results, deck_name=deck_name)
 
 
-@app.route('/decks/<int:id>/study/<int:index>')
+@app.route('/decks/<int:id>/study/<int:index>/')
 def Study(id, index):
     # get all flashcard info
     sql = """
@@ -90,6 +95,39 @@ def Study(id, index):
         total=total,
         index=index
         )
+
+
+@app.route('/decks/create/', methods=['GET', 'POST'])
+def createDeck():
+    if request.method == "POST":
+        deck_name = request.form['deckName']
+        deck_description = request.form['deckDescription']
+        sql = """
+                INSERT INTO Decks (deck_name, deck_description)
+                VALUES (?, ?);
+            """
+        get_db().execute(sql, (deck_name, deck_description))
+        get_db().commit()
+        return redirect(url_for('Decks'))
+    else:
+        # get all the decks id, name, and description
+        sql = """
+                SELECT deck_ID, deck_name, deck_description
+                FROM Decks;
+            """
+        result = query_db(sql)
+        return render_template("deckCreate.html", results=result)
+
+
+@app.route('/decks/<int:id>/create/', methods=['GET', 'POST'])
+def createCard(id):
+    # get all the decks id, name, and description
+    sql = """
+            SELECT deck_ID, deck_name, deck_description
+            FROM Decks;
+        """
+    result = query_db(sql)
+    return render_template("deckCreate.html", results=result)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<form action="{{ url_for('createDeck') }}" method="POST">
+    <label>Deck Name:</label>
+    <input id="deckInput" name="deckName"><br><br>
+    <label>Description:</label>
+    <input id="descriptionInput" name="deckDescription"><br><br>
+    <button type="submit">Submit</button>
+</form>
+
+<div class="w3-card-4">
+    <!-- the question then the answer -->
+    <h1 id="deck">Deck Name</h1>
+    <p id="description">Deck Description</p>
+</div>
+
+<script>
+
+function InputAction() {
+    deck.textContent = deckInput.value;
+    description.textContent = descriptionInput.value;
+}
+
+deckInput.oninput = InputAction;
+descriptionInput.oninput = InputAction;
+
+
+// CANT USE NAME AS ID
+
+</script>
+{% endblock %}

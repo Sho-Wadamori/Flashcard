@@ -1,18 +1,17 @@
 link style:
 /decks/:deckId/cards/:cardId
 
-/decks/                         - show all decks
-/decks/:deckId/                 - show inside a deck
-/decks/:deckId/cards/           - show flashcards inside the deck
-/decks/:deckId/cards/:cardId    - show one flashcard
+/decks/                             - show all decks
+/decks/:deckId/                     - show flashcards inside the deck
+/decks/:deckId/:cardId              - show one flashcard (may not be needed)
 
-/decks/:deckId/study             - study a deck
+/decks/:deckId/study                - study a deck
 
-/decks/create
-/decks/:deckId/cards/create
+/decks/create                       - create new deck
+/decks/:deckId/create               - create new flashcard
 
-/decks/:deckId/edit
-/decks/:deckId/cards/:cardId/edit
+/decks/:deckId/edit                 - edit deck
+/decks/:deckId/cards/:cardId/edit   - edit flashcard
 
 
 
@@ -22,8 +21,12 @@ homepage.html - home/landing page
 decks.html - display all decks
 deck.html - display single deck contents
 card.html - show single flashcard
+deckCreate.html - create new deck
 
 
 
 
 INSERT INTO Flashcards (card_creation, card_question, card_answer, card_deckID) VALUES (datetime('now'), 'What is 2+2?', '4', 2);
+
+
+

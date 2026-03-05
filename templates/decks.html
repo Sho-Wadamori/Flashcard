@@ -5,10 +5,15 @@
 <p>Select a deck to view its cards.</p>
  <!-- a 3 column grid -->
   <div class="three-column">
+    <a href="{{ url_for('createDeck') }}" style="text-decoration: none;">
+        <div class="w3-card-4">
+            <h1 class="plus">+</h1>
+        </div>
+    </a>
     {% for deck in results %}
     <a href="{{ url_for('Deck', id=deck[0]) }}" style="text-decoration: none;">
         <div class="w3-card-4">
-            <!-- the name then the image -->
+            <!-- the question then the answer -->
             <h1>{{ deck[1] }}</h1>
             <p>{{ deck[2] }}</p>
         </div>
