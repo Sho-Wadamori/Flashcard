@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<!-- Error message -->
+{% if error %}
+  <p class="error">{{ error }}</p>
+{% endif %}
+
+<!-- Card creation form -->
+<form action="{{ url_for('createCard', id=results[0][0]) }}" method="POST">
+    <p style="color: rgb(168, 46, 46);">* Indicates required question</p>
+    <label>Flashcard Question:</label>
+    <input id="questionInput" name="cardQuestion"><br><br>
+    <label>Flashcard Answer:</label>
+    <input id="answerInput" name="cardAnswer"><br><br>
+    <button type="submit">Submit</button><br><br>
+</form>
+
+<!-- Card preview -->
+<div class="w3-card-4">
+    <!-- the question then the answer -->
+    <h1 id="question">Flashcard Question</h1>
+    <p id="answer">Flashcard Answer</p>
+</div>
+
+
+<!-- script -->
+<script>
+
+function InputAction() {
+    question.textContent = questionInput.value;
+    answer.textContent = answerInput.value;
+}
+
+questionInput.oninput = InputAction;
+answerInput.oninput = InputAction;
+
+</script>
+{% endblock %}

@@ -1,20 +1,31 @@
 {% extends "layout.html" %}
 {% block body %}
 
+<!-- Error message -->
+{% if error %}
+  <p class="error">{{ error }}</p>
+{% endif %}
+
+<!-- Deck creation form -->
 <form action="{{ url_for('createDeck') }}" method="POST">
-    <label>Deck Name:</label>
+    <p style="color: rgb(168, 46, 46);">* Indicates required question</p>
+    <label>Deck Name<span style="color: rgb(219, 54, 54); font-size: smaller;">*</span>:</label>
     <input id="deckInput" name="deckName"><br><br>
     <label>Description:</label>
     <input id="descriptionInput" name="deckDescription"><br><br>
-    <button type="submit">Submit</button>
+    <label>Cover Image:</label>
+    <input type="file" id="myfile" name="myfile"><br><br>
+    <button type="submit">Submit</button><br><br>
 </form>
 
+<!-- Deck preview -->
 <div class="w3-card-4">
-    <!-- the question then the answer -->
     <h1 id="deck">Deck Name</h1>
-    <p id="description">Deck Description</p>
+    <p id="description"><span style="color: rgb(107, 107, 107);">No description.</span></p>
 </div>
 
+
+<!-- script -->
 <script>
 
 function InputAction() {
@@ -24,9 +35,6 @@ function InputAction() {
 
 deckInput.oninput = InputAction;
 descriptionInput.oninput = InputAction;
-
-
-// CANT USE NAME AS ID
 
 </script>
 {% endblock %}

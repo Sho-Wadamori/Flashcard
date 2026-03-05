@@ -1,10 +1,8 @@
 {% extends "layout.html" %}
 {% block body %}
-<!-- home page goes here -->
-<h2>Flashcard maker!</h2>
-<!-- <p>Here are some cars for sale.</p> -->
 
- <!-- a 3 column grid -->
+<h2>Flashcard maker!</h2>
+
   <a href="{{ url_for('Decks') }}"><button>View Decks</button></a>
   <a href="{{ url_for('createDeck') }}"><button>Create Deck</button></a>
 {% endblock %}

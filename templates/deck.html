@@ -1,32 +1,46 @@
 {% extends "layout.html" %}
 {% block body %}
-<!-- home page goes here -->
-<h2>{{ deck_name }}</h2>
+
+<h2>{{ deck_info[0] }}</h2>
+
+<!-- If cards exist -->
 {% if results %}
   <p>Cards in this deck:</p>
   <a href="{{ url_for('Study', id=results[0][0], index=0) }}"><button>Click here to start studying!</button></a>
-  <a href="{{ url_for('Decks') }}"><button>Back</button></a>
+  <a href="{{ url_for('Decks') }}"><button>Back</button></a><br><br>
 
   <!-- a 3 column grid -->
-
   <div class="three-column">
+    <!-- Create Card button -->
     <a href="{{ url_for('createCard', id=results[0][0]) }}" style="text-decoration: none;">
       <div class="w3-card-4">
         <h1 class="plus">+</h1>
       </div>
     </a>
+
     {% for card in results %}
+    <!-- Card List -->
     <!-- <a href="{{ url_for('Deck', id=card[0]) }}"> -->
         <div class="w3-card-4">
-            <!-- the question only -->
+            <!-- the question then the answer -->
             <h1>{{ card[1] }}</h1>
             <p>{{ card[2] }}</p>
         </div>
     <!-- </a> -->
     {% endfor %}
   </div>
+
+<!-- Empty deck message -->
 {% else %}
-<p>This deck has no cards yet.</p>
+  <p>This deck has no cards yet.</p>
+
+  <a href="{{ url_for('createCard', id=deck_info[1]) }}" style="text-decoration: none;">
+    <div class="w3-card-4">
+        <h1 class="plus">+</h1>
+    </div>
+  </a>
+
 {% endif %}
+<p>Deck created {{ time_ago(deck_info[2]) }} | {{ format_date(deck_info[2]) }}</p>
 
 {% endblock %}
