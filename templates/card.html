@@ -17,10 +17,10 @@
         <button id="next_button" class="next">Next</button>
     </a>
 {% else %}
-    <p>You've completed the deck!</p>
     <a href="{{ url_for('Deck', id=deck_id) }}">
         <button id="exit_button" class="exit">Exit</button>
     </a>
+    <p>You've completed the deck!</p>
 {% endif %}
 
 <!-- Show answer -->
@@ -28,12 +28,18 @@
   <button class="card" id="card_click">
     <h2 id="card">{{ cards[1] }}</h2>
   </button>
+  
+    <br><div class="tooltip" style="cursor: help;">
+      Hint💡<span class="tooltiptext">{{ cards[4] }}</span>
+    </div>
+
 {% else %}
   <p>No cards in this deck.</p>
 {% endif %}
 
-
-
+<!-- Correct/Incorrect/Skip -->
+<button id="prev_button" class="prev">Correct [1]</button> <button id="prev_button" class="prev">Incorrect [2]</button> <button id="prev_button" class="prev">Skip [3]</button>
+<!-- DOES NOT DO ANYTHING YET -->
 
 
 <script>
@@ -50,13 +56,6 @@ function clickAction(){
 }
 
 card_click.onclick = clickAction;
-
-
-// function nextCard() {
-
-// }
-
-// next_button.onclick = nextCard;
 
 </script>
 {% endblock %}

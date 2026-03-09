@@ -7,26 +7,26 @@
 {% endif %}
 
 <!-- Card creation form -->
-<form action="{{ url_for('createCard', id=deck_info[1]) }}" method="POST">
+<form action="{{ url_for('editCard', id=deck_info[1], card_id=cards[0]) }}" method="POST">
     <p style="color: rgb(168, 46, 46);">* Indicates required question</p>
     <label>Flashcard Question<span style="color: rgb(219, 54, 54); font-size: smaller;">*</span>:</label>
-    <input id="questionInput" name="cardQuestion" placeholder="eg, What is 1 + 1?" required><br><br>
+    <input id="questionInput" name="cardQuestion" value="{{ cards[1] }}" required><br><br>
     <label>Flashcard Answer<span style="color: rgb(219, 54, 54); font-size: smaller;">*</span>:</label>
-    <input id="answerInput" name="cardAnswer" placeholder="eg, 2" required><br><br>
+    <input id="answerInput" name="cardAnswer" value="{{ cards[2] }}" required><br><br>
     <label>Flashcard Hint:</label>
-    <input id="hintInput" name="cardHint" placeholder="eg, Think about basic arithmetic"><br><br>
+    <input id="hintInput" name="cardHint" value="{{ cards[4] }}"><br><br>
     <button type="submit">Submit</button><br><br>
 </form>
 
 <!-- Card preview -->
 <div class="card">
     <!-- the question then the answer -->
-    <h1 id="question">{ Flashcard Question }</h1>
-    <p id="answer">{ Flashcard Answer }</p>
+    <h1 id="question">{{ cards[1] }}</h1>
+    <p id="answer">{{ cards[2] }}</p>
 </div>
 
 <br><div class="tooltip">
-    Hint💡<span id="hint" class="tooltiptext", style="visibility: visible; opacity: 1;">{ Hint text }</span>
+    Hint💡<span id="hint" class="tooltiptext", style="visibility: visible; opacity: 1;">{{ cards[4] }}</span>
 </div>
 
 

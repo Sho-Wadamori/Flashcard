@@ -17,13 +17,28 @@
 
         {% for deck in results %}
         <!-- Deck List -->
-        <a href="{{ url_for('Deck', id=deck[0]) }}" style="text-decoration: none;">
+        <div onclick="window.location='{{ url_for('Deck', id=deck[0]) }}'" style="text-decoration: none; cursor: pointer;"> <!-- Make it div to stop conflicts w/ buttons inside -->
             <div class="w3-card-4">
+                <div class="card-buttons">
+                    <!-- edit deck -->
+                    <a href="{{ url_for('editDeck', id=deck[0]) }}">
+                        <button style="text-decoration: none;" class="edit-button">✏️</button>
+                    </a>
+                    <!-- delete deck -->
+                    <form action="{{ url_for('deleteDeck', id=deck[0]) }}" method="POST">
+                        <input type="hidden" name="deck_id" value="{{ deck[0] }}">
+                        <button type="button" onclick="event.preventDefault(); event.stopPropagation(); showConfirm(this.form);" class="delete-button">❌</button>
+                    </form>
+                </div>
                 <!-- the name then the description -->
                 <h1>{{ deck[1] }}</h1>
-                <p>{{ deck[2] }}</p>
+                {% if deck[2] %}
+                    <p style="color: rgb(107, 107, 107);">{{ deck[2] }}</p>
+                {% else %}
+                    <p style="color: rgb(107, 107, 107);">No description</p>
+                {% endif %}
             </div>
-        </a>
+        </div>
         {% endfor %}
     </div>
 
@@ -38,5 +53,46 @@
 </a>
 
 {% endif %}
+
+<!-- confirmation overlay -->
+<div id="overlay" onclick="off()"> <!-- Turn off overlay when clicking outside -->
+<div class="confirmation-box" onclick="event.stopPropagation()">
+    <p>Are you sure you want to delete this deck?</p>
+    <button onclick="confirmDelete()">Yes</button> 
+    <button onclick="off()">No</button>
+</div>
+</div>
+
+<script>
+
+// turn on confirmation overlay
+function on() {
+  document.getElementById("overlay").style.display = "block";
+}
+
+// turn off confirmation overlay
+function off() {
+  document.getElementById("overlay").style.display = "none";
+}
+
+// variable to store form info
+let formToDelete = null; 
+
+// when delete button is clicked
+function showConfirm(form) {
+  formToDelete = form; // Store the form to send if confirmed
+  on(); // Show confirmation overlay
+}
+
+// if user confirms delete
+function confirmDelete() {
+  if (formToDelete) {
+    formToDelete.submit(); //submit the stored form
+    formToDelete = null; // Clear the stored form
+  }
+  off(); // Hide confirmation overlay
+}
+
+</script>
 
 {% endblock %}

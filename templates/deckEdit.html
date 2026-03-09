@@ -7,12 +7,12 @@
 {% endif %}
 
 <!-- Deck creation form -->
-<form action="{{ url_for('createDeck') }}" method="POST">
+<form action="{{ url_for('editDeck', id=results[0][0]) }}" method="POST">
     <p style="color: rgb(168, 46, 46);">* Indicates required question</p>
     <label>Deck Name<span style="color: rgb(219, 54, 54); font-size: smaller;">*</span>:</label>
-    <input id="deckInput" name="deckName" placeholder="eg, Term 2 Chemistry" required><br><br>
+    <input id="deckInput" name="deckName" value="{{ results[0][1] }}" required><br><br>
     <label>Description:</label>
-    <input id="descriptionInput" name="deckDescription" placeholder="eg, Term 2 Chemistry test questions"><br><br>
+    <input id="descriptionInput" name="deckDescription" value="{{ results[0][2] }}"><br><br>
     <!-- <label>Cover Image:</label>
     <input type="file" id="myfile" name="myfile"><br><br> -->
     <button type="submit">Submit</button><br><br>
@@ -20,8 +20,8 @@
 
 <!-- Deck preview -->
 <div class="card">
-    <h1 id="deck">{ Deck Name }</h1>
-    <p id="description"><span style="color: rgb(107, 107, 107);">{ Deck Description }</span></p>
+    <h1 id="deck">{{ results[0][1] }}</h1>
+    <p id="description"><span style="color: rgb(107, 107, 107);">{{ results[0][2] }}</span></p>
 </div>
 
 <p style="color: rgb(107, 107, 107); text-align: center;">* deck description defaults to "No description."</p>
