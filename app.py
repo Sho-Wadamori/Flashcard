@@ -314,6 +314,75 @@ def editCard(id, card_id):
         return render_template("cardEdit.html", deck_info=deck_info, cards=card)
 
 
+@app.route('/login/', methods=['GET', 'POST'])
+def login():
+    if request.method == "POST":
+        # get the form data
+        username = request.form['username']
+        password = request.form['password']
+
+        sql = """
+                SELECT user_name, user_password
+                FROM Users
+                WHERE user_name = ?;
+            """
+        username_list = query_db(sql, (username,))
+
+        # check if the username and password are not empty
+        if not username or not password:
+            error = "Both fields are required."
+            return render_template("login.html", error=error)
+
+        elif not username_list:
+            # reload the page with the error message
+            error = "No account under the username " + username + "."
+            return render_template("login.html", error=error)
+
+        else:
+            # check if the password is correct
+            if password == username_list[0][1]:
+                # logged in successfully, redirect to homepage
+                return redirect(url_for('home'))
+            else:
+                error = "Incorrect password."
+                return render_template("login.html", error=error)
+
+    else:
+        return render_template("login.html")
+
+
+@app.route('/signup/', methods=['GET', 'POST'])
+def signup():
+    if request.method == "POST":
+        # get the form data
+        username = request.form['username']
+        password = request.form['password']
+
+        sql = """
+                SELECT user_name
+                FROM Users
+                WHERE user_name = ?;
+            """
+        username_list = query_db(sql, (username,))
+
+        # check if the username and password are not empty
+        if not username or not password:
+            error = "Both fields are required."
+            return render_template("signup.html", error=error)
+
+        # check if the username already exists in the database
+        elif username_list:
+            error = "Username already exists."
+            return render_template("signup.html", error=error)
+
+        else:
+            # reload the page with the error message
+            error = "Not accepting new signups yet."
+            return render_template("signup.html", error=error)
+
+    else:
+        return render_template("signup.html")
+
 # only run the app if app.py is executed directly
 if __name__ == "__main__":
     app.run(debug=True)

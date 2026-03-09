@@ -9,15 +9,18 @@
     <title>Flashcard Maker Login</title>
 </head>
 <body>
+    <div class="login-container w3-card-4">
+        <h2>Welcome Back!</h2>
 
-    <div>
-        <form action="">
-            <input type="text" name="username" id="" placeholder="Username/Email"><br><br>
-            <input type="text" name="password" id="" placeholder="Password"><br><br>
-            <a href="">Forgot Login?</a>
-            <button type="submit">Sign in</button>
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+        <form action="{{ url_for('login') }}" method="POST" class="login">
+            <input type="text" name="username" id="username" placeholder="Username/Email"><br><br>
+            <input type="text" name="password" id="password" placeholder="Password"><br><br>
+            <input type="submit" value="Login"><br>
         </form>
-        <p>New to Flashcard Maker?</p> <a href="">Sign up here!</a>
+        <p>New to Flashcard Maker?</p> <a href="{{ url_for('signup') }}">Sign up here!</a>
     </div>
     
 </body>

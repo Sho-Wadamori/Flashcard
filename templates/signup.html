@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Righteous">
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+    <title>Flashcard Maker Login</title>
+</head>
+<body>
+    <div>
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+        <form action="{{ url_for('signup') }}" method="POST">
+            <input type="text" name="username" id="username" placeholder="Username"><br><br>
+            <input type="text" name="password" id="password" placeholder="Password"><br><br>
+            <button type="submit">Sign up</button>
+        </form>
+        <p>Already have an account?</p> <a href="{{ url_for('login') }}">Sign in here!</a>
+    </div>
+    
+</body>
+</html>
