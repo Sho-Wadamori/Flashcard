@@ -1,21 +1,41 @@
+/* all elements */
 html {
-    background-color: white;
+    background-color: white; /* Some browsers use default browser colors for background when undefined */
 }
 
-body,h1,h2,h3,h4,h5,h6 {
+body,h1,h2,h3,h4,h5,h6,p {
     font-family: Righteous, sans-serif;
 }
-
 /* 3 column, used in listing decks and cards */
 .three-column {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 2em;
-    text-align: center;
-    align-items: stretch;
-    padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2em;
+  text-align: center;
+  align-items: stretch;
+  padding: 0;
 }
 
+@media (max-width: 1300px) {
+    .three-column {
+        grid-template-columns: 1fr 1fr; /* Stack items vertically on small screens */
+    }
+}
+
+@media (max-width: 750px) {
+    .three-column {
+        grid-template-columns: 1fr; /* Stack items vertically on small screens */
+    }
+}
+
+/* all buttons */
+button {
+  margin: 0 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+/* the cards in 3 column layout */
 .w3-card-4 {
   height: 100%;
   display: flex;
@@ -24,28 +44,133 @@ body,h1,h2,h3,h4,h5,h6 {
   justify-content: center;
   padding: 1rem;
   box-sizing: border-box;
+  border-radius: 8px;
+  overflow-wrap: break-word; /* allow long text to wrap */
 }
 
+/* Plus button */
 .plus {
     font-size: 4em;
 }
 
-/* indervidual flashcard */
+/* Studying flashcard */
 .card {
     display: grid;
-    margin: auto;
+    margin: 0 auto;
     background-color: #f1f1f1;
-    padding: 200px;
-    border-radius: 5px;
+    padding: 10vw;
+    border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     text-align: center;
-    width: 60%;
-    height: 500px;
+    width: calc(100% - 40vw); /* make wider when narrow */
+    flex-direction: column;
     cursor: pointer; 
     border: none;
+    overflow-wrap: break-word; /* allow long text to wrap */
 }
 
+/* Error message */
 .error {
     color: rgb(219, 46, 46);
     margin-bottom: 1em;
+}
+
+/* Confirmation Overlay */
+#overlay {
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(83, 83, 83, 0.438); /* Slightly transparent */
+  z-index: 2; /* Higher than the other stuff */
+  cursor: pointer;
+}
+
+/* Confirmation Box div */
+.confirmation-box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  z-index: 3; /* Higher than overlay */
+}
+
+/* Confirmation Box buttons */
+.confirmation-box button {
+  margin: 0 10px;
+  padding: 10px 20px;
+}
+
+/* Tooltip container */
+.tooltip {
+  position: relative;
+  display: block;
+  margin: 0 auto;
+  border-bottom: 1px dotted rgb(54, 54, 54); /* Dotted underline */
+  cursor: pointer; /* Change cursor to point */
+  text-align: center;
+  width: fit-content; /* Shrink width to fit content */
+}
+
+.tooltiptext {
+  visibility: hidden; /* Hide */
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(15, 15, 15, 0.726);
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0px;
+  position: absolute;
+  z-index: 1;
+  padding: 5px;
+  width: max-content; /* shrink width to fit content */
+  max-width: 250px; /* maximum width the tooltip can have */
+  white-space: normal; /* allow text to wrap */
+}
+
+/* Show the tooltip text on hover w/ animation */
+.tooltiptext {
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.card-buttons {
+    display: flex;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+}
+
+.header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 100vw; 
+    margin: 0 auto;
+    padding: 0 100px;
+}
+
+.login-container {
+    display: flex;
+    top:50%;
+    left:50%;
+    margin: auto;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }

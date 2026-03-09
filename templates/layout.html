@@ -5,13 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Righteous">
-    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+    <link rel="stylesheet" href="..\static\style.css">
     <title>Flashcard Maker</title>
 </head>
 <body class="w3-container">
     <!-- Shared Header Bar -->
      <header class="w3-container w3-padding-32">
-        <h1>Flashcard Maker</h1>
+        <div class="header-inner">
+            <h1 onclick="window.location='{{ url_for('home') }}'" style="cursor: pointer;">Flashcard Maker</h1>
+            <a href="{{ url_for('Decks') }}"><button>🔎︎ View</button></a>
+            <input type="text" name="Search" id="Search" placeholder="🔎︎ Search decks...">
+            <a href="{{ url_for('createDeck') }}"><button>+ Create</button></a>
+            <button>👤 Login/Signup</button>
+        </div>
     </header>
     <nav class="w3-bar w3-blue-grey">
         <a href="{{ url_for('home') }}" class="w3-bar-item w3-button">Home</a>
