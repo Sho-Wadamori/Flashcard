@@ -13,20 +13,113 @@ link style:
 /decks/:deckId/edit                 - edit deck
 /decks/:deckId/cards/:cardId/edit   - edit flashcard
 
+---------------------------------------------------
 
-
-
+filenames:
 layout.html - navbar
 homepage.html - home/landing page
 decks.html - display all decks
 deck.html - display single deck contents
 card.html - show single flashcard
 deckCreate.html - create new deck
+cardCreate.html - create new card in specific deck
+deckEdit.html - edit deck
+cardedit.html - edit card
 
 
+style.css - css stylesheet file
+database.db - database
+app.py - handles all the read and write between database and frontend
 
+---------------------------------------------------
 
 INSERT INTO Flashcards (card_creation, card_question, card_answer, card_deckID) VALUES (datetime('now'), 'What is 2+2?', '4', 2);
+UPDATE sqlite_sequence SET seq = 3 WHERE name = 'Decks';
+UPDATE sqlite_sequence SET seq = 5 WHERE name = 'Flashcards';
+onclick="event.stopPropagation(); event.preventDefault();"
+ - stops parent from making actions
+data-{variable}
+ - stores data in html which can be called again using {variable}
+
+---------------------------------------------------
+
+Done:
+View Decks 
+View flashcards
+Create deck
+Create flashcard
+Delete Deck
+Delete flashcard
+Edit Deck
+Edit flashcard
+explanation/hint text
 
 
+Things to add: 
+correct/incorrect/skip button
+shuffle card order, spaced repetition (either cache/sessions or store in table)
+flag difficult cards, then study flagged cards (flagged column in flashcard table)
+question difficuly(appear more/less frequently)
+reverse answer/question
+quiz/input mode (eg, multi chose, typing in, selecting out of 4 options)
+search decks/flashcards (fuzzy)
+ - Ifrit, elasticsearch, jina, or just use sql LIKE operator
 
+keyboard shortcut
+ - https://ralzohairi.medium.com/adding-custom-keyboard-shortcuts-to-your-website-b4151fda2e7a
+
+user login
+ - encrypted password 
+     - werkzeug.security.generate_password_hash()
+     - check_password_hash()
+
+sharing flashcards
+ - public board (needs safety consideration)
+ - rating
+ - share only to certain user
+ - comments (needs safety consideration)
+
+image or audio upload
+ - werkzeug.utils.secure_filename
+
+stats 
+ - user(cards learned, cards due, success rate, study streak, longest streak, time studied)
+ - per card(times wrong, times correct, total attempted, avg time to answer, time studied)
+ - study heatmap/calendar
+
+homepage
+ - welcome message, daily challange (rand gen number for daily cards studied)
+ - study Now | View Decks | Create Deck
+ - bookmark/favourite decks (fav column in Decks table)
+ - Recents (store recent 3 - 5 decks in User table, append later.)
+ - stats (store in User table)
+ - public board
+ - fun trivia? (cycle through trivia list daily)
+
+
+study goal
+achievements/motivation
+autosave
+further character and styling support
+ - markdown
+ - mathematic symbols
+ - spell correct
+export decks
+maybe encrypt/hash/salt deck and card ids
+ - make UUID for deck urls so users cant see what-th deck they have. 
+translation (google translate API)
+
+---------------------------------------------------
+
+Appearances:
+animations
+ - card flip
+ - deck shuffle
+ - correct/wrong/skip
+ - goal reached
+ - streak
+fancier buttons
+dark more/theme colour
+customisation of deck style, colour, background, font, etc (https://www.w3schools.com/howto/howto_html_colorpicker.asp)
+emoji picker
+ - https://codepen.io/vigowebs/pen/OJoXyQV
