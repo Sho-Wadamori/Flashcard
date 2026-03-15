@@ -1,5 +1,15 @@
 # import libraries
-from flask import Flask, g, redirect, render_template, request, url_for, session, flash
+from flask import (
+    Flask,
+    g,
+    request,  # used to get method
+    session,  # used to store user data
+    redirect,  # used to redirect users to another page
+    render_template,  # used to render html pages
+    url_for,  # used to redirect users
+    flash  # used for error messages (NOT SETUP YET)
+)
+
 # from werkzeug.utils import secure_filename  # for file uploads
 from datetime import datetime, timezone  # for time formatting
 import sqlite3
@@ -89,7 +99,12 @@ def uservar():
 # homepage
 @app.route('/')
 def home():
-    return render_template("homepage.html", username=session.get('username', 'Guest'), userID=session.get('userID', 0))
+    return render_template(
+        "homepage.html", username=session.get(
+            'username', 'Guest'
+        ),
+        userID=session.get('userID', 0)
+    )
 
 
 # list all decks
@@ -109,7 +124,7 @@ def Decks():
 # list all flashcards for a single deck
 @app.route('/decks/<int:id>/')
 def Deck(id):
-    # get all the card id, question, answer, and creation date for inputted deck id
+    # get all the card id, Q, A, and creation date for inputted deck id
     sql = """
             SELECT card_ID, card_question, card_answer, card_creation
             FROM Flashcards
@@ -117,20 +132,28 @@ def Deck(id):
         """
     # get the deck name of the inputted deck id
     sql_deck = """
-                SELECT deck_name, deck_ID, deck_creation FROM Decks WHERE deck_ID = ? AND deck_userID = ?;
+                SELECT deck_name, deck_ID, deck_creation
+                FROM Decks
+                WHERE deck_ID = ?
+                AND deck_userID = ?;
             """
 
     deck_info = query_db(sql_deck, (id, userID()), True)
     results = query_db(sql, (id, userID()))
     # return the results
-    return render_template("deck.html", results=results, deck_info=deck_info, time_ago=time_ago, format_date=format_date)
+    return render_template(
+        "deck.html", results=results, deck_info=deck_info,
+        time_ago=time_ago, format_date=format_date
+    )
 
 
 @app.route('/decks/<int:id>/cards/<int:card_id>/delete/', methods=['POST'])
 def deleteCard(id, card_id):
     # delete the card with the inputted card id
     sql = """
-            DELETE FROM Flashcards WHERE card_ID = ? AND card_userID = ?;
+            DELETE FROM Flashcards
+            WHERE card_ID = ?
+            AND card_userID = ?;
         """
     get_db().execute(sql, (card_id, userID()))
     get_db().commit()
@@ -142,7 +165,9 @@ def deleteCard(id, card_id):
 def deleteDeck(id):
     # delete the deck with the inputted deck id
     sql = """
-            DELETE FROM Decks WHERE deck_ID = ? AND deck_userID = ?;
+            DELETE FROM Decks
+            WHERE deck_ID = ?
+            AND deck_userID = ?;
         """
     get_db().execute(sql, (id, userID()))
     get_db().commit()
@@ -153,9 +178,10 @@ def deleteDeck(id):
 # study a single card based on the index
 @app.route('/decks/<int:id>/study/<int:index>/')
 def Study(id, index):
-    # get all the card id, question, answer, and creation date for inputted deck id
+    # get all the card id, Q, A, and creation date for inputted deck id
     sql = """
-            SELECT card_ID, card_question, card_answer, card_creation, card_hint
+            SELECT card_ID, card_question,
+            card_answer, card_creation, card_hint
             FROM Flashcards
             WHERE card_deckID = ? AND card_userID = ?;
         """
@@ -191,7 +217,9 @@ def createDeck():
 
         else:
             sql = """
-                    INSERT INTO Decks (deck_name, deck_description, deck_creation, deck_userID)
+                    INSERT INTO Decks (
+                    deck_name, deck_description, deck_creation, deck_userID
+                    )
                     VALUES (?, ?, datetime('now'), ?);
                 """
             get_db().execute(sql, (deck_name, deck_description, userID()))
@@ -217,7 +245,10 @@ def createCard(id):
 
     # get the deck name of the inputted deck id
     sql_deck = """
-            SELECT deck_name, deck_ID, deck_creation FROM Decks WHERE deck_ID = ? AND deck_userID = ?;
+            SELECT deck_name, deck_ID, deck_creation
+            FROM Decks
+            WHERE deck_ID = ?
+            AND deck_userID = ?;
         """
     deck_info = query_db(sql_deck, (id, userID()))[0]
 
@@ -232,15 +263,22 @@ def createCard(id):
             # reload the page with the error message
             error = "Both fields are required."
             flash("Both fields are required.")
-            return render_template("cardCreate.html", error=error, deck_info=deck_info)
+            return render_template(
+                "cardCreate.html", error=error, deck_info=deck_info
+            )
 
         else:
             sql = """
-                    INSERT INTO Flashcards (card_question, card_answer, card_deckID, card_creation, card_hint, card_userID)
+                    INSERT INTO Flashcards (
+                    card_question, card_answer, card_deckID,
+                    card_creation, card_hint, card_userID
+                    )
                     VALUES (?, ?, ?, datetime('now'), ?, ?);
                 """
 
-            get_db().execute(sql, (card_question, card_answer, id, card_hint, userID()))
+            get_db().execute(sql, (
+                card_question, card_answer, id, card_hint, userID()
+            ))
             get_db().commit()
             # redirect to the deck page
             return redirect(url_for('Deck', id=id))
@@ -292,11 +330,17 @@ def editDeck(id):
 
 
 # edit a card and update the database
-@app.route('/decks/<int:id>/cards/<int:card_id>/edit/', methods=['GET', 'POST'])
+@app.route(
+    '/decks/<int:id>/cards/<int:card_id>/edit/',
+    methods=['GET', 'POST']
+)
 def editCard(id, card_id):
     # get the deck name of the inputted deck id
     sql_deck = """
-            SELECT deck_name, deck_ID, deck_creation FROM Decks WHERE deck_ID = ? AND deck_userID = ?;
+            SELECT deck_name, deck_ID, deck_creation
+            FROM Decks
+            WHERE deck_ID = ?
+            AND deck_userID = ?;
         """
     deck_info = query_db(sql_deck, (id, userID()))[0]
 
@@ -311,9 +355,17 @@ def editCard(id, card_id):
             # reload the page with the error message
             error = "Both fields are required."
             flash("Both fields are required.")
-            sql_card = "SELECT card_ID, card_question, card_answer, card_creation, card_hint FROM Flashcards WHERE card_ID = ? AND card_userID = ?;"
+            sql_card = """
+                SELECT card_ID, card_question,
+                card_answer, card_creation, card_hint
+                FROM Flashcards
+                WHERE card_ID = ?
+                AND card_userID = ?;
+            """
             card = query_db(sql_card, (card_id, userID()), one=True)
-            return render_template("cardEdit.html", error=error, deck_info=deck_info, cards=card)
+            return render_template(
+                "cardEdit.html", error=error, deck_info=deck_info, cards=card
+            )
 
         else:
             sql = """
@@ -323,7 +375,9 @@ def editCard(id, card_id):
                     AND card_userID = ?;
                 """
 
-            get_db().execute(sql, (card_question, card_answer, card_hint, card_id, id, userID()))
+            get_db().execute(sql, (
+                card_question, card_answer, card_hint, card_id, id, userID()
+                ))
             get_db().commit()
             # redirect to the deck page
             return redirect(url_for('Deck', id=id))
@@ -332,9 +386,17 @@ def editCard(id, card_id):
     else:
 
         # return cardinfo
-        sql_card = "SELECT card_ID, card_question, card_answer, card_creation, card_hint FROM Flashcards WHERE card_ID = ? AND card_userID = ?;"
+        sql_card = """
+            SELECT card_ID, card_question,
+            card_answer, card_creation, card_hint
+            FROM Flashcards
+            WHERE card_ID = ?
+            AND card_userID = ?;
+        """
         card = query_db(sql_card, (card_id, userID()), one=True)
-        return render_template("cardEdit.html", deck_info=deck_info, cards=card)
+        return render_template(
+            "cardEdit.html", deck_info=deck_info, cards=card
+        )
 
 
 @app.route('/login/', methods=['GET', 'POST'])
@@ -369,7 +431,10 @@ def login():
             if password == username_list[0][1]:
                 # logged in successfully, redirect to homepage
                 session['username'] = username
-                session['userID'] = query_db("SELECT user_ID FROM Users WHERE user_name = ?", (username,), one=True)[0]
+                session['userID'] = query_db(
+                    "SELECT user_ID FROM Users WHERE user_name = ?",
+                    (username,), one=True
+                )[0]
                 return redirect(url_for('home'))
             else:
                 error = "Incorrect password."
@@ -437,7 +502,10 @@ def profile():
 
     results = query_db(sql, (userID(),))[0]
     # return the results
-    return render_template("profile.html", results=results, format_date=format_date, time_ago=time_ago)
+    return render_template(
+        "profile.html", results=results,
+        format_date=format_date, time_ago=time_ago
+    )
 
 
 @app.route('/logout/')
