@@ -16,7 +16,11 @@
             <a href="{{ url_for('Decks') }}"><button>🔎︎ View</button></a>
             <input type="text" name="Search" id="Search" placeholder="🔎︎ Search decks...">
             <a href="{{ url_for('createDeck') }}"><button>+ Create</button></a>
-            <a href="{{ url_for('login') }}"><button>👤 Login/Signup</button></a>
+            {% if username != 'Guest' %}
+                <a href="{{ url_for('profile') }}"><button>👤 Profile</button></a>
+            {% else %}
+                <a href="{{ url_for('login') }}"><button>👤 Login/Signup</button></a>
+            {% endif %}
         </div>
     </header>
     <nav class="w3-bar w3-blue-grey">
@@ -32,8 +36,6 @@
                 </div>
         </div> -->
     </nav>
-
-    <!-- Shared Navbar -->
     {% block body %}
     {% endblock %}
 </body>

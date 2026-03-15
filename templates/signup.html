@@ -6,20 +6,43 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Righteous">
     <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
-    <title>Flashcard Maker Login</title>
+    <title>Flashcard Maker Sign Up</title>
 </head>
 <body>
-    <div>
+    <div class="login-container w3-card-4">
+        <h2>Welcome To Flashcard Maker!</h2><br>
+        <h1>-- Sign up --</h1>
+
         {% if error %}
             <p class="error">{{ error }}</p>
         {% endif %}
-        <form action="{{ url_for('signup') }}" method="POST">
-            <input type="text" name="username" id="username" placeholder="Username"><br><br>
-            <input type="text" name="password" id="password" placeholder="Password"><br><br>
-            <button type="submit">Sign up</button>
+
+        <form action="{{ url_for('signup') }}" method="POST" class="login">
+            <input type="text" name="username" id="username" placeholder="Username"><br>
+            <input type="password" name="password" id="password" placeholder="Password"><br>
+            <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password"><br><br>
+            <input type="checkbox" onclick="passwordReveal()" id="showPasswords">
+            <label for="showPasswords">Show Passwords</label><br><br>
+            <input type="submit" value="Sign up">
         </form>
-        <p>Already have an account?</p> <a href="{{ url_for('login') }}">Sign in here!</a>
+        <p>Already have an account?</p> <a href="{{ url_for('login') }}" style="color: rgb(14, 103, 161);">Sign in here!</a>
     </div>
     
+
+    <script>
+        function passwordReveal() {
+            var password = document.getElementById("password");
+            var confirm = document.getElementById("confirm_password");
+
+            if (password.type === "password") {
+                password.type = "text";
+                confirm.type = "text";
+            } else {
+                password.type = "password";
+                confirm.type = "password";
+            }
+        }
+    </script>
+
 </body>
 </html>

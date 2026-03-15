@@ -1,8 +1,9 @@
 {% extends "layout.html" %}
 {% block body %}
 
-<h2>Flashcard maker!</h2>
+<h1>Welcome, {{ username }}!</h1>
 
-  <a href="{{ url_for('Decks') }}"><button>View Decks</button></a>
-  <a href="{{ url_for('createDeck') }}"><button>Create Deck</button></a>
+<a href="{{ url_for('Decks') }}"><button>View Decks</button></a>
+<a href="{{ url_for('createDeck') }}"><button>Create Deck</button></a>
+
 {% endblock %}

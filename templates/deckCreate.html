@@ -7,7 +7,7 @@
 {% endif %}
 
 <!-- Deck creation form -->
-<form action="{{ url_for('createDeck') }}" method="POST">
+<form action="{{ url_for('createDeck') }}" method="POST" autocomplete="off">
     <p style="color: rgb(168, 46, 46);">* Indicates required question</p>
     <label>Deck Name<span style="color: rgb(219, 54, 54); font-size: smaller;">*</span>:</label>
     <input id="deckInput" name="deckName" placeholder="eg, Term 2 Chemistry" required><br><br>
@@ -15,7 +15,8 @@
     <input id="descriptionInput" name="deckDescription" placeholder="eg, Term 2 Chemistry test questions"><br><br>
     <!-- <label>Cover Image:</label>
     <input type="file" id="myfile" name="myfile"><br><br> -->
-    <button type="submit">Submit</button><br><br>
+    <button type="submit">Submit</button>
+    <button type="reset">Reset</button><br><br>
 </form>
 
 <!-- Deck preview -->

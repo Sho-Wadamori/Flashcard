@@ -28,19 +28,28 @@
   <button class="card" id="card_click">
     <h2 id="card">{{ cards[1] }}</h2>
   </button>
-  
-    <br><div class="tooltip" style="cursor: help;">
-      Hint💡<span class="tooltiptext">{{ cards[4] }}</span>
-    </div>
+
+  <br><div class="tooltip" style="cursor: help;">
+    Hint💡<span class="tooltiptext">{{ cards[4] }}</span>
+  </div>
+
+  <!-- Correct/Incorrect/Skip -->
+  <div class="radio-buttons">
+    <input type="radio" id="correct" name="response" class="prev">
+    <label for="correct">Correct [1]</label>
+    
+    <input type="radio" id="incorrect" name="response" class="prev">
+    <label for="incorrect">Incorrect [2]</label>
+    
+    <input type="radio" id="skip" name="response" class="prev">
+    <label for="skip">Skip [3]</label>
+  </div>
+  <p id="keybindhint" style="text-align: center; color: rgb(63, 63, 63);">*press [alt + shift] + Number to change response</p>
+  <!-- DOES NOT DO ANYTHING YET -->
 
 {% else %}
   <p>No cards in this deck.</p>
 {% endif %}
-
-<!-- Correct/Incorrect/Skip -->
-<button id="prev_button" class="prev">Correct [1]</button> <button id="prev_button" class="prev">Incorrect [2]</button> <button id="prev_button" class="prev">Skip [3]</button>
-<!-- DOES NOT DO ANYTHING YET -->
-
 
 <script>
 
@@ -56,6 +65,19 @@ function clickAction(){
 }
 
 card_click.onclick = clickAction;
+
+document.getElementById("correct").accessKey = "1";
+document.getElementById("incorrect").accessKey = "2";
+document.getElementById("skip").accessKey = "3";
+
+const keybindHint = document.getElementById("keybindhint");
+const ua = navigator.userAgent;
+
+if (ua.indexOf("Firefox") > -1) {
+    keybindHint.textContent = "*press [Alt + Shift] + Number to change response";
+} else {
+    keybindHint.textContent = "*press [Alt] + Number to change response";
+}
 
 </script>
 {% endblock %}

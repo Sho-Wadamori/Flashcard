@@ -1,0 +1,8 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<p>Username: {{ results[0] }}</p>
+<p style="white-space: pre;">Creation Date: {{ format_date(results[1]) }}  |  {{ time_ago(results[1]) }}</p>
+<button onclick="location.href='{{ url_for('logout') }}'">Logout</button>
+
+{% endblock %}
