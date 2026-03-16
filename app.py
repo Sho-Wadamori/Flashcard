@@ -11,7 +11,16 @@ from flask import (
 )
 
 # from werkzeug.utils import secure_filename  # for file uploads
-from datetime import datetime, timezone  # for time formatting
+from datetime import (
+    datetime,
+    timezone
+)  # for time formatting
+
+from werkzeug.security import (
+    generate_password_hash,
+    check_password_hash
+)  # for user login password encryption
+
 import sqlite3
 
 DATABASE = 'database.db'  # relative path to the database file
@@ -20,7 +29,7 @@ DATABASE = 'database.db'  # relative path to the database file
 app = Flask(__name__)
 
 # set a secret key for sessions
-app.config['SECRET_KEY'] = "SecretKey123"
+app.config['SECRET_KEY'] = "8y9awhDWdhHfw8ghgrgdgGRgDEgwndaiundIUDNu1823892e8h"
 
 
 # connect to the database
@@ -142,8 +151,11 @@ def Deck(id):
     results = query_db(sql, (id, userID()))
     # return the results
     return render_template(
-        "deck.html", results=results, deck_info=deck_info,
-        time_ago=time_ago, format_date=format_date
+        "deck.html",
+        results=results,
+        deck_info=deck_info,
+        time_ago=time_ago,
+        format_date=format_date
     )
 
 
@@ -250,7 +262,13 @@ def createCard(id):
             WHERE deck_ID = ?
             AND deck_userID = ?;
         """
-    deck_info = query_db(sql_deck, (id, userID()))[0]
+    deck_info = query_db(sql_deck, (id, userID()))
+
+    # check if deck_info is not empty
+    if not deck_info:
+        error = "No deck was found..."
+        flash("No deck was found...")
+        return redirect(url_for("Decks"))
 
     # if request method is POST, get the form data and insert into database
     if request.method == "POST":
@@ -264,7 +282,9 @@ def createCard(id):
             error = "Both fields are required."
             flash("Both fields are required.")
             return render_template(
-                "cardCreate.html", error=error, deck_info=deck_info
+                "cardCreate.html",
+                error=error,
+                deck_info=deck_info[0]
             )
 
         else:
@@ -277,7 +297,11 @@ def createCard(id):
                 """
 
             get_db().execute(sql, (
-                card_question, card_answer, id, card_hint, userID()
+                card_question,
+                card_answer,
+                id,
+                card_hint,
+                userID()
             ))
             get_db().commit()
             # redirect to the deck page
@@ -325,6 +349,12 @@ def editDeck(id):
                 WHERE deck_ID = ? AND deck_userID = ?;
             """
         result = query_db(sql, (id, userID()))
+
+        if not result:
+            error = "Invalid deck..."
+            flash("Invalid deck...")
+            return redirect(url_for("Decks"))
+
         # return the results
         return render_template("deckEdit.html", results=result)
 
@@ -342,7 +372,13 @@ def editCard(id, card_id):
             WHERE deck_ID = ?
             AND deck_userID = ?;
         """
-    deck_info = query_db(sql_deck, (id, userID()))[0]
+    deck_info = query_db(sql_deck, (id, userID()))
+
+    # check if deckinfo is not empty
+    if not deck_info:
+        error = "Invalid deck..."
+        flash("Invalid deck...")
+        return redirect(url_for("Decks"))
 
     # if request method is POST, get the form data and insert into database
     if request.method == "POST":
@@ -364,9 +400,13 @@ def editCard(id, card_id):
             """
             card = query_db(sql_card, (card_id, userID()), one=True)
             return render_template(
-                "cardEdit.html", error=error, deck_info=deck_info, cards=card
+                "cardEdit.html",
+                error=error,
+                deck_info=deck_info[0],
+                cards=card
             )
 
+        # if form data is present in both
         else:
             sql = """
                     UPDATE Flashcards
@@ -376,8 +416,13 @@ def editCard(id, card_id):
                 """
 
             get_db().execute(sql, (
-                card_question, card_answer, card_hint, card_id, id, userID()
-                ))
+                card_question,
+                card_answer,
+                card_hint,
+                card_id,
+                id,
+                userID()
+            ))
             get_db().commit()
             # redirect to the deck page
             return redirect(url_for('Deck', id=id))
@@ -394,8 +439,17 @@ def editCard(id, card_id):
             AND card_userID = ?;
         """
         card = query_db(sql_card, (card_id, userID()), one=True)
+
+        # check if card is not empty
+        if not card:
+            error = "Invalid Card..."
+            flash("Invalid Card...")
+            return redirect(url_for('Deck', id=id))
+
         return render_template(
-            "cardEdit.html", deck_info=deck_info, cards=card
+            "cardEdit.html",
+            deck_info=deck_info[0],
+            cards=card
         )
 
 
@@ -426,9 +480,9 @@ def login():
             flash("No account under the username " + username + ".")
             return render_template("login.html", error=error)
 
-        else:
+        elif username_list[0][0] == username:
             # check if the password is correct
-            if password == username_list[0][1]:
+            if check_password_hash(username_list[0][1], password):
                 # logged in successfully, redirect to homepage
                 session['username'] = username
                 session['userID'] = query_db(
@@ -440,6 +494,9 @@ def login():
                 error = "Incorrect password."
                 flash("Incorrect password.")
                 return render_template("login.html", error=error)
+        else:
+            error = "Something Went Wrong..."
+            return render_template("login.html", error=error)
 
     else:
         return render_template("login.html")
@@ -478,11 +535,12 @@ def signup():
             return render_template("signup.html", error=error)
 
         else:
+            hashed_password = generate_password_hash(password)
             sql = """
                     INSERT INTO Users (user_name, user_password, user_creation)
                     VALUES (?, ?, datetime('now'));
                 """
-            get_db().execute(sql, (username, password))
+            get_db().execute(sql, (username, hashed_password))
             get_db().commit()
             error = "Account created successfully. Please log in."
             flash("Account created successfully. Please log in.")
@@ -494,17 +552,28 @@ def signup():
 
 @app.route('/profile/')
 def profile():
+    if not userID():
+        flash("You are not logged in.")
+        return redirect(url_for('logout'))
+
     sql = """
             SELECT user_name, user_creation
             FROM Users
             WHERE user_ID = ?;
         """
 
-    results = query_db(sql, (userID(),))[0]
+    results = query_db(sql, (userID(),))
+
+    if not results:
+        flash("User details not found. Logging out.")
+        return redirect(url_for('logout'))
+
     # return the results
     return render_template(
-        "profile.html", results=results,
-        format_date=format_date, time_ago=time_ago
+        "profile.html",
+        results=results[0],
+        format_date=format_date,
+        time_ago=time_ago
     )
 
 
