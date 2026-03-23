@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<p style="white-space: pre;">Cards Correct: {{ answer_stats[0] }}</p>
+<p style="white-space: pre;">Cards Incorrect: {{ answer_stats[1] }}</p>
+
+<p style="white-space: pre;">Number of Decks: {{ deck_stats[0] }}</p>
+<p style="white-space: pre;">Number of Cards: {{ card_stats[0] }}</p>
+
+
+<button onclick="location.href='{{ url_for('home') }}'">Back</button>
+
+{% endblock %}

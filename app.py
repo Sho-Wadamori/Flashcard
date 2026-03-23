@@ -207,20 +207,23 @@ def Study(id, index):
     total = len(results)  # total number of cards in the deck
 
     card = results[index]  # get the current card info based on the index
-    card_id = card['card_ID']
+    card_id = card[0]
 
     if request.method == 'POST':
-        response = request.form['response']
+        response = request.form.get('response')
+        # get the user's stats for the current card
         get_stats = """
             SELECT *
             FROM UserCardStats
-            WHERE stats_cardID = (SELECT )
+            WHERE stats_cardID = ?
             AND stats_userID = ?;
         """
+        stats = query_db(get_stats, (card_id, userID()))
 
+        # if the user got the card correct
         if response == "correct":
-            stats = query_db(get_stats, (card_id, userID()))
 
+            # if the user has no stats for card, create new entry
             if not stats:
                 add_stats = """
                     INSERT INTO UserCardStats (
@@ -228,9 +231,11 @@ def Study(id, index):
                     )
                     Values (?, ?, ?)
                 """
-                get_db().execute(sql, (card_id, userID(), 1))
+                # add 1 correct
+                get_db().execute(add_stats, (1, userID(), card_id))
                 get_db().commit()
-            
+
+            # if the user has stats for the card, add 1 to correct
             else:
                 update_stats = """
                     UPDATE UserCardStats
@@ -238,10 +243,12 @@ def Study(id, index):
                     WHERE stats_cardID = ?
                     AND stats_userID = ?
                 """
-                get_db().execute(sql, (card_id, userID()))
+                get_db().execute(update_stats, (card_id, userID()))
                 get_db().commit()
 
+        # if the user got the card incorrect
         elif response == "incorrect":
+            # if the user has no stats for card, create new entry
             if not stats:
                 add_stats = """
                     INSERT INTO UserCardStats (
@@ -249,9 +256,11 @@ def Study(id, index):
                     )
                     Values (?, ?, ?)
                 """
-                get_db().execute(sql, (card_id, userID(), 1))
+                # add 1 incorrect
+                get_db().execute(add_stats, (1, userID(), card_id))
                 get_db().commit()
 
+            # if the user has stats for card, add 1 to incorrect
             else:
                 update_stats = """
                     UPDATE UserCardStats
@@ -259,10 +268,17 @@ def Study(id, index):
                     WHERE stats_cardID = ?
                     AND stats_userID = ?
                 """
-                get_db().execute(sql, (card_id, userID()))
+                get_db().execute(update_stats, (card_id, userID()))
                 get_db().commit()
 
+        if index + 1 < total:
+            return redirect(url_for('Study', id=id, index=index + 1))
 
+        else:
+            flash("You have finished studying this deck!")
+            return redirect(url_for('Deck', id=id))
+
+    # return the results in method is GET
     else:
         return render_template(
             "card.html",
@@ -372,7 +388,7 @@ def createCard(id):
     else:
 
         # return deckinfo
-        return render_template("cardCreate.html", deck_info=deck_info)
+        return render_template("cardCreate.html", deck_info=deck_info[0])
 
 
 # edit a deck and update the database
@@ -645,6 +661,46 @@ def logout():
     flash("Logged out successfully.")
     return redirect(url_for('home'))
 
+
+@app.route('/stats/')
+def stats():
+    if not userID():
+        flash("You are not logged in.")
+        return redirect(url_for('logout'))
+
+    userAnswerStats = """
+            SELECT SUM(stats_correct), SUM(stats_incorrect)
+            FROM UserCardStats
+            WHERE stats_userID = ?;
+        """
+    answer_stats = query_db(userAnswerStats, (userID(),))
+
+    userDeckStats = """
+            SELECT COUNT(deck_ID)
+            FROM Decks
+            WHERE deck_userID = ?;
+    """
+    deck_stats = query_db(userDeckStats, (userID(),))
+
+    userCardStats = """
+            SELECT COUNT(card_ID)
+            FROM Flashcards
+            WHERE card_userID = ?;
+    """
+    card_stats = query_db(userCardStats, (userID(),))
+
+    # return the results
+    return render_template(
+        "stats.html",
+        answer_stats=answer_stats[0],
+        deck_stats=deck_stats[0],
+        card_stats=card_stats[0]
+    )
+
+
+@app.route('/test/')
+def test():
+    return render_template("test.html")
 
 # only run the app if app.py is executed directly
 if __name__ == "__main__":
