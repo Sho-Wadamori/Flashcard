@@ -149,6 +149,11 @@ def Deck(id):
 
     deck_info = query_db(sql_deck, (id, userID()), True)
     results = query_db(sql, (id, userID()))
+
+    if not deck_info:
+        flash("No deck was found...")
+        return redirect(url_for("Decks"))
+
     # return the results
     return render_template(
         "deck.html",
@@ -188,28 +193,84 @@ def deleteDeck(id):
 
 
 # study a single card based on the index
-@app.route('/decks/<int:id>/study/<int:index>/')
+@app.route('/decks/<int:id>/study/<int:index>/', methods=['GET', 'POST'])
 def Study(id, index):
     # get all the card id, Q, A, and creation date for inputted deck id
     sql = """
-            SELECT card_ID, card_question,
-            card_answer, card_creation, card_hint
-            FROM Flashcards
-            WHERE card_deckID = ? AND card_userID = ?;
-        """
+        SELECT card_ID, card_question,
+        card_answer, card_creation, card_hint
+        FROM Flashcards
+        WHERE card_deckID = ? AND card_userID = ?;
+    """
     results = query_db(sql, (id, userID()))
 
     total = len(results)  # total number of cards in the deck
 
     card = results[index]  # get the current card info based on the index
+    card_id = card['card_ID']
 
-    return render_template(
-        "card.html",
-        cards=card,
-        deck_id=id,
-        total=total,
-        index=index
-        )
+    if request.method == 'POST':
+        response = request.form['response']
+        get_stats = """
+            SELECT *
+            FROM UserCardStats
+            WHERE stats_cardID = (SELECT )
+            AND stats_userID = ?;
+        """
+
+        if response == "correct":
+            stats = query_db(get_stats, (card_id, userID()))
+
+            if not stats:
+                add_stats = """
+                    INSERT INTO UserCardStats (
+                        stats_correct, stats_userID, stats_cardID
+                    )
+                    Values (?, ?, ?)
+                """
+                get_db().execute(sql, (card_id, userID(), 1))
+                get_db().commit()
+            
+            else:
+                update_stats = """
+                    UPDATE UserCardStats
+                    SET stats_correct = stats_correct + 1
+                    WHERE stats_cardID = ?
+                    AND stats_userID = ?
+                """
+                get_db().execute(sql, (card_id, userID()))
+                get_db().commit()
+
+        elif response == "incorrect":
+            if not stats:
+                add_stats = """
+                    INSERT INTO UserCardStats (
+                        stats_incorrect, stats_userID, stats_cardID
+                    )
+                    Values (?, ?, ?)
+                """
+                get_db().execute(sql, (card_id, userID(), 1))
+                get_db().commit()
+
+            else:
+                update_stats = """
+                    UPDATE UserCardStats
+                    SET stats_incorrect = stats_incorrect + 1
+                    WHERE stats_cardID = ?
+                    AND stats_userID = ?
+                """
+                get_db().execute(sql, (card_id, userID()))
+                get_db().commit()
+
+
+    else:
+        return render_template(
+            "card.html",
+            cards=card,
+            deck_id=id,
+            total=total,
+            index=index
+            )
 
 
 # create a new deck and add it to the database

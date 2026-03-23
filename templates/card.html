@@ -7,19 +7,19 @@
 <!-- Previous card button -->
 {% if index > 0 %}
     <a href="{{ url_for('Study', id=deck_id, index=index - 1) }}">
-        <button id="prev_button" class="prev">Previous</button>
+        <button id="prev_button" form="responceForm">Previous</button>
     </a>
 {% endif %}
 
 <!-- Next card button -->
 {% if index + 1 < total %}
-    <a href="{{ url_for('Study', id=deck_id, index=index + 1) }}">
-        <button id="next_button" class="next">Next</button>
-    </a>
+    <!-- <a href="{{ url_for('Study', id=deck_id, index=index + 1) }}"> -->
+    <button id="next_button" form="responceForm" type="submit">Next</button>
+    <!-- </a> -->
 {% else %}
-    <a href="{{ url_for('Deck', id=deck_id) }}">
-        <button id="exit_button" class="exit">Exit</button>
-    </a>
+    <!-- <a href="{{ url_for('Deck', id=deck_id) }}"> -->
+    <button id="exit_button" form="responceForm" type="submit">Exit</button>
+    <!-- </a> -->
     <p>You've completed the deck!</p>
 {% endif %}
 
@@ -34,18 +34,20 @@
   </div>
 
   <!-- Correct/Incorrect/Skip -->
-  <div class="radio-buttons">
-    <input type="radio" id="correct" name="response" class="prev">
-    <label for="correct">Correct [1]</label>
-    
-    <input type="radio" id="incorrect" name="response" class="prev">
-    <label for="incorrect">Incorrect [2]</label>
-    
-    <input type="radio" id="skip" name="response" class="prev">
-    <label for="skip">Skip [3]</label>
-  </div>
-  <p id="keybindhint" style="text-align: center; color: rgb(63, 63, 63);">*press [alt + shift] + Number to change response</p>
-  <!-- DOES NOT DO ANYTHING YET -->
+  <form action="Study" method="POST" id="responceForm">
+    <div class="radio-buttons">
+      <input type="radio" id="correct" name="response" value="correct">
+      <label for="correct">Correct [1]</label>
+      
+      <input type="radio" id="incorrect" name="response" value="incorrect">
+      <label for="incorrect">Incorrect [2]</label>
+      
+      <input type="radio" id="skip" name="response" value="skip">
+      <label for="skip">Skip [3]</label>
+    </div>
+    <p id="keybindhint" style="text-align: center; color: rgb(63, 63, 63);">*press [alt + shift] + Number to change response</p>
+    <!-- DOES NOT DO ANYTHING YET -->
+  </form>
 
 {% else %}
   <p>No cards in this deck.</p>
