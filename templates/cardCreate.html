@@ -7,7 +7,7 @@
 {% endif %}
 
 <!-- Card creation form -->
-<form action="{{ url_for('createCard', id=deck_info[1]) }}" method="POST" autocomplete="off">
+<form id="cardForm" action="{{ url_for('createCard', id=deck_info[1]) }}" method="POST" autocomplete="off">
     <p style="color: rgb(168, 46, 46);">* Indicates required question</p>
     <label>Flashcard Question<span style="color: rgb(219, 54, 54); font-size: smaller;">*</span>:</label>
     <input id="questionInput" name="cardQuestion" placeholder="eg, What is 1 + 1?" required><br><br>
@@ -20,7 +20,7 @@
 </form>
 
 <!-- Card preview -->
-<div class="card">
+<div class="card" style="cursor: default;">
     <!-- the question then the answer -->
     <h1 id="question">{ Flashcard Question }</h1>
     <p id="answer">{ Flashcard Answer }</p>
@@ -30,34 +30,4 @@
     Hint💡<span id="hint" class="tooltiptext", style="visibility: visible; opacity: 1;">{ Hint text }</span>
 </div>
 
-
-<!-- script -->
-<script>
-
-function QuestionAction() {
-    question.textContent = questionInput.value;
-    if (question.textContent == "") {
-        question.textContent = "{ Flashcard Question }";
-    }
-}
-
-function AnswerAction() {
-    answer.textContent = answerInput.value;
-    if (answer.textContent == "") {
-        answer.textContent = "{ Flashcard Answer }";
-    }
-}
-
-function HintAction() {
-    hint.textContent = hintInput.value;
-    if (hint.textContent == "") {
-        hint.textContent = "{ Hint text }";
-    }
-}
-
-questionInput.oninput = QuestionAction;
-answerInput.oninput = AnswerAction;
-hintInput.oninput = HintAction;
-
-</script>
 {% endblock %}

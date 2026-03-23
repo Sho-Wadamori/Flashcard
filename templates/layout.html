@@ -3,9 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../static/assets/favicon.png" type="image/x-icon">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Righteous">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
     <title>Flashcard Maker</title>
 </head>
 <body class="w3-container">
@@ -27,6 +31,7 @@
         <a href="{{ url_for('home') }}" class="w3-bar-item w3-button">Home</a>
         <a href="{{ url_for('Decks') }}" class="w3-bar-item w3-button">View Decks</a>
         <a href="{{ url_for('createDeck') }}" class="w3-bar-item w3-button">Create Deck</a>
+        <a href="{{ url_for('stats') }}" class="w3-bar-item w3-button">Statistics</a>
         <!-- <div class="w3-dropdown-hover">
             <button class="w3-button">Dropdown ▾</button>
                 <div class="w3-dropdown-content w3-bar-block w3-card-4">

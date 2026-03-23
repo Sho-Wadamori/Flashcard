@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block body %}
 
-<h2>{{ deck_info[0] }}</h2>
+<h2 class="scientific">{{ deck_info[0] }}</h2>
 
 <!-- If cards exist -->
 {% if results %}
@@ -35,8 +35,8 @@
           </form>
         </div>
         <!-- the question then the answer -->
-        <h1>{{ card[1] }}</h1>
-        <p>{{ card[2] }}</p>
+        <h1 class="scientific">{{ card[1] }}</h1>
+        <p class="scientific">{{ card[2] }}</p>
       </div>
     <!-- </a> -->
     {% endfor %}
@@ -64,8 +64,13 @@
   </div>
 </div>
 
+
+
+
+<!----------------------------------- Javascript ----------------------------------->
 <script>
 
+// ----- Delete Confirmation -----
 // turn on confirmation overlay
 function on() {
   document.getElementById("overlay").style.display = "block";

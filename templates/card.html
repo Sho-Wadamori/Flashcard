@@ -1,86 +1,118 @@
-{% extends "layout.html" %}
-{% block body %}
-<h2>Study</h2>
+  {% extends "layout.html" %}
+  {% block body %}
+  <h2>Study</h2>
 
-<h3>Card {{ index + 1 }} of {{ total }}</h3>
+  <h3>Card {{ index + 1 }} of {{ total }}</h3>
 
-<!-- Previous card button -->
-{% if index > 0 %}
-    <a href="{{ url_for('Study', id=deck_id, index=index - 1) }}">
-        <button id="prev_button" form="responceForm">Previous</button>
-    </a>
-{% endif %}
+  <!-- Previous card button -->
+  {% if index > 0 %}
+      <a href="{{ url_for('Study', id=deck_id, index=index - 1) }}">
+          <button id="prev_button">Previous</button>
+      </a>
+  {% endif %}
 
-<!-- Next card button -->
-{% if index + 1 < total %}
-    <!-- <a href="{{ url_for('Study', id=deck_id, index=index + 1) }}"> -->
-    <button id="next_button" form="responceForm" type="submit">Next</button>
-    <!-- </a> -->
-{% else %}
-    <!-- <a href="{{ url_for('Deck', id=deck_id) }}"> -->
-    <button id="exit_button" form="responceForm" type="submit">Exit</button>
-    <!-- </a> -->
-    <p>You've completed the deck!</p>
-{% endif %}
+  <!-- Next card button -->
+  {% if index + 1 < total %}
+      <button id="next_button" form="responseForm" type="submit">Next</button>
+  {% else %}
+      <button id="exit_button" form="responseForm" type="submit">Exit</button>
+      <p>You've completed the deck!</p>
+  {% endif %}
 
-<!-- Show answer -->
-{% if cards %}
-  <button class="card" id="card_click">
-    <h2 id="card">{{ cards[1] }}</h2>
-  </button>
+  <!-- Show answer -->
+  {% if cards %}
+    <button class="card" id="card_click">
+      <h2 class="scientific" id="card">{{ cards[1] }}</h2>
+    </button>
 
-  <br><div class="tooltip" style="cursor: help;">
-    Hint💡<span class="tooltiptext">{{ cards[4] }}</span>
-  </div>
-
-  <!-- Correct/Incorrect/Skip -->
-  <form action="Study" method="POST" id="responceForm">
-    <div class="radio-buttons">
-      <input type="radio" id="correct" name="response" value="correct">
-      <label for="correct">Correct [1]</label>
-      
-      <input type="radio" id="incorrect" name="response" value="incorrect">
-      <label for="incorrect">Incorrect [2]</label>
-      
-      <input type="radio" id="skip" name="response" value="skip">
-      <label for="skip">Skip [3]</label>
+    <br><div class="tooltip" style="cursor: help;">
+      Hint💡<span class="tooltiptext scientific" id="hint">{{ cards[4] }}</span>
     </div>
-    <p id="keybindhint" style="text-align: center; color: rgb(63, 63, 63);">*press [alt + shift] + Number to change response</p>
-    <!-- DOES NOT DO ANYTHING YET -->
-  </form>
 
-{% else %}
-  <p>No cards in this deck.</p>
-{% endif %}
+    <!-- Correct/Incorrect/Skip -->
+    <form action="{{ url_for('Study', id=deck_id, index=index) }}" method="POST" id="responseForm">
+      <div class="radio-buttons">
+        <input type="radio" id="correct" name="response" value="correct">
+        <label for="correct">Correct [1]</label>
+        
+        <input type="radio" id="incorrect" name="response" value="incorrect">
+        <label for="incorrect">Incorrect [2]</label>
+        
+        <input type="radio" id="skip" name="response" value="skip">
+        <label for="skip">Skip [3]</label>
+      </div>
+      <p id="keybindhint" style="text-align: center; color: rgb(63, 63, 63);">*press [alt + shift] + Number to change response</p>
+    </form>
 
+  {% else %}
+    <p>No cards in this deck.</p>
+  {% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+<!----------------------------------- Javascript ----------------------------------->
 <script>
 
-// Show answer when card is clicked
-function clickAction(){
-  if (card.textContent === "{{ cards[1] }}") {
-    card.textContent = "{{ cards[2] }}";
-  } 
-  
-  else {
-    card.textContent = "{{ cards[1] }}";
-  }
-}
+  // ----- Card Flipper -----
+  let showingAnswer = false; // define var
+  function clickAction() {
+    if (!showingAnswer) {
+      card.innerHTML = renderScientific("{{ cards[2] }}"); // reveal answer
+      showingAnswer = true;
+    } else {
+      card.innerHTML = renderScientific("{{ cards[1] }}"); //switch back to question
+      showingAnswer = false;
+    }
+  };
 
-card_click.onclick = clickAction;
+  card_click.onclick = clickAction; // on click run clickAction func
 
-document.getElementById("correct").accessKey = "1";
-document.getElementById("incorrect").accessKey = "2";
-document.getElementById("skip").accessKey = "3";
 
-const keybindHint = document.getElementById("keybindhint");
-const ua = navigator.userAgent;
+  // ----- Keybinds -----
+  document.getElementById("correct").accessKey = "1";
+  document.getElementById("incorrect").accessKey = "2";
+  document.getElementById("skip").accessKey = "3";
 
-if (ua.indexOf("Firefox") > -1) {
+  const keybindHint = document.getElementById("keybindhint");
+  const ua = navigator.userAgent;
+
+
+  // ----- Browser Checker -----
+  if (ua.indexOf("Firefox") > -1) {
     keybindHint.textContent = "*press [Alt + Shift] + Number to change response";
-} else {
+  } else {
     keybindHint.textContent = "*press [Alt] + Number to change response";
-}
+  }
+
+
+  // const responseValue = document.querySelector('input[name="response"]:checked');
+
+  // function enableNextButton() {
+  //   if (responseValue) {
+  //     document.getElementById("next_button").disabled = false;
+  //     document.getElementById("exit_button").disabled = false;
+  //   }
+
+  //   else {
+  //     document.getElementById("next_button").disabled = true;
+  //     document.getElementById("exit_button").disabled = true;
+  //   }
+  // }
+
+  // document.getElementById("responseForm").addEventListener("change", enableNextButton);
+
+
+  // ----- Scientific Text Renderer -----
 
 </script>
-{% endblock %}
+  {% endblock %}
 

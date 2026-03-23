@@ -20,9 +20,9 @@
 </form>
 
 <!-- Deck preview -->
-<div class="card">
-    <h1 id="deck">{ Deck Name }</h1>
-    <p id="description"><span style="color: rgb(107, 107, 107);">{ Deck Description }</span></p>
+<div class="card" style="cursor: default;">
+    <h1 id="deckName">{ Deck Name }</h1>
+    <p id="deckDescription"><span style="color: rgb(107, 107, 107);">{ Deck Description }</span></p>
 </div>
 
 <p style="color: rgb(107, 107, 107); text-align: center;">* deck description defaults to "No description."</p>
@@ -30,22 +30,6 @@
 <!-- script -->
 <script>
 
-function DeckAction() {
-    deck.textContent = deckInput.value;
-    if (deck.textContent == "") {
-        deck.textContent = "{ Deck Name }";
-    }
-}
-
-function DescriptionAction() {
-    description.textContent = descriptionInput.value;
-    if (description.textContent == "") {
-        description.textContent = "{ Deck Description }";
-    }
-}
-
-deckInput.oninput = DeckAction;
-descriptionInput.oninput = DescriptionAction;
 
 </script>
 {% endblock %}

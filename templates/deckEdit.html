@@ -12,7 +12,7 @@
     <label>Deck Name<span style="color: rgb(219, 54, 54); font-size: smaller;">*</span>:</label>
     <input id="deckInput" name="deckName" value="{{ results[0][1] }}" required><br><br>
     <label>Description:</label>
-    <input id="descriptionInput" name="deckDescription" value="{{ results[0][2] }}"><br><br>
+    <input id="descriptionInput" name="deckDescription" value="{{ results[0][2] }}" placeholder="No description"><br><br>
     <!-- <label>Cover Image:</label>
     <input type="file" id="myfile" name="myfile"><br><br> -->
     <button type="submit">Submit</button>
@@ -20,7 +20,7 @@
 </form>
 
 <!-- Deck preview -->
-<div class="card">
+<div class="card" style="cursor: default;">
     <h1 id="deck">{{ results[0][1] }}</h1>
     <p id="description"><span style="color: rgb(107, 107, 107);">{{ results[0][2] }}</span></p>
 </div>
@@ -30,22 +30,6 @@
 <!-- script -->
 <script>
 
-function DeckAction() {
-    deck.textContent = deckInput.value;
-    if (deck.textContent == "") {
-        deck.textContent = "{ Deck Name }";
-    }
-}
-
-function DescriptionAction() {
-    description.textContent = descriptionInput.value;
-    if (description.textContent == "") {
-        description.textContent = "{ Deck Description }";
-    }
-}
-
-deckInput.oninput = DeckAction;
-descriptionInput.oninput = DescriptionAction;
 
 </script>
 {% endblock %}
