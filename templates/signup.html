@@ -21,8 +21,8 @@
             <input type="text" name="username" id="username" placeholder="Username"><br>
             <input type="password" name="password" id="password" placeholder="Password"><br>
             <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password"><br><br>
-            <input type="checkbox" onclick="passwordReveal()" id="showPasswords">
-            <label for="showPasswords">Show Passwords</label><br><br>
+            <input type="checkbox" onclick="passwordReveal()" id="showPasswords" class="showPasswords" style="margin-right: 0.5rem;">
+            <label for="showPasswords" class="showPasswords">Show Passwords</label><br><br>
             <input type="submit" value="Sign up">
         </form>
         <p>Already have an account?</p> <a href="{{ url_for('login') }}" style="color: rgb(14, 103, 161);">Sign in here!</a>

@@ -34,9 +34,26 @@
         <form action="{{ url_for('login') }}" method="POST" class="login">
             <input type="text" name="username" id="username" placeholder="Username/Email"><br><br>
             <input type="password" name="password" id="password" placeholder="Password"><br><br>
+            <input type="checkbox" onclick="passwordReveal()" id="showPasswords" class="showPasswords" style="margin-right: 0.5rem;">
+            <label for="showPasswords" class="showPasswords">Show Password</label><br><br>
             <input type="submit" value="Sign In"><br>
         </form>
         <p>New to Flashcard Maker?</p> <a href="{{ url_for('signup') }}">Sign up here!</a>
-    </div>    
+    </div>
+
+    <script>
+        function passwordReveal() {
+            var password = document.getElementById("password");
+            var confirm = document.getElementById("confirm_password");
+
+            if (password.type === "password") {
+                password.type = "text";
+                confirm.type = "text";
+            } else {
+                password.type = "password";
+                confirm.type = "password";
+            }
+        }
+    </script>
 </body>
 </html>
