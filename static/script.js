@@ -122,6 +122,20 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // ---------- Password reveal system ----------
+    function passwordReveal() {
+        var password = document.getElementById("password");
+        var confirm = document.getElementById("confirm_password");
+
+        if (password.type === "password") {
+            password.type = "text";
+            confirm.type = "text";
+        } else {
+            password.type = "password";
+            confirm.type = "password";
+        }
+    }
+
     // ---------- Reset Button ----------
     if (form) {
         form.addEventListener("reset", function() { // on reset run func

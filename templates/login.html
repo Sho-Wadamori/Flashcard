@@ -40,20 +40,6 @@
         </form>
         <p>New to Flashcard Maker?</p> <a href="{{ url_for('signup') }}">Sign up here!</a>
     </div>
-
-    <script>
-        function passwordReveal() {
-            var password = document.getElementById("password");
-            var confirm = document.getElementById("confirm_password");
-
-            if (password.type === "password") {
-                password.type = "text";
-                confirm.type = "text";
-            } else {
-                password.type = "password";
-                confirm.type = "password";
-            }
-        }
-    </script>
+    
 </body>
 </html>

@@ -10,6 +10,8 @@ from flask import (
     flash  # used for error messages (NOT SETUP YET)
 )
 
+import os
+
 # from werkzeug.utils import secure_filename  # for file uploads
 from datetime import (
     datetime,
@@ -21,9 +23,20 @@ from werkzeug.security import (
     check_password_hash
 )  # for user login password encryption
 
+from werkzeug.utils import (
+    secure_filename
+)
+
 import sqlite3
 
 DATABASE = 'database.db'  # relative path to the database file
+UPLOAD_FOLDER = 'static\\uploads'  # folder to store uploaded files
+ALLOWED_IMAGES = {
+    '.png', '.jpg', '.jpeg', '.gif', '.webp', '.avif', '.apng', '.svg'
+}
+ALLOWED_AUDIO = {
+    '.mp3'
+}
 
 # initialise app
 app = Flask(__name__)
@@ -32,6 +45,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = "8y9awhDWdhHfw8ghgrgdgGRgDEgwndaiundIUDNu1823892e8h"
 
 
+# ---------- FLASK SETUP ----------
 # connect to the database
 def get_db():
     db = getattr(g, '_database', None)
@@ -56,7 +70,7 @@ def query_db(query, args=(), one=False):
     return (rv[0] if rv else None) if one else rv
 
 
-# conveting YYYY-MM-DD HH:MM:SS to x minutes/hours/days ago
+# ---------- convet YYYY-MM-DD HH:MM:SS to x minutes/hours/days ago ----------
 def time_ago(date_string):
     dt = datetime.strptime(date_string, "%Y-%m-%d %H:%M:%S")
     dt = dt.replace(tzinfo=timezone.utc)
@@ -81,7 +95,7 @@ def time_ago(date_string):
     return "just now"
 
 
-# conveting YYYY-MM-DD HH:MM:SS to DD/Month/YYYY
+# ---------- convet YYYY-MM-DD HH:MM:SS to DD/Month/YYYY ----------
 def format_date(date_string):
     dt = datetime.strptime(date_string, "%Y-%m-%d %H:%M:%S")
     dt = dt.replace(tzinfo=timezone.utc)
@@ -91,12 +105,12 @@ def format_date(date_string):
     return local_dt.strftime("%d/%b/%Y")
 
 
-# get user ID from session username
+# ---------- get user ID ----------
 def userID():
     return session.get('userID', 0)
 
 
-# make username and userID available in all templates
+# ---------- user information ----------
 @app.context_processor
 def uservar():
     return {
@@ -105,7 +119,7 @@ def uservar():
     }
 
 
-# homepage
+# ---------- homepage ----------
 @app.route('/')
 def home():
     return render_template(
@@ -116,7 +130,7 @@ def home():
     )
 
 
-# list all decks
+# ---------- list all decks ----------
 @app.route('/decks/')
 def Decks():
     # get all the decks id, name, description, and creation date
@@ -130,7 +144,7 @@ def Decks():
     return render_template("decks.html", results=result)
 
 
-# list all flashcards for a single deck
+# ---------- list all flashcards for a single deck ----------
 @app.route('/decks/<int:id>/')
 def Deck(id):
     # get all the card id, Q, A, and creation date for inputted deck id
@@ -164,6 +178,7 @@ def Deck(id):
     )
 
 
+# ---------- delete a card ----------
 @app.route('/decks/<int:id>/cards/<int:card_id>/delete/', methods=['POST'])
 def deleteCard(id, card_id):
     # delete the card with the inputted card id
@@ -178,6 +193,7 @@ def deleteCard(id, card_id):
     return redirect(url_for('Deck', id=id))
 
 
+# ---------- delete a deck ----------
 @app.route('/decks/<int:id>/delete/', methods=['POST'])
 def deleteDeck(id):
     # delete the deck with the inputted deck id
@@ -192,7 +208,7 @@ def deleteDeck(id):
     return redirect(url_for('Decks'))
 
 
-# study a single card based on the index
+# ---------- study a single card based on the index ----------
 @app.route('/decks/<int:id>/study/<int:index>/', methods=['GET', 'POST'])
 def Study(id, index):
     # get all the card id, Q, A, and creation date for inputted deck id
@@ -289,7 +305,7 @@ def Study(id, index):
             )
 
 
-# create a new deck and add it to the database
+# ---------- create a new deck and add it to the database ----------
 @app.route('/decks/create/', methods=['GET', 'POST'])
 def createDeck():
     # if request method is POST, get the form data and insert into database
@@ -328,7 +344,7 @@ def createDeck():
         return render_template("deckCreate.html", results=result)
 
 
-# create a new card for a specific deck and add it to the database
+# ---------- create a new card for a specific deck and add it to the database ----------
 @app.route('/decks/<int:id>/create/', methods=['GET', 'POST'])
 def createCard(id):
 
@@ -391,7 +407,7 @@ def createCard(id):
         return render_template("cardCreate.html", deck_info=deck_info[0])
 
 
-# edit a deck and update the database
+# ---------- edit a deck and update the database ----------
 @app.route('/decks/<int:id>/edit/', methods=['GET', 'POST'])
 def editDeck(id):
     # if request method is POST, get the form data and insert into database
@@ -436,7 +452,7 @@ def editDeck(id):
         return render_template("deckEdit.html", results=result)
 
 
-# edit a card and update the database
+# ---------- edit a card and update the database ----------
 @app.route(
     '/decks/<int:id>/cards/<int:card_id>/edit/',
     methods=['GET', 'POST']
@@ -530,6 +546,7 @@ def editCard(id, card_id):
         )
 
 
+# ---------- login ----------
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
     if request.method == "POST":
@@ -579,6 +596,7 @@ def login():
         return render_template("login.html")
 
 
+# ---------- sign up ----------
 @app.route('/signup/', methods=['GET', 'POST'])
 def signup():
     if request.method == "POST":
@@ -627,6 +645,7 @@ def signup():
         return render_template("signup.html")
 
 
+# ---------- profile ----------
 @app.route('/profile/')
 def profile():
     if not userID():
@@ -654,6 +673,7 @@ def profile():
     )
 
 
+# ---------- logout ----------
 @app.route('/logout/')
 def logout():
     session.pop('username', None)
@@ -662,6 +682,7 @@ def logout():
     return redirect(url_for('home'))
 
 
+# ---------- stats ----------
 @app.route('/stats/')
 def stats():
     if not userID():
@@ -698,9 +719,46 @@ def stats():
     )
 
 
-@app.route('/test/')
+# ---------- test ----------
+@app.route('/test/', methods=['GET', 'POST'])
 def test():
-    return render_template("test.html")
+    if request.method == 'POST':
+        # get the form data from the request object like this
+            # item = request.form['file_name']
+        # now get the filename from the form
+        file = request.files['file']
+
+        if file.filename == '':
+            return "No selected file", 400
+
+        # should check the file is valid but for simplicity......
+        # save the file in the UPLOAD_FOLDER
+        print(f"Uploading file: {file.filename} to {UPLOAD_FOLDER}")
+        original_name = secure_filename(file.filename)
+
+        extension = os.path.splitext(original_name)[1].lower()
+
+        if extension not in ALLOWED_IMAGES:
+            return "Invalid file type", 400
+
+        sql = "INSERT INTO Files (file_name, file_cardID, file_userID) VALUES (?, ?, ?);"  # create a query to insert ther data
+        get_db().execute(sql, (original_name, 2, userID()))  # execute the query
+        get_db().commit()
+
+        get_ID = "SELECT last_insert_rowid();"
+        file_ID = query_db(get_ID, (), one=True)[0]  # get the ID of the file we just uploaded
+        print(f"ROW ID: {file_ID}")
+
+        extension = os.path.splitext(original_name)[1]
+        new_filename = f"{file_ID}{extension}"
+
+        file.save(os.path.join(UPLOAD_FOLDER, new_filename))
+        # now insert into the database
+
+        return redirect(url_for('home'))
+    else:
+        return render_template("test.html")
+
 
 # only run the app if app.py is executed directly
 if __name__ == "__main__":
