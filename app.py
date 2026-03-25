@@ -122,6 +122,8 @@ def uservar():
 # ---------- homepage ----------
 @app.route('/')
 def home():
+    # flash("Welcome to the Flashcard App!", "success")
+    # flash("Something went wrong...", "error")
     return render_template(
         "homepage.html", username=session.get(
             'username', 'Guest'
@@ -165,7 +167,7 @@ def Deck(id):
     results = query_db(sql, (id, userID()))
 
     if not deck_info:
-        flash("No deck was found...")
+        flash("No deck was found...", "error")
         return redirect(url_for("Decks"))
 
     # return the results
@@ -291,7 +293,7 @@ def Study(id, index):
             return redirect(url_for('Study', id=id, index=index + 1))
 
         else:
-            flash("You have finished studying this deck!")
+            flash("You have finished studying this deck!", "success")
             return redirect(url_for('Deck', id=id))
 
     # return the results in method is GET
@@ -316,9 +318,8 @@ def createDeck():
         # check if the form data is not empty
         if not deck_name:
             # reload the page with the error message
-            error = "A deck name is required."
-            flash("A deck name is required.")
-            return render_template("deckCreate.html", error=error)
+            flash("A deck name is required.", "error")
+            return render_template("deckCreate.html")
 
         else:
             sql = """
@@ -330,6 +331,7 @@ def createDeck():
             get_db().execute(sql, (deck_name, deck_description, userID()))
             get_db().commit()
             # redirect to the decks list page
+            flash("Deck created successfully!", "success")
             return redirect(url_for('Decks'))
     # if request method is GET, return the sql results
     else:
@@ -359,8 +361,7 @@ def createCard(id):
 
     # check if deck_info is not empty
     if not deck_info:
-        error = "No deck was found..."
-        flash("No deck was found...")
+        flash("No deck was found...", "error")
         return redirect(url_for("Decks"))
 
     # if request method is POST, get the form data and insert into database
@@ -372,11 +373,9 @@ def createCard(id):
         # check if the form data is not empty
         if not card_question or not card_answer:
             # reload the page with the error message
-            error = "Both fields are required."
-            flash("Both fields are required.")
+            flash("Both fields are required.", "error")
             return render_template(
                 "cardCreate.html",
-                error=error,
                 deck_info=deck_info[0]
             )
 
@@ -398,6 +397,7 @@ def createCard(id):
             ))
             get_db().commit()
             # redirect to the deck page
+            flash("Card created successfully!", "success")
             return redirect(url_for('Deck', id=id))
 
     # if request method is GET, return the sql results
@@ -418,9 +418,8 @@ def editDeck(id):
         # check if the form data is not empty
         if not deck_name:
             # reload the page with the error message
-            error = "A deck name is required."
-            flash("A deck name is required.")
-            return render_template("deck.html", error=error, id=id)
+            flash("A deck name is required.", "error")
+            return render_template("deck.html", id=id)
 
         else:
             sql = """
@@ -444,8 +443,7 @@ def editDeck(id):
         result = query_db(sql, (id, userID()))
 
         if not result:
-            error = "Invalid deck..."
-            flash("Invalid deck...")
+            flash("Invalid deck...", "error")
             return redirect(url_for("Decks"))
 
         # return the results
@@ -469,8 +467,7 @@ def editCard(id, card_id):
 
     # check if deckinfo is not empty
     if not deck_info:
-        error = "Invalid deck..."
-        flash("Invalid deck...")
+        flash("Invalid deck...", "error")
         return redirect(url_for("Decks"))
 
     # if request method is POST, get the form data and insert into database
@@ -482,8 +479,7 @@ def editCard(id, card_id):
         # check if the form data is not empty
         if not card_question or not card_answer:
             # reload the page with the error message
-            error = "Both fields are required."
-            flash("Both fields are required.")
+            flash("Both fields are required.", "error")
             sql_card = """
                 SELECT card_ID, card_question,
                 card_answer, card_creation, card_hint
@@ -494,7 +490,6 @@ def editCard(id, card_id):
             card = query_db(sql_card, (card_id, userID()), one=True)
             return render_template(
                 "cardEdit.html",
-                error=error,
                 deck_info=deck_info[0],
                 cards=card
             )
@@ -535,8 +530,7 @@ def editCard(id, card_id):
 
         # check if card is not empty
         if not card:
-            error = "Invalid Card..."
-            flash("Invalid Card...")
+            flash("Invalid Card...", "error")
             return redirect(url_for('Deck', id=id))
 
         return render_template(
@@ -564,15 +558,13 @@ def login():
 
         # check if the username and password are not empty
         if not username or not password:
-            error = "Both fields are required."
-            flash("Both fields are required.")
-            return render_template("login.html", error=error)
+            flash("Both fields are required.", "error")
+            return render_template("login.html")
 
         elif not username_list:
             # reload the page with the error message
-            error = "No account under the username " + username + "."
-            flash("No account under the username " + username + ".")
-            return render_template("login.html", error=error)
+            flash("No account under the username " + username + ".", "error")
+            return render_template("login.html")
 
         elif username_list[0][0] == username:
             # check if the password is correct
@@ -583,15 +575,14 @@ def login():
                     "SELECT user_ID FROM Users WHERE user_name = ?",
                     (username,), one=True
                 )[0]
+                flash("Logged in successfully.", "success")
                 return redirect(url_for('home'))
             else:
-                error = "Incorrect password."
-                flash("Incorrect password.")
-                return render_template("login.html", error=error)
+                flash("Incorrect password.", "error")
+                return render_template("login.html")
         else:
-            error = "Something Went Wrong..."
-            return render_template("login.html", error=error)
-
+            flash("Something Went Wrong.", "error")
+            return render_template("login.html")
     else:
         return render_template("login.html")
 
@@ -614,20 +605,17 @@ def signup():
 
         # check if the username and password are not empty
         if not username or not password or not confirm_password:
-            error = "All fields are required."
-            flash("All fields are required.")
-            return render_template("signup.html", error=error)
+            flash("All fields are required.", "error")
+            return render_template("signup.html")
 
         elif confirm_password != password:
-            error = "Passwords do not match."
-            flash("Passwords do not match.")
-            return render_template("signup.html", error=error)
+            flash("Passwords do not match.", "error")
+            return render_template("signup.html")
 
         # check if the username already exists in the database
         elif username_list:
-            error = "Username already exists."
-            flash("Username already exists.")
-            return render_template("signup.html", error=error)
+            flash("Username already exists.", "error")
+            return render_template("signup.html")
 
         else:
             hashed_password = generate_password_hash(password)
@@ -637,9 +625,8 @@ def signup():
                 """
             get_db().execute(sql, (username, hashed_password))
             get_db().commit()
-            error = "Account created successfully. Please log in."
-            flash("Account created successfully. Please log in.")
-            return render_template("login.html", error=error)
+            flash("Account created successfully! Please log in.", "success")
+            return render_template("login.html")
 
     else:
         return render_template("signup.html")
@@ -649,8 +636,10 @@ def signup():
 @app.route('/profile/')
 def profile():
     if not userID():
-        flash("You are not logged in.")
-        return redirect(url_for('logout'))
+        session.pop('username', None)
+        session.pop('userID', None)
+        flash("You are not logged in. Please log in to view your profile.", "error")
+        return redirect(url_for('home'))
 
     sql = """
             SELECT user_name, user_creation
@@ -661,7 +650,7 @@ def profile():
     results = query_db(sql, (userID(),))
 
     if not results:
-        flash("User details not found. Logging out.")
+        flash("User details not found. Logging out.", "error")
         return redirect(url_for('logout'))
 
     # return the results
@@ -678,7 +667,7 @@ def profile():
 def logout():
     session.pop('username', None)
     session.pop('userID', None)
-    flash("Logged out successfully.")
+    flash("Logged out successfully.", "success")
     return redirect(url_for('home'))
 
 
@@ -686,8 +675,10 @@ def logout():
 @app.route('/stats/')
 def stats():
     if not userID():
-        flash("You are not logged in.")
-        return redirect(url_for('logout'))
+        session.pop('username', None)
+        session.pop('userID', None)
+        flash("You are not logged in. Please log in to see stats.", "error")
+        return redirect(url_for('home'))
 
     userAnswerStats = """
             SELECT SUM(stats_correct), SUM(stats_incorrect)

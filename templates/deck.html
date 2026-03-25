@@ -1,6 +1,17 @@
 {% extends "layout.html" %}
 {% block body %}
 
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages%}
+        {% for category, message in messages%}
+            <div class="alertContainer">
+                <p class="alert {{ category }}">{{message}}</p>
+                <button onclick="this.parentElement.remove()" class="close-btn">x</button>
+            </div>
+        {%endfor%}
+    {%endif%}
+{%endwith%}
+
 <h2 class="scientific">{{ deck_info[0] }}</h2>
 
 <!-- If cards exist -->

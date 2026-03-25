@@ -2,9 +2,16 @@
 {% block body %}
 
 <!-- Error message -->
-{% if error %}
-  <p class="error">{{ error }}</p>
-{% endif %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages%}
+        {% for category, message in messages%}
+            <div class="alertContainer">
+                <p class="alert {{ category }}">{{message}}</p>
+                <button onclick="this.parentElement.remove()" class="close-btn">x</button>
+            </div>
+        {%endfor%}
+    {%endif%}
+{%endwith%}
 
 <!-- Card creation form -->
 <form id="cardForm" action="{{ url_for('editCard', id=deck_info[1], card_id=cards[0]) }}" method="POST" autocomplete="off">

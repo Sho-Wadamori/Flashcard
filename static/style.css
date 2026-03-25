@@ -236,3 +236,60 @@ form.login {
   background-color: rgb(52, 148, 212);
   color: white;
 }
+
+/* Error alert message */
+.alert.error {
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  background-color: rgb(224, 89, 89);
+  color: black;
+  text-align: center;
+  font-size: large;
+  padding-right: 60px;
+  padding-left: 60px; /* so text does not overlap w/ X button */
+} 
+
+/* Success alert message */
+.alert.success {
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  background-color: rgb(145, 216, 145);
+  text-align: center;
+  font-size: large;
+  padding-right: 60px;
+  padding-left: 60px; /* so text does not overlap w/ X button */
+} 
+
+/* Text-only error message */
+.simpleAlert.error {
+    color: rgb(219, 46, 46);
+    margin-bottom: 1em;
+}
+
+/* Text-only success message */
+.simpleAlert.success {
+    color: rgb(46, 219, 46);
+    margin-bottom: 1em;
+}
+
+/* Alert container */
+.alertContainer {
+    position: relative;
+}
+
+/* Close button */
+.close-btn {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #333;
+  justify-content: center;
+  font-size: 25px;
+  transform: translateY(-50%);
+}
