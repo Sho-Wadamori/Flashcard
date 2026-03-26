@@ -21,13 +21,15 @@
 
   <!-- Show answer -->
   {% if cards %}
-    <button class="card" id="card_click">
+    <button class="card" id="card_click" data-question="{{ cards[1] }}" data-answer="{{ cards[2] }}">
       <h2 class="scientific" id="card">{{ cards[1] }}</h2>
-    </button>
+    </button><br>
 
-    <br><div class="tooltip" style="cursor: help;">
-      Hint💡<span class="tooltiptext scientific" id="hint">{{ cards[4] }}</span>
-    </div>
+    {% if cards[4] %}
+      <div class="tooltip" style="cursor: help;">
+        Hint💡<span class="tooltiptext scientific" id="hint">{{ cards[4] }}</span>
+      </div>
+    {% endif %}
 
     <!-- Correct/Incorrect/Skip -->
     <form action="{{ url_for('Study', id=deck_id, index=index) }}" method="POST" id="responseForm">
@@ -63,18 +65,31 @@
 <script>
 
   // ----- Card Flipper -----
-  let showingAnswer = false; // define var
+  document.addEventListener("DOMContentLoaded", () => {
+    let showingAnswer = false;
+    const cardButton = document.getElementById("card_click");
+    const card = document.getElementById("card");
+
+    const questionText = cardButton.dataset.question;
+    const answerText = cardButton.dataset.answer;
+
   function clickAction() {
     if (!showingAnswer) {
-      card.innerHTML = renderScientific("{{ cards[2] }}"); // reveal answer
+      // Show answer
+      card.textContent = answerText;
       showingAnswer = true;
-    } else {
-      card.innerHTML = renderScientific("{{ cards[1] }}"); //switch back to question
+    } 
+    
+    else {
+      // Show question
+      card.textContent = questionText;
       showingAnswer = false;
     }
-  };
+    MathJax.typesetPromise([card]);
+  }
 
-  card_click.onclick = clickAction; // on click run clickAction func
+    cardButton.onclick = clickAction;
+  });
 
 
   // ----- Keybinds -----

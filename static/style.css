@@ -48,7 +48,8 @@ button {
   padding: 1rem;
   box-sizing: border-box;
   border-radius: 8px;
-  overflow-wrap: break-word; /* allow long text to wrap */
+  word-break: break-word; /* allow long text to wrap */
+  white-space: normal;
 }
 
 /* Plus button */
@@ -69,7 +70,9 @@ button {
   flex-direction: column;
   cursor: pointer; 
   border: none;
-  overflow-wrap: break-word; /* allow long text to wrap */
+  word-break: break-word; /* allow long text to wrap */
+  white-space: normal;
+  max-width: 100%;
 }
 
 /* Error message */
@@ -242,8 +245,8 @@ form.login {
   padding: 10px;
   margin-bottom: 15px;
   border-radius: 8px;
-  background-color: rgb(224, 89, 89);
-  color: black;
+  background-color: #c93a36;
+  color: rgb(255, 255, 255);
   text-align: center;
   font-size: large;
   padding-right: 60px;
@@ -256,6 +259,7 @@ form.login {
   margin-bottom: 15px;
   border-radius: 8px;
   background-color: rgb(145, 216, 145);
+  color: rgb(39, 39, 39);
   text-align: center;
   font-size: large;
   padding-right: 60px;
@@ -292,4 +296,24 @@ form.login {
   justify-content: center;
   font-size: 25px;
   transform: translateY(-50%);
+}
+
+.close-btn.error {
+    color: rgb(255, 255, 255);
+}
+
+.close-btn.alert.success {
+    color: rgb(39, 39, 39);
+}
+
+.card mjx-container,
+.card mjx-container * {
+  word-break: break-word !important;
+  white-space: normal !important;
+}
+
+.alert {
+  word-break: normal;
+  overflow-wrap: normal;
+  white-space: normal;
 }

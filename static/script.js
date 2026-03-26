@@ -1,18 +1,14 @@
 // ----- Scientific Text Renderer -----
-function escapeHTML(text) { // prevent html tags
-    return text
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
-}
+// function escapeHTML(text) {
+//     return text
+//         .replace(/&/g, "&amp;")
+//         .replace(/</g, "&lt;")
+//         .replace(/>/g, "&gt;")
+//         .replace(/"/g, "&quot;")
+//         .replace(/'/g, "&#39;");
+// }
+// no longer needed as we are using textContent instead of innerHTML & conflicts with mathjax
 
-function renderScientific(text) { // convert _{} and ^{} to sub/sup
-    return escapeHTML(text) // remove html tags
-        .replace(/\^\{([^}]+)\}/g, '<sup>$1</sup>') // superscripts
-        .replace(/_\{([^}]+)\}/g, '<sub>$1</sub>'); // subscripts
-}
 
 // load html brefore running
 document.addEventListener("DOMContentLoaded", () => {
@@ -30,17 +26,20 @@ document.addEventListener("DOMContentLoaded", () => {
     // for deck inputs:
     const DeckNameInput = document.getElementById("deckInput");
     const DeckDescriptionInput = document.getElementById("descriptionInput");
-
+    
     const deckNameElement = document.getElementById("deckName");
     const deckDescriptionElement = document.getElementById("deckDescription");
-
+    
     // for reset button:
-    const form = document.getElementById("cardForm"); // define form element
-
-
+    const cardForm = document.getElementById("cardForm"); // define form element
+    const deckForm = document.getElementById("deckForm"); // define form element
+    
+    
     // ---------- Render Scientific Text for each instance (ONLY STATIC) ----------
     document.querySelectorAll(".scientific").forEach(i => {
-        i.innerHTML = renderScientific(i.textContent);
+        if (i.textContent.includes('\\(')) {
+            MathJax.typesetPromise([i]);
+        }
     });
 
 
@@ -77,7 +76,8 @@ document.addEventListener("DOMContentLoaded", () => {
             questionElement.textContent = "{ Flashcard Question }";
         }
         else {
-            questionElement.innerHTML = renderScientific(raw); // render scientific text
+            questionElement.textContent = raw; // render scientific text
+            MathJax.typesetPromise([questionElement]);
         }
     }
 
@@ -87,7 +87,8 @@ document.addEventListener("DOMContentLoaded", () => {
             answerElement.textContent = "{ Flashcard Answer }";
         }
         else {
-            answerElement.innerHTML = renderScientific(raw); // render scientific text
+            answerElement.textContent = raw; // render scientific text
+            MathJax.typesetPromise([answerElement]);
         }
     }
 
@@ -97,7 +98,8 @@ document.addEventListener("DOMContentLoaded", () => {
             hintElement.textContent = "{ Hint text }";
         }
         else {
-            hintElement.innerHTML = renderScientific(raw); // render scientific text
+            hintElement.textContent = raw; // render scientific text
+            MathJax.typesetPromise([hintElement]);
         }
     }
 
@@ -108,7 +110,8 @@ document.addEventListener("DOMContentLoaded", () => {
             deckNameElement.textContent = "{ Deck Name }";
         }
         else {
-            deckNameElement.innerHTML = renderScientific(raw); // render scientific text
+            deckNameElement.textContent = raw; // render scientific text
+            MathJax.typesetPromise([deckNameElement]);
         }
     }
 
@@ -118,7 +121,8 @@ document.addEventListener("DOMContentLoaded", () => {
             deckDescriptionElement.textContent = "{ Deck Description }";
         }
         else {
-            deckDescriptionElement.innerHTML = renderScientific(raw); // render scientific text
+            deckDescriptionElement.textContent = raw; // render scientific text
+            MathJax.typesetPromise([deckDescriptionElement]);
         }
     }
 
@@ -137,8 +141,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ---------- Reset Button ----------
-    if (form) {
-        form.addEventListener("reset", function() { // on reset run func
+    if (cardForm) {
+        cardForm.addEventListener("reset", function() { // on reset run func
             setTimeout(() => {
                 QuestionAction();
                 AnswerAction();
@@ -146,5 +150,15 @@ document.addEventListener("DOMContentLoaded", () => {
             }, 30); // pause to allow form reset
         });
     }
+
+    if (deckForm) {
+        deckForm.addEventListener("reset", function() { // on reset run func
+            setTimeout(() => {
+                DeckDescriptionAction();
+                DeckNameAction();
+            }, 30); // pause to allow form reset
+        });
+    }
  
 });
+

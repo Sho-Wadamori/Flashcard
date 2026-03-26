@@ -1,6 +1,7 @@
 <style>
 body {
   font-family: Arial, Helvetica, sans-serif;
+  background-color: white;
 }
 
 .flip-card {
@@ -48,6 +49,7 @@ sub, sup {
 }
 
 </style>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 
@@ -76,6 +78,58 @@ sub, sup {
 <h1>^{3}√8 = 2</h1>
 <h1>÷≠=≡±×>≤<≥∞⅓¼⅑½⅛⅕⅗⅙⅜⅐⅒⅘⅚¾⅞⅝↉⅖⅟√∛∜∪∩∈∉∝∙𝑎𝑏𝑐𝑑𝑒𝑓𝑔ℎ𝑖𝑗𝑘𝑙𝑚𝑛𝑜𝑝𝑞𝑟𝑠𝑡𝑢𝑣𝑤𝑥𝑦𝑧θπϕ∑∫∬∭∆∇∂≈</h1>
 <h1>αβγδσπϕ∑μλ°∝ΔΩ→⇌σθ↑↓</h1><br>
+
+
+
+<h1>MathJax explanation</h1>
+
+<p>  You can type using mathJax formatting! Surround your mathematic text in \​( MATH HERE \​) to format your mathematic text!</p>
+<p>  COMMON SYMBOLS (add this anywhere inside the \​(...\​) !):</p>
+<p>  \pm - plus minus symbol</p>
+<p>  \times - multiplication symbol</p>
+<p>  \div - division symbol</p>
+<p>  x^{a} - superscript/powering (replace x and a)</p>
+<p>  x_{a} - subscript (replace x and a)</p>
+<p>  \sqrt{x} - square root (replace x)</p>
+<p>  \sqrt[n]{x} - nth root (replace n and x)</p>
+
+<p>  \le - less or equal to</p>
+<p>  \ge - greater or equal to</p>
+<p>  \neq - not equal to</p>
+<p>  \Rightarrow or \rightarrow- right arrow for chemistry</p>
+
+<h2>  MORE ADVANCED:</h2>
+<p>  {ABC \over DEF} or \frac{ABC}{DEF} - fraction of ABC/DEF</p>
+<p>  \sum\limits _{i=1} ^{n} i^2 - sigma sum notation</p>
+<p>  \limits puts the sub and super scripts directly above/below the operator</p>
+
+<h2>  GREEK LETTERS:</h2>
+<p>  \NAMEHERE - displays greek letter (lowercase first letter for lowercase)</p>
+<p>  only displays special uppercases (eg, delta but not alpha)</p>
+
+<h2>  Spacing: </h2>
+<p>  \ - adds small spacing(leave empty space after or ,)</p>
+<p>  \! - connects two characters together</p>
+<p>  then, from the following order of increasing spacing:</p>
+<p>  \,    \:    \;    \     \quad    \qquad </p>
+<p>  For more help, please visit https://artofproblemsolving.com/wiki/index.php/LaTeX:Symbols</p>
+
+<h2>  EXAMPLES:</h2>
+<p>  \( x = { -b \pm \sqrt{ b^{ 2 }-4ac } \over 2a }\) or \( x = \frac{ -b \pm \sqrt{ b^2-4ac } } { 2a } \)</p>
+<p>  \​( x = { -b \pm \sqrt{ b^{ 2 }-4ac } \over 2a }\) or \​( x = \frac{ -b \pm \sqrt{ b^2-4ac } } { 2a } \)</p>
+<p>  \( Ag^{ + } \! _{ (aq) } + NH_{ 3 \, (aq) } \Rightarrow [Ag(NH_{ 3 })_{ 2 }]^{ + } \! _{ (aq) } \)</p>
+<p>  \​( Ag^{ + } \! _{ (aq) } + NH_{ 3 \, (aq) } \Rightarrow [Ag(NH_{ 3 })_{ 2 }]^{ + } \! _{ (aq) } \)</p>
+
+<p>  \(x^{ 1 \over 5 } = \sqrt[5]{x}\)</p>
+<p>  \​(x^{ 1 \over 5 } = \sqrt[5]{x}\)</p>
+
+<p>  \( (\frac{1}{2})^2 = \frac{1}{2} \times \frac{1}{2} = \frac{1}{4} = \frac{1}{2^2} = 2^{-2} \)</p>
+<p>  \​( (\frac{1}{2})^2 = \frac{1}{2} \times \frac{1}{2} = \frac{1}{4} = \frac{1}{2^2} = 2^{-2} \)</p>
+
+<p>  \(   \frac{\frac{1}{2}}{\frac{1}{4}} = \frac{1}{2} \div \frac{1}{4} = \frac{1}{2} \times \frac{4}{1} = \frac{4}{2} = 2 \)</p>
+<p>  \​(   \frac{\frac{1}{2}}{\frac{1}{4}} = \frac{1}{2} \div \frac{1}{4} = \frac{1}{2} \times \frac{4}{1} = \frac{4}{2} = 2 \)</p>
+
+
 
 <form action="{{ url_for('test') }}" method="POST" enctype='multipart/form-data'>
   <!-- <label for="file_name">File Name</label>
