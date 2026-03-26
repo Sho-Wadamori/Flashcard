@@ -1,3 +1,17 @@
+"""
+This is a flashcard making app that allows users to:
+- create decks of flashcards
+- create flashcards with a question and answer
+- edit and delete decks and flashcards
+- study flashcards indervidually
+- delete decks and flashcards
+- login and sign up to save their decks
+- view their profile and stats
+- track how many times they got a flashcard correct or incorrect
+- Upload images to flashcards
+- Type with mathematical symbols using LaTeX in flashcards
+"""
+
 # import libraries
 from flask import (
     Flask,
@@ -43,6 +57,7 @@ app = Flask(__name__)
 
 # set a secret key for sessions
 app.config['SECRET_KEY'] = "8y9awhDWdhHfw8ghgrgdgGRgDEgwndaiundIUDNu1823892e8h"
+app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024  # 5 MB file size limit
 
 
 # ---------- FLASK SETUP ----------
@@ -289,9 +304,11 @@ def Study(id, index):
                 get_db().execute(update_stats, (card_id, userID()))
                 get_db().commit()
 
+        # go to next page
         if index + 1 < total:
             return redirect(url_for('Study', id=id, index=index + 1))
 
+        # exit to deck page if there are no more cards
         else:
             flash("You have finished studying this deck!", "success")
             return redirect(url_for('Deck', id=id))
@@ -307,7 +324,7 @@ def Study(id, index):
             )
 
 
-# ---------- create a new deck and add it to the database ----------
+# ---------- create a new deck ----------
 @app.route('/decks/create/', methods=['GET', 'POST'])
 def createDeck():
     # if request method is POST, get the form data and insert into database
@@ -324,7 +341,7 @@ def createDeck():
         else:
             sql = """
                     INSERT INTO Decks (
-                    deck_name, deck_description, deck_creation, deck_userID
+                        deck_name, deck_description, deck_creation, deck_userID
                     )
                     VALUES (?, ?, datetime('now'), ?);
                 """
@@ -346,7 +363,7 @@ def createDeck():
         return render_template("deckCreate.html", results=result)
 
 
-# ---------- create a new card for a specific deck and add it to the database ----------
+# ---------- create a new card ----------
 @app.route('/decks/<int:id>/create/', methods=['GET', 'POST'])
 def createCard(id):
 
@@ -382,8 +399,8 @@ def createCard(id):
         else:
             sql = """
                     INSERT INTO Flashcards (
-                    card_question, card_answer, card_deckID,
-                    card_creation, card_hint, card_userID
+                        card_question, card_answer, card_deckID,
+                        card_creation, card_hint, card_userID
                     )
                     VALUES (?, ?, ?, datetime('now'), ?, ?);
                 """
@@ -407,7 +424,7 @@ def createCard(id):
         return render_template("cardCreate.html", deck_info=deck_info[0])
 
 
-# ---------- edit a deck and update the database ----------
+# ---------- edit a deck ----------
 @app.route('/decks/<int:id>/edit/', methods=['GET', 'POST'])
 def editDeck(id):
     # if request method is POST, get the form data and insert into database
@@ -450,7 +467,7 @@ def editDeck(id):
         return render_template("deckEdit.html", results=result)
 
 
-# ---------- edit a card and update the database ----------
+# ---------- edit a card ----------
 @app.route(
     '/decks/<int:id>/cards/<int:card_id>/edit/',
     methods=['GET', 'POST']
@@ -620,7 +637,9 @@ def signup():
         else:
             hashed_password = generate_password_hash(password)
             sql = """
-                    INSERT INTO Users (user_name, user_password, user_creation)
+                    INSERT INTO Users (
+                        user_name, user_password, user_creation
+                    )
                     VALUES (?, ?, datetime('now'));
                 """
             get_db().execute(sql, (username, hashed_password))
@@ -638,7 +657,10 @@ def profile():
     if not userID():
         session.pop('username', None)
         session.pop('userID', None)
-        flash("You are not logged in. Please log in to view your profile.", "error")
+        flash(
+            "You are not logged in. Please log in to view your profile.",
+            "error"
+        )
         return redirect(url_for('home'))
 
     sql = """
@@ -715,7 +737,7 @@ def stats():
 def test():
     if request.method == 'POST':
         # get the form data from the request object like this
-            # item = request.form['file_name']
+        # item = request.form['file_name']
         # now get the filename from the form
         file = request.files['file']
 
@@ -732,12 +754,17 @@ def test():
         if extension not in ALLOWED_IMAGES:
             return "Invalid file type", 400
 
-        sql = "INSERT INTO Files (file_name, file_cardID, file_userID) VALUES (?, ?, ?);"  # create a query to insert ther data
-        get_db().execute(sql, (original_name, 2, userID()))  # execute the query
+        sql = """
+                INSERT INTO Files (
+                    file_name, file_cardID, file_userID
+                )
+                VALUES (?, ?, ?);
+            """
+        get_db().execute(sql, (original_name, 2, userID()))
         get_db().commit()
 
         get_ID = "SELECT last_insert_rowid();"
-        file_ID = query_db(get_ID, (), one=True)[0]  # get the ID of the file we just uploaded
+        file_ID = query_db(get_ID, (), one=True)[0]  # get the ID of the file
         print(f"ROW ID: {file_ID}")
 
         extension = os.path.splitext(original_name)[1]
