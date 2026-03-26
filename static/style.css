@@ -49,7 +49,9 @@ button {
   box-sizing: border-box;
   border-radius: 8px;
   word-break: break-word; /* allow long text to wrap */
+  overflow: visible;
   white-space: normal;
+  max-width: 100%;
 }
 
 /* Plus button */
@@ -308,6 +310,12 @@ form.login {
 
 .card mjx-container,
 .card mjx-container * {
+  word-break: break-word !important;
+  white-space: normal !important;
+}
+
+.w3-card-4 mjx-container,
+.w3-card-4 mjx-container * {
   word-break: break-word !important;
   white-space: normal !important;
 }

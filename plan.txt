@@ -216,3 +216,51 @@ x = ±√5
 ★★★★⯪ - 4.5 stars
 ★★★★☆ - 4 stars
 ★★★⯪☆ - 3.5 stars
+
+
+
+
+MathJax explanation
+
+You can type using mathJax formatting! Surround your mathematic text in \( MATH HERE \) to format your mathematic text!
+COMMON SYMBOLS (add this anywhere inside the \(...\) !):
+\pm - plus minus symbol
+\times - multiplication symbol
+\div - division symbol
+x^{a} - superscript/powering (replace x and a)
+x_{a} - subscript (replace x and a)
+\sqrt{x} - square root (replace x)
+\sqrt[n]{x} - nth root (replace n and x)
+
+\le - less or equal to
+\ge - greater or equal to
+\neq - not equal to
+\Rightarrow or \rightarrow- right arrow for chemistry
+
+MORE ADVANCED:
+{ABC \over DEF} or \frac{ABC}{DEF} - fraction of ABC/DEF
+\sum\limits _{i=1} ^{n} i^2 - sigma sum notation
+\limits puts the sub and super scripts directly above/below the operator
+
+GREEK LETTERS:
+\NAMEHERE - displays greek letter (lowercase first letter for lowercase)
+only displays special uppercases (eg, delta but not alpha)
+
+Spacing: 
+\ - adds small spacing(leave empty space after or ,)
+\! - connects two characters together
+then, from the following order of increasing spacing:
+\,    \:    \;    \     \quad    \qquad 
+
+For more help, please visit https://artofproblemsolving.com/wiki/index.php/LaTeX:Symbols
+
+EXAMPLES:
+\( x = { -b \pm \sqrt{ b^{ 2 }-4ac } \over 2a }\) or \( x = \frac{ -b \pm \sqrt{ b^2-4ac } } { 2a } \)
+
+\( Ag^{ + } \! _{ (aq) } + NH_{ 3 \, (aq) } \Rightarrow [Ag(NH_{ 3 })_{ 2 }]^{ + } \! _{ (aq) } \)
+
+\(x^{ 1 \over 5 } = \sqrt[5]{x}\)
+
+\( (\frac{1}{2})^2 = \frac{1}{2} \times \frac{1}{2} = \frac{1}{4} = \frac{1}{2^2} = 2^{-2} \)
+
+\(   \frac{\frac{1}{2}}{\frac{1}{4}} = \frac{1}{2} \div \frac{1}{4} = \frac{1}{2} \times \frac{4}{1} = \frac{4}{2} = 2 \)
