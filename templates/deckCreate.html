@@ -7,14 +7,14 @@
         {% for category, message in messages%}
             <div class="alertContainer">
                 <p class="alert {{ category }}">{{message}}</p>
-                <button onclick="this.parentElement.remove()" class="close-btn">x</button>
+                <button onclick="this.parentElement.remove()" class="close-btn">✖</button>
             </div>
         {%endfor%}
     {%endif%}
 {%endwith%}
 
 <!-- Deck creation form -->
-<form action="{{ url_for('createDeck') }}" method="POST" autocomplete="off">
+<form id="deckForm" action="{{ url_for('createDeck') }}" method="POST" autocomplete="off">
     <p style="color: rgb(168, 46, 46);">* Indicates required question</p>
     <label>Deck Name<span style="color: rgb(219, 54, 54); font-size: smaller;">*</span>:</label>
     <input id="deckInput" name="deckName" placeholder="eg, Term 2 Chemistry" required><br><br>
