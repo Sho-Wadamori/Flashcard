@@ -24,7 +24,8 @@ from flask import (
     flash  # used for error messages (NOT SETUP YET)
 )
 
-import os
+import os  # for file extension and name extraction
+import random  # for randomising card list
 
 # from werkzeug.utils import secure_filename  # for file uploads
 from datetime import (
@@ -39,7 +40,7 @@ from werkzeug.security import (
 
 from werkzeug.utils import (
     secure_filename
-)
+)  # for securing uploaded files
 
 import sqlite3
 
@@ -207,6 +208,7 @@ def deleteCard(id, card_id):
     get_db().execute(sql, (card_id, userID()))
     get_db().commit()
     # redirect to the deck page
+    flash("Card Deleted Successfuly.", "success")
     return redirect(url_for('Deck', id=id))
 
 
@@ -222,7 +224,18 @@ def deleteDeck(id):
     get_db().execute(sql, (id, userID()))
     get_db().commit()
     # redirect to the deck page
+    flash("Decl Deteted Successfuly", "success")
     return redirect(url_for('Decks'))
+
+
+# ---------- refresh session data on study ----------
+@app.route('/decks/<int:id>/study/start/')
+def start_study(id):
+    # set session data to empty to remove previous list
+    session.pop('shuffled_cards', None)
+    session.pop('study_deckID', None)
+    # redirect to study
+    return redirect(url_for('Study', id=id, index=0))
 
 
 # ---------- study a single card based on the index ----------
@@ -237,12 +250,29 @@ def Study(id, index):
     """
     results = query_db(sql, (id, userID()))
 
-    total = len(results)  # total number of cards in the deck
+    # get session data
+    currentSession = session.get('shuffled_cards', None)
+    currentSessionDeck = session.get('study_deckID', None)
 
-    card = results[index]  # get the current card info based on the index
+    # check if session exists or matches deck ID
+    if currentSessionDeck != id or not currentSession:
+        temp_list = [list(item) for item in results]
+        random.shuffle(temp_list)
+        session['shuffled_cards'] = temp_list
+        session['study_deckID'] = id
+
+    # set card_list to the session list
+    card_list = session['shuffled_cards']
+
+    # get total number of cards in the deck
+    total = len(card_list)
+
+    card = card_list[index]  # get the current card info based on the index
     card_id = card[0]
 
+    # request is POST, get the form data and add to database
     if request.method == 'POST':
+        # get response
         response = request.form.get('response')
         # get the user's stats for the current card
         get_stats = """
@@ -310,6 +340,10 @@ def Study(id, index):
 
         # exit to deck page if there are no more cards
         else:
+            # clear sessions after exit
+            session.pop('shuffled_cards', None)
+            session.pop('study_deckID', None)
+            # redirect to deck page
             flash("You have finished studying this deck!", "success")
             return redirect(url_for('Deck', id=id))
 
@@ -321,7 +355,7 @@ def Study(id, index):
             deck_id=id,
             total=total,
             index=index
-            )
+        )
 
 
 # ---------- create a new deck ----------
