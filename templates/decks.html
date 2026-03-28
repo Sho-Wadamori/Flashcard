@@ -77,6 +77,13 @@
 </div>
 </div>
 
+<!-- scroll to top button -->
+<div class="fixed-button">
+    <a onclick="window.scrollTo({top: 0, behavior: 'smooth'});">
+        <img src="{{ url_for('static', filename='assets/scroll.svg') }}" alt="Scroll To Top Button" title="Scroll To Top">
+    </a>
+</div>
+
 <script>
 
 // turn on confirmation overlay
@@ -106,6 +113,14 @@ function confirmDelete() {
   }
   off(); // Hide confirmation overlay
 }
+
+// define button
+const scrollBtn = document.querySelector(".fixed-button");
+
+// detect when user scrolls below 200
+window.addEventListener("scroll", () => {
+    scrollBtn.classList.toggle("show", window.scrollY > 200);
+});
 
 </script>
 

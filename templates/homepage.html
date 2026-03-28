@@ -20,4 +20,20 @@
 <a href="{{ url_for('Decks') }}"><button>View Decks</button></a>
 <a href="{{ url_for('createDeck') }}"><button>Create Deck</button></a>
 
+<div class="fixed-button">
+    <a onclick="window.scrollTo({top: 0, behavior: 'smooth'});">
+        <img src="{{ url_for('static', filename='assets/scroll.svg') }}" alt="Scroll To Top Button" title="Scroll To Top">
+    </a>
+</div>
+
+<script>
+// define button
+const scrollBtn = document.querySelector(".fixed-button");
+
+// detect when user scrolls below 200
+window.addEventListener("scroll", () => {
+    scrollBtn.classList.toggle("show", window.scrollY > 200);
+});
+</script>
+
 {% endblock %}

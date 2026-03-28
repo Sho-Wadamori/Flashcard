@@ -1,15 +1,35 @@
-/* all elements */
+/* ----- all pages ----- */
 html {
-    background-color: white; /* Some browsers use default browser colors for background when undefined */
+    background-color: white; /* to fix bg colour issues for some browsers/extensions */
 }
 
+/* ----- all text ----- */
 body,h1,h2,h3,h4,h5,h6,p {
     font-family: Righteous, sans-serif;
     /* font-family: Montserrat; */
     /* font-family: Poppins; font-weight: 700; */
 }
 
-/* 3 column, used in listing decks and cards */
+/* ----- All Buttons ----- */
+button {
+  margin: 0 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+/* ----- Header (part above navbar) ----- */
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 100vw; 
+  margin: 0 auto;
+  padding: 0 100px;
+}
+
+
+
+/* ----- 3-column used in listing decks/cards ----- */
 .three-column {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -19,26 +39,23 @@ body,h1,h2,h3,h4,h5,h6,p {
   padding: 0;
 }
 
+/* tablet mode with 2 columns */
 @media (max-width: 1300px) {
     .three-column {
         grid-template-columns: 1fr 1fr; /* Stack items vertically on small screens */
     }
 }
 
+/* phone mode with 1 column */
 @media (max-width: 750px) {
     .three-column {
         grid-template-columns: 1fr; /* Stack items vertically on small screens */
     }
 }
 
-/* all buttons */
-button {
-  margin: 0 5px;
-  padding: 5px 10px;
-  cursor: pointer;
-}
 
-/* the cards in 3 column layout */
+
+/* ----- cards within 3-column ----- */
 .w3-card-4 {
   height: 100%;
   display: flex;
@@ -54,12 +71,21 @@ button {
   max-width: 100%;
 }
 
-/* Plus button */
-.plus {
-    font-size: 4em;
+/* deck/card edit & detele buttons */
+.card-buttons {
+  display: flex;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
 }
 
-/* Studying flashcard */
+/* Create deck/card button */
+.plus {
+  font-size: 4em;
+}
+
+
+
+/* ----- used in study, edit, and create ----- */
 .card {
   display: grid;
   margin: 0 auto;
@@ -77,13 +103,23 @@ button {
   max-width: 100%;
 }
 
-/* Error message */
-.error {
-    color: rgb(219, 46, 46);
-    margin-bottom: 1em;
+
+
+/* ----- delete confirmation popup ----- */
+.confirmation-box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  z-index: 3; /* Higher than overlay */
 }
 
-/* Confirmation Overlay */
+/* slight overlay behind popup */
 #overlay {
   position: fixed;
   display: none;
@@ -98,27 +134,15 @@ button {
   cursor: pointer;
 }
 
-/* Confirmation Box div */
-.confirmation-box {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  text-align: center;
-  z-index: 3; /* Higher than overlay */
-}
-
 /* Confirmation Box buttons */
 .confirmation-box button {
   margin: 0 10px;
   padding: 10px 20px;
 }
 
-/* Tooltip container */
+
+
+/* ----- Hint Tooltip ----- */
 .tooltip {
   position: relative;
   display: block;
@@ -147,32 +171,21 @@ button {
   white-space: normal; /* allow text to wrap */
 }
 
-/* Show the tooltip text on hover w/ animation */
+/* hide the tooltip text on unhover w/ animation */
 .tooltiptext {
   opacity: 0;
   transition: opacity 0.4s;
 }
 
+/* on hover reveal tooltip */
 .tooltip:hover .tooltiptext {
   visibility: visible;
   opacity: 1;
 }
 
-.card-buttons {
-  display: flex;
-  grid-template-columns: 1fr 1fr;
-  gap: 5px;
-}
 
-.header-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  max-width: 100vw; 
-  margin: 0 auto;
-  padding: 0 100px;
-}
 
+/* ----- Login/Sign Up ----- */
 .login-container {
   display: flex;
   justify-content: center;
@@ -185,10 +198,12 @@ button {
   border-radius: 32px;   
 }
 
+/* set login container width */
 form.login {
   width: 70%;
 }
 
+/* set login input width */
 .login input:not([type="checkbox"]) {
   width: 100%;
   padding: 0.5rem;
@@ -196,11 +211,13 @@ form.login {
   border-radius: 8px;
 }
 
+/* show password button */
 .showPasswords {
   user-select: none;
   cursor: pointer;
 }
 
+/* submit button */
 .login input[type="submit"] {
   background-color: rgb(14, 103, 161);
   color: white;
@@ -208,6 +225,9 @@ form.login {
   cursor: pointer;
 }
 
+
+
+/* ----- User Response Buttons ----- */
 .radio-buttons {
   display: flex;
   justify-content: center;
@@ -242,7 +262,9 @@ form.login {
   color: white;
 }
 
-/* Error alert message */
+
+
+/* ----- Alert Messages ----- */
 .alert.error {
   padding: 10px;
   margin-bottom: 15px;
@@ -254,8 +276,6 @@ form.login {
   padding-right: 60px;
   padding-left: 60px; /* so text does not overlap w/ X button */
 } 
-
-/* Success alert message */
 .alert.success {
   padding: 10px;
   margin-bottom: 15px;
@@ -268,24 +288,22 @@ form.login {
   padding-left: 60px; /* so text does not overlap w/ X button */
 } 
 
-/* Text-only error message */
+/* Text-Only Alert Messages */
 .simpleAlert.error {
-    color: rgb(219, 46, 46);
-    margin-bottom: 1em;
+  color: rgb(219, 46, 46);
+  margin-bottom: 1em;
 }
-
-/* Text-only success message */
 .simpleAlert.success {
-    color: rgb(46, 219, 46);
-    margin-bottom: 1em;
+  color: rgb(46, 219, 46);
+  margin-bottom: 1em;
 }
 
 /* Alert container */
 .alertContainer {
-    position: relative;
+  position: relative;
 }
 
-/* Close button */
+/* Close button for error messages */
 .close-btn {
   position: absolute;
   top: 50%;
@@ -300,14 +318,17 @@ form.login {
   transform: translateY(-50%);
 }
 
+/* change close button to white/black when error/success */
 .close-btn.error {
     color: rgb(255, 255, 255);
 }
-
 .close-btn.alert.success {
     color: rgb(39, 39, 39);
 }
 
+
+
+/* ----- MathJax text wraping (BREAKS M.J ERROR MESSAGES) ----- */
 .card mjx-container,
 .card mjx-container * {
   word-break: break-word !important;
@@ -320,8 +341,52 @@ form.login {
   white-space: normal !important;
 }
 
+/* tries to make MathJax alerts as exception BUT DOES NOT WORK */
 .alert {
   word-break: normal;
   overflow-wrap: normal;
   white-space: normal;
+}
+
+
+
+/* ----- Scroll To Top Buttons ----- */
+.fixed-button {
+  position: fixed;
+  /* anchor to bottom right */
+  bottom: 20px;
+  right: 20px;
+
+  width: 35px;
+  height: 35px;
+  padding: 0;  
+  border: none;
+  cursor: pointer;
+  border-radius: 18px; /* make the button round like the icon */
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  opacity: 0;
+  pointer-events: none;
+  /* smoothly appear from below */
+  transform: translateY(10px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+/* smoothly reveal button */
+.fixed-button.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* button image */
+.fixed-button img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 5px;
 }
