@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="../static/assets/icon.png" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='assets/icon.png') }}">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Righteous">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -11,8 +11,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <script src="{{ url_for('static', filename='script.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <title>Flashcard Maker</title>
+    <title>{% block title %}{% endblock %} | Flashcard Maker</title>
 </head>
+
 <body class="w3-container">
     <!-- Shared Header Bar -->
      <header class="w3-container w3-padding-32">

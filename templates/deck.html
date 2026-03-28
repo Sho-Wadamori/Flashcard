@@ -1,4 +1,7 @@
 {% extends "layout.html" %}
+
+{% block title %}{{ deck_info[0].replace('\\(', '').replace('\\)', '').replace('$$', '').replace('\\[', '').replace('\\]', '') }}{% endblock %}
+
 {% block body %}
 
 {% with messages = get_flashed_messages(with_categories=true) %}
