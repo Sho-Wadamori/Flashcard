@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // ---------- Render Scientific Text for each instance (ONLY STATIC) ----------
     document.querySelectorAll(".scientific").forEach(i => {
-        if (i.textContent.includes('\\(')) {
+        if (i.textContent.includes('\\(')) { 
             MathJax.typesetPromise([i]);
         }
     });
@@ -57,14 +57,14 @@ document.addEventListener("DOMContentLoaded", () => {
         HintAction();
     }
 
-    if (DeckNameInput) {
-        DeckNameInput.oninput = DeckNameAction;
-        DeckNameAction();
-    }
-    if (DeckDescriptionInput) {
-        DeckDescriptionInput.oninput = DeckDescriptionAction;
-        DeckDescriptionAction();
-    }
+    // if (DeckNameInput) {
+    //     DeckNameInput.oninput = DeckNameAction;
+    //     DeckNameAction();
+    // }
+    // if (DeckDescriptionInput) {
+    //     DeckDescriptionInput.oninput = DeckDescriptionAction;
+    //     DeckDescriptionAction();
+    // }
 
 
 
@@ -103,29 +103,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // for Decks
-    function DeckNameAction() {
-        let raw = DeckNameInput.value;
-        if (raw == "") {
-            deckNameElement.textContent = "{ Deck Name }";
-        }
-        else {
-            deckNameElement.textContent = raw; // render scientific text
-            MathJax.typesetPromise([deckNameElement]);
-        }
-    }
-
-    function DeckDescriptionAction() {
-        let raw = DeckDescriptionInput.value;
-        if (raw == "") {
-            deckDescriptionElement.textContent = "{ Deck Description }";
-        }
-        else {
-            deckDescriptionElement.textContent = raw; // render scientific text
-            MathJax.typesetPromise([deckDescriptionElement]);
-        }
-    }
-
     // ---------- Password reveal system ----------
     function passwordReveal() {
         var password = document.getElementById("password");
@@ -151,14 +128,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    if (deckForm) {
-        deckForm.addEventListener("reset", function() { // on reset run func
-            setTimeout(() => {
-                DeckDescriptionAction();
-                DeckNameAction();
-            }, 30); // pause to allow form reset
-        });
-    }
+    // if (deckForm) {
+    //     deckForm.addEventListener("reset", function() { // on reset run func
+    //         setTimeout(() => {
+    //             DeckDescriptionAction();
+    //             DeckNameAction();
+    //         }, 30); // pause to allow form reset
+    //     });
+    // }
  
 });
 
