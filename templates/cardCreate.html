@@ -19,12 +19,9 @@
 <!-- Card creation form -->
 <form id="cardForm" action="{{ url_for('createCard', id=deck_info[1]) }}" method="POST" autocomplete="off">
     <p style="color: rgb(168, 46, 46);">* Indicates required question</p>
-    <label>Flashcard Question<span style="color: rgb(219, 54, 54); font-size: smaller;">*</span>:</label>
-    <input id="questionInput" name="cardQuestion" placeholder="eg, What is 1 + 1?" required><br><br>
-    <label>Flashcard Answer<span style="color: rgb(219, 54, 54); font-size: smaller;">*</span>:</label>
-    <input id="answerInput" name="cardAnswer" placeholder="eg, 2" required><br><br>
-    <label>Flashcard Hint:</label>
-    <input id="hintInput" name="cardHint" placeholder="eg, Think about basic arithmetic"><br><br>
+    <input id="questionInput" name="cardQuestion" type="hidden" required>
+    <input id="answerInput" name="cardAnswer" type="hidden" required>
+    <input id="hintInput" name="cardHint" type="hidden">
     <button type="submit">Submit</button>
     <button type="reset">Reset</button><br><br>
 </form>
@@ -32,12 +29,180 @@
 <!-- Card preview -->
 <div class="card" style="cursor: default;">
     <!-- the question then the answer -->
-    <h1 id="question">{ Flashcard Question }</h1>
-    <p id="answer">{ Flashcard Answer }</p>
+    <h1 id="question" contenteditable="plaintext-only" class="preview question">{ Flashcard Question }</h1>
+    <p id="answer" contenteditable="plaintext-only" class="preview answer">{ Flashcard Answer }</p>
 </div>
 
 <br><div class="tooltip">
-    Hint💡<span id="hint" class="tooltiptext", style="visibility: visible; opacity: 1;">{ Hint text }</span>
+    Hint💡<span id="hint" class="tooltiptext preview hint", style="visibility: visible; opacity: 1;" contenteditable="plaintext-only">{ Hint text }</span>
 </div>
+
+
+<!-- MathJax Rendering Toggle -->
+<input type="checkbox" id="MathJaxCheck" onclick="toggleMathJax()" checked>
+<label for="MathJaxCheck">Enable MathJax Preview</label>
+
+
+
+<!------------------------ JAVASCRIPT -------------------------->
+<script>
+
+// define editable preview and hidden input
+const questionEditable = document.getElementById("question");
+const questionInput = document.getElementById("questionInput");
+
+const answerEditable = document.getElementById("answer");
+const answerInput = document.getElementById("answerInput");
+
+const hintEditable = document.getElementById("hint");
+const hintInput = document.getElementById("hintInput");
+
+
+// store original values cos .defaultValue is a bum
+const originalQuestion = questionInput.value;
+const originalAnswer = answerInput.value;
+const originalHint = hintInput.value;
+
+// set placeholders
+const QUESTION_PLACEHOLDER = "{ Flashcard Question }*";
+const ANSWER_PLACEHOLDER = "{ Flashcard Answer }*";
+const HINT_PLACEHOLDER = "{ Hint Text }";
+
+// MathJax toggle
+function toggleMathJax() {
+    var checkBox = document.getElementById("MathJaxCheck");
+
+    // if checked, render MathJax
+    if (checkBox.checked) {
+        MathJax.typesetPromise([questionEditable, answerEditable, hintEditable]);
+    } 
+    // else show raw MathJax code (input values)
+    else {
+        questionEditable.innerText = questionInput.value;
+        answerEditable.innerText = answerInput.value;
+        hintEditable.innerText = hintInput.value;
+    }
+}
+
+// remove placeholder on focus
+questionEditable.addEventListener("focus", () => { // on focus
+    if (questionEditable.innerText.trim() === QUESTION_PLACEHOLDER) { // if text = placeholder
+        questionEditable.innerText = ""; // clear text
+    }
+    else { // else set preview text to input so MathJax unrenders
+        questionEditable.innerText = questionInput.value
+    }
+});
+
+// render MathJax on unfocus
+questionEditable.addEventListener("blur", () => { // when unfocused
+    var checkBox = document.getElementById("MathJaxCheck");
+    if (checkBox.checked) { // if MathJax rendering Enabled
+        MathJax.typesetPromise([questionEditable]); // render MathJax
+    }
+});
+
+// update hidden input on input
+questionEditable.addEventListener("input", () => { // on input
+    let text = questionEditable.innerText.trim();
+    if (text === "") { // if text is empty
+        questionEditable.innerHTML = ""; // make sure its empty (removes <br>)
+    }
+    questionInput.value = text; // update hidden input value to preview text
+});
+
+
+// remove placeholder on focus
+answerEditable.addEventListener("focus", () => { // on focus
+    if (answerEditable.innerText.trim() === ANSWER_PLACEHOLDER) { // if text = placeholder
+        answerEditable.innerText = ""; // clear text
+    }
+    else { // else set preview text to input so MathJax unrenders
+        answerEditable.innerText = answerInput.value
+    }
+});
+
+// render MathJax on unfocus
+answerEditable.addEventListener("blur", () => { // when unfocused
+    var checkBox = document.getElementById("MathJaxCheck");
+    if (checkBox.checked) {
+        MathJax.typesetPromise([answerEditable]);
+    }
+});
+
+// update hidden input on input
+answerEditable.addEventListener("input", () => { // on input
+    let text = answerEditable.innerText.trim();
+    console.log(text);
+    if (text === "") { // if text is empty
+        answerEditable.innerHTML = ""; // make sure its empty (removes <br>)
+    }
+    answerInput.value = text;
+});
+
+
+// remove placeholder on focus
+hintEditable.addEventListener("focus", () => { // on focus
+    if (hintEditable.innerText.trim() === HINT_PLACEHOLDER) { // if text = placeholder
+        hintEditable.innerText = ""; // clear text
+    }
+    else { // else set preview text to input so MathJax unrenders
+        hintEditable.innerText = hintInput.value
+    }
+});
+
+// render MathJax on unfocus
+hintEditable.addEventListener("blur", () => { // when unfocused
+    var checkBox = document.getElementById("MathJaxCheck");
+    if (checkBox.checked) {
+        MathJax.typesetPromise([hintEditable]);
+    }
+});
+
+// update hidden input on input
+hintEditable.addEventListener("input", () => { // on input
+    let text = hintEditable.innerText.trim();
+    console.log(text);
+    if (text === "") { // if text is empty
+        hintEditable.innerHTML = ""; // make sure its empty (removes <br>)
+    }
+    hintInput.value = text;
+});
+
+// reset button
+const cardForm = document.getElementById("cardForm"); // define form element
+if (cardForm) {
+    cardForm.addEventListener("reset", function() { // on reset button pressed
+        // manually set inputs to original values cos reset button is a bum
+        questionInput.value = originalQuestion;
+        answerInput.value = originalAnswer;
+        hintInput.value = originalHint;
+
+        // render MathJax if enabled
+        toggleMathJax()
+
+        if (originalQuestion === "") { // if original value is empty
+            questionEditable.innerHTML = ""; // make sure its empty (removes <br>)
+        } 
+        else { // else, set text to original value
+            questionEditable.innerText = originalQuestion;
+        }
+
+        if (originalAnswer === "") { // if original value is empty
+            answerEditable.innerHTML = ""; // make sure its empty (removes <br>)
+        } 
+        else { // else, set text to original value
+            answerEditable.innerText = originalAnswer;
+        }
+
+        if (originalHint === "") { // if original value is empty
+            hintEditable.innerHTML = ""; // make sure its empty (removes <br>)
+        } 
+        else { // else, set text to original value
+            hintEditable.innerText = originalHint;
+        }
+    });
+}
+</script>
 
 {% endblock %}
