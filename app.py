@@ -809,7 +809,14 @@ def test():
 
         return redirect(url_for('home'))
     else:
-        return render_template("test.html")
+        # get the deck name of the inputted deck id
+        sql1 = """
+                SELECT Flashcards.card_question, Flashcards.card_answer, Decks.deck_name
+                FROM Flashcards, Decks
+                WHERE card_userID = ?;
+            """
+        card_list = query_db(sql1, (userID(),))
+        return render_template("test.html", card_list=card_list)
 
 
 # only run the app if app.py is executed directly
