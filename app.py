@@ -183,7 +183,7 @@ def Deck(id):
     results = query_db(sql, (id, userID()))
 
     if not deck_info:
-        flash("No deck was found...", "error")
+        flash("Invalid Deck...", "error")
         return redirect(url_for("Decks"))
 
     # return the results
@@ -224,7 +224,7 @@ def deleteDeck(id):
     get_db().execute(sql, (id, userID()))
     get_db().commit()
     # redirect to the deck page
-    flash("Decl Deteted Successfuly", "success")
+    flash("Deck Deleted Successfully", "success")
     return redirect(url_for('Decks'))
 
 
@@ -344,7 +344,7 @@ def Study(id, index):
             session.pop('shuffled_cards', None)
             session.pop('study_deckID', None)
             # redirect to deck page
-            flash("You have finished studying this deck!", "success")
+            flash("You Have Finished Studying This Deck!", "success")
             return redirect(url_for('Deck', id=id))
 
     # return the results in method is GET
@@ -369,7 +369,7 @@ def createDeck():
         # check if the form data is not empty
         if not deck_name:
             # reload the page with the error message
-            flash("A deck name is required.", "error")
+            flash("A Deck Name is Required.", "error")
             return render_template("deckCreate.html")
 
         else:
@@ -382,7 +382,7 @@ def createDeck():
             get_db().execute(sql, (deck_name, deck_description, userID()))
             get_db().commit()
             # redirect to the decks list page
-            flash("Deck created successfully!", "success")
+            flash("Deck Created Successfully!", "success")
             return redirect(url_for('Decks'))
     # if request method is GET, return the sql results
     else:
@@ -412,7 +412,7 @@ def createCard(id):
 
     # check if deck_info is not empty
     if not deck_info:
-        flash("No deck was found...", "error")
+        flash("Invalid Deck...", "error")
         return redirect(url_for("Decks"))
 
     # if request method is POST, get the form data and insert into database
@@ -424,7 +424,7 @@ def createCard(id):
         # check if the form data is not empty
         if not card_question or not card_answer:
             # reload the page with the error message
-            flash("Both fields are required.", "error")
+            flash("Both Fields Are Required.", "error")
             return render_template(
                 "cardCreate.html",
                 deck_info=deck_info[0]
@@ -448,7 +448,7 @@ def createCard(id):
             ))
             get_db().commit()
             # redirect to the deck page
-            flash("Card created successfully!", "success")
+            flash("Card Created Successfully!", "success")
             return redirect(url_for('Deck', id=id))
 
     # if request method is GET, return the sql results
@@ -469,7 +469,7 @@ def editDeck(id):
         # check if the form data is not empty
         if not deck_name:
             # reload the page with the error message
-            flash("A deck name is required.", "error")
+            flash("A Deck Name is Required.", "error")
             return render_template("deck.html", id=id)
 
         else:
@@ -494,7 +494,7 @@ def editDeck(id):
         result = query_db(sql, (id, userID()))
 
         if not result:
-            flash("Invalid deck...", "error")
+            flash("Invalid Deck...", "error")
             return redirect(url_for("Decks"))
 
         # return the results
@@ -518,7 +518,7 @@ def editCard(id, card_id):
 
     # check if deckinfo is not empty
     if not deck_info:
-        flash("Invalid deck...", "error")
+        flash("Invalid Deck...", "error")
         return redirect(url_for("Decks"))
 
     # if request method is POST, get the form data and insert into database
@@ -530,7 +530,7 @@ def editCard(id, card_id):
         # check if the form data is not empty
         if not card_question or not card_answer:
             # reload the page with the error message
-            flash("Both fields are required.", "error")
+            flash("Both Fields Are Required.", "error")
             sql_card = """
                 SELECT card_ID, card_question,
                 card_answer, card_creation, card_hint
@@ -609,12 +609,15 @@ def login():
 
         # check if the username and password are not empty
         if not username or not password:
-            flash("Both fields are required.", "error")
+            flash("Both Fields Are Required.", "error")
             return render_template("login.html")
 
         elif not username_list:
             # reload the page with the error message
-            flash("No account under the username " + username + ".", "error")
+            flash(
+                "No Account Exists Under the Username "
+                f"{username}...", "error"
+            )
             return render_template("login.html")
 
         elif username_list[0][0] == username:
@@ -626,13 +629,13 @@ def login():
                     "SELECT user_ID FROM Users WHERE user_name = ?",
                     (username,), one=True
                 )[0]
-                flash("Logged in successfully.", "success")
+                flash("Logged in Successfully!", "success")
                 return redirect(url_for('home'))
             else:
-                flash("Incorrect password.", "error")
+                flash("Incorrect Password.", "error")
                 return render_template("login.html")
         else:
-            flash("Something Went Wrong.", "error")
+            flash("Something Went Wrong...", "error")
             return render_template("login.html")
     else:
         return render_template("login.html")
@@ -656,16 +659,16 @@ def signup():
 
         # check if the username and password are not empty
         if not username or not password or not confirm_password:
-            flash("All fields are required.", "error")
+            flash("All Fields Are Required.", "error")
             return render_template("signup.html")
 
         elif confirm_password != password:
-            flash("Passwords do not match.", "error")
+            flash("Passwords Do Not Match.", "error")
             return render_template("signup.html")
 
         # check if the username already exists in the database
         elif username_list:
-            flash("Username already exists.", "error")
+            flash("Username Already Exists.", "error")
             return render_template("signup.html")
 
         else:
@@ -678,7 +681,7 @@ def signup():
                 """
             get_db().execute(sql, (username, hashed_password))
             get_db().commit()
-            flash("Account created successfully! Please log in.", "success")
+            flash("Account Created Successfully! Please Log In.", "success")
             return render_template("login.html")
 
     else:
@@ -692,7 +695,7 @@ def profile():
         session.pop('username', None)
         session.pop('userID', None)
         flash(
-            "You are not logged in. Please log in to view your profile.",
+            "You Are Not Logged In. Please Log In to View Your Profile.",
             "error"
         )
         return redirect(url_for('home'))
@@ -706,7 +709,7 @@ def profile():
     results = query_db(sql, (userID(),))
 
     if not results:
-        flash("User details not found. Logging out.", "error")
+        flash("User Details Not Found. Logging Out.", "error")
         return redirect(url_for('logout'))
 
     # return the results
@@ -723,7 +726,7 @@ def profile():
 def logout():
     session.pop('username', None)
     session.pop('userID', None)
-    flash("Logged out successfully.", "success")
+    flash("Logged Out Successfully.", "success")
     return redirect(url_for('home'))
 
 
@@ -733,7 +736,7 @@ def stats():
     if not userID():
         session.pop('username', None)
         session.pop('userID', None)
-        flash("You are not logged in. Please log in to see stats.", "error")
+        flash("You Are Not Logged In. Please Log In to See Stats.", "error")
         return redirect(url_for('home'))
 
     userAnswerStats = """
@@ -811,7 +814,8 @@ def test():
     else:
         # get the deck name of the inputted deck id
         sql1 = """
-                SELECT Flashcards.card_question, Flashcards.card_answer, Decks.deck_name
+                SELECT Flashcards.card_question,
+                Flashcards.card_answer, Decks.deck_name
                 FROM Flashcards, Decks
                 WHERE card_userID = ?;
             """
