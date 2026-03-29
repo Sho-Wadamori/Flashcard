@@ -312,7 +312,7 @@ form.login {
   background: none;
   border: none;
   font-size: 20px;
-  color: #333;
+  color: #ffffff;
   justify-content: center;
   font-size: 25px;
   transform: translateY(-50%);
@@ -322,7 +322,7 @@ form.login {
 .close-btn.error {
     color: rgb(255, 255, 255);
 }
-.close-btn.alert.success {
+.close-btn.success {
     color: rgb(39, 39, 39);
 }
 
