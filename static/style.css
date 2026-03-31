@@ -265,27 +265,22 @@ form.login {
 
 
 /* ----- Alert Messages ----- */
-.alert.error {
+.alert {
   padding: 10px;
   margin-bottom: 15px;
   border-radius: 8px;
-  background-color: #c93a36;
   color: rgb(255, 255, 255);
   text-align: center;
   font-size: large;
   padding-right: 60px;
   padding-left: 60px; /* so text does not overlap w/ X button */
+}
+
+.alert.error {
+  background-color: #f44336;
 } 
 .alert.success {
-  padding: 10px;
-  margin-bottom: 15px;
-  border-radius: 8px;
-  background-color: rgb(145, 216, 145);
-  color: rgb(39, 39, 39);
-  text-align: center;
-  font-size: large;
-  padding-right: 60px;
-  padding-left: 60px; /* so text does not overlap w/ X button */
+  background-color: #04AA6D;
 } 
 
 /* Text-Only Alert Messages */
@@ -316,14 +311,6 @@ form.login {
   justify-content: center;
   font-size: 25px;
   transform: translateY(-50%);
-}
-
-/* change close button to white/black when error/success */
-.close-btn.error {
-  color: rgb(255, 255, 255);
-}
-.close-btn.success {
-  color: rgb(39, 39, 39);
 }
 
 
@@ -407,7 +394,7 @@ form.login {
 }
 
 .preview.DeckDescription:empty::before {
-  content: "{ Deck Description }*";
+  content: "{ Deck Description }";
   color: rgb(0, 0, 0);
   pointer-events: none;
   text-align: center;
