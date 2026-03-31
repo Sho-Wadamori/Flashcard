@@ -24,7 +24,7 @@ button {
   justify-content: space-between;
   max-width: 100vw; 
   margin: 0 auto;
-  padding: 0 100px;
+  padding: 0 200px;
 }
 
 
@@ -401,6 +401,13 @@ form.login {
 
 .preview.DeckName:empty::before {
   content: "{ Deck Name }*";
+  color: rgb(0, 0, 0);
+  pointer-events: none;
+  text-align: center;
+}
+
+.preview.DeckDescription:empty::before {
+  content: "{ Deck Description }*";
   color: rgb(0, 0, 0);
   pointer-events: none;
   text-align: center;

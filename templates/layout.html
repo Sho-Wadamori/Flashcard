@@ -20,7 +20,7 @@
         <div class="header-inner">
             <h1 onclick="window.location='{{ url_for('home') }}'" style="cursor: pointer;"><img src="{{ url_for('static', filename='assets/icon.png') }}" alt="Flashcard Maker Logo" style="height: 2em;"> Flashcard Maker</h1>
             <!-- <a href="{{ url_for('Decks') }}"><button>🔎︎ View</button></a> -->
-            <input type="text" name="Search" id="Search" placeholder="🔎︎ Search decks...">
+            <!-- <input type="text" name="Search" id="Search" placeholder="🔎︎ Search decks..."> -->
             <!-- <a href="{{ url_for('createDeck') }}"><button>+ Create</button></a> -->
             {% if username != 'Guest' %}
                 <a href="{{ url_for('profile') }}"><button>👤 Profile</button></a>
