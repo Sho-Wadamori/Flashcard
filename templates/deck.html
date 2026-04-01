@@ -34,8 +34,6 @@
 
     {% for card in results %}
     <!-- Card List -->
-    <!-- <a href="{{ url_for('Deck', id=card[0]) }}"> -->
-
       <div class="w3-card-4">
         <div class="card-buttons">
           <!-- edit card -->
@@ -50,6 +48,7 @@
         </div>
         <!-- the question then the answer -->
         <h1 class="scientific">{{ card[1] }}</h1>
+        <p>---------------</p>
         <p class="scientific">{{ card[2] }}</p>
       </div>
     <!-- </a> -->
