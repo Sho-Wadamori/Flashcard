@@ -86,6 +86,37 @@ button {
 
 
 /* ----- used in study, edit, and create ----- */
+.card-editor {
+  display: grid;
+  margin: 0 auto;
+  background-color: #f1f1f1;
+  padding: 10vw;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  text-align: center;
+  width: calc(100% - 40vw); /* make wider when narrow */
+  flex-direction: column;
+  cursor: default;
+  border: none;
+  word-break: break-word; /* allow long text to wrap */
+  white-space: normal;
+  max-width: 100%;
+}
+
+/* make cursor type text for editable parts */
+.card-editor h1, h4 {
+  cursor: text;
+}
+
+/* remove selection on the divider */
+.card-editor p {
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+}
+
+
+/* ----- used in study, edit, and create ----- */
 .card {
   display: grid;
   margin: 0 auto;
@@ -424,4 +455,84 @@ form.login {
 .preview:empty:focus::before {
   color: rgb(107, 107, 107);
   text-align: center;
+}
+
+
+/* ----- Editor Layout & Character Inputter ----- */
+.editor-layout {
+  display: flex;
+  justify-content: center;
+}
+
+.characterPanel {
+  /* width: 20vw;
+  max-width: 550px; */
+  max-height: 55vh;
+  overflow-y: auto;
+  min-width: 300px;
+  background: #f1f1f1;
+  padding: 10px;
+  border-radius: 12px;
+  text-align: center;
+  margin-left: 5vw;
+}
+
+.left-layout {
+  width: 0; /* 0 width to not interfere w/ card */
+  pointer-events: none;
+  visibility: hidden; /* hide it */
+}
+
+.left-layout.open {
+  width: 320px; /* give it a width */
+  pointer-events: auto;
+  visibility: visible; /* reveal it */
+}
+
+#popup-overlay { display: none; }
+
+/* On small screens use popup instead */
+@media (max-width: 1200px) {
+  .left-layout {
+    position: fixed;
+    /* make top left corner centred */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* move whole thing 50% of its own size in each direction to centre */
+
+    width: 70vw;
+    visibility: hidden; /* hide it */
+    pointer-events: none; /* stop interaction when hidden */
+    z-index: 3; /* high z index to make it appear above other elements */
+    background: #f1f1f1;
+    padding: 10px;
+    border-radius: 12px;
+  }
+
+  .left-layout.open {
+    width: 70vw;
+    visibility: visible; /* reveal it */
+    pointer-events: auto; /* enable interaction when open */
+  }
+
+  /* grey overlay behind the popup */
+  #popup-overlay {
+    display: none; /* hide it */
+    position: fixed;
+    /* make the overlay cover the entire screen */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 2; /* 1 below the popup */
+  }
+
+  #popup-overlay.open {
+    display: block; /* reveal it */
+  }
+
+  .characterPanel {
+    margin-left: 0;
+  }
 }
