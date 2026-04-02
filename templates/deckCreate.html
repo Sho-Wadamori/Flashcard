@@ -28,11 +28,12 @@
 </form>
 
 <!-- Popup Overlay that takes up whole screen -->
-<div id="popup-overlay" onclick="closeDropdownPanel()"></div>
+<div id="characterPopup-overlay" onclick="closeDropdownPanel()"></div>
+<div id="popup-overlay" onclick="closePopup()"></div>
 
 <div style="text-align:center; margin-bottom: 20px;">
   <button type="button" onclick="togglePanel()">⌨ Special Characters</button>
-  <button type="button" onclick="mathjaxTooltip()">🛈 MathJax Help</button>
+  <button type="button" onclick="togglePopup()">🛈 MathJax Help</button>
 </div>
 
 <div class="editor-layout">
@@ -163,7 +164,79 @@
 <input type="checkbox" id="MathJaxCheck" onclick="toggleMathJax()" checked>
 <label for="MathJaxCheck">Enable MathJax Preview</label><br>
 
+<!-- Copied Texy Toast -->
+<div id="toast">TEST</div>
 
+<!-- MathJax Help -->
+<div id="popup">
+    <h1>MathJax explanation</h1>
+
+    <p>You can type using mathJax formatting! Surround your mathematic text in <code>\( MATH HERE \)</code> to format your mathematic text!</p>
+    <p>COMMON SYMBOLS (add this anywhere inside the <code>\(...\)</code>):</p>
+    <!-- <p><code>\pm</code> - plus minus symbol</p>
+    <p><code>\times</code> - multiplication symbol</p>
+    <p><code>\div</code> - division symbol</p>
+    <p><code>x^{a}</code> - superscript/powering (replace x and a)</p>
+    <p><code>x_{a}</code> - subscript (replace x and a)</p>
+    <p><code>\sqrt{x}</code> - square root (replace x)</p>
+    <p><code>\sqrt[n]{x}</code> - nth root (replace n and x)</p>
+
+    <p><code>\le</code> - less or equal to</p>
+    <p><code>\ge</code> - greater or equal to</p>
+    <p><code>\neq</code> - not equal to</p>
+    <p><code>\Rightarrow</code> or <code>\rightarrow</code>- right arrow for chemistry</p>
+
+    <h2>MORE ADVANCED:</h2>
+    <p><code>{ABC \over DEF}</code> or <code>\frac{ABC}{DEF}</code> - fraction of ABC/DEF</p>
+    <p><code>\sum\limits _{i=1} ^{n} i^2</code> - sigma sum notation</p>
+    <p><code>\limits</code> puts the sub and super scripts directly above/below the operator</p> -->
+
+    <p>\( \pm \) - <code>\pm</code></p>
+    <p>\( \times \) - <code>\times</code></p>
+    <p>\( \div \) - <code>\div</code></p>
+    <p>\( x^{a} \) - <code>x^{a}</code></p>
+    <p>\( x_{a} \) - <code>x_{a}</code></p>
+    <p>\( \sqrt{x} \) - <code>\sqrt{x}</code></p>
+    <p>\( \sqrt[n]{x} \) - <code>\sqrt[n]{x}</code></p>
+
+    <p>\( \le \) - <code>\le</code></p>
+    <p>\( \ge \) - <code>\ge</code></p>
+    <p>\( \neq \) - <code>\neq</code></p>
+    <p>\( \Rightarrow \) or \( \rightarrow \) - <code>\Rightarrow</code> or <code>\rightarrow</code></p>
+
+    <h2>MORE ADVANCED:</h2>
+    <p>\( \frac{ABC}{DEF} \) - <code>{ABC \over DEF}</code> or <code>\frac{ABC}{DEF}</code></p>
+    <p>\( \sum\limits _{i=1} ^{n} i^2 \) - <code>\sum\limits _{i=1} ^{n} i^2</code></p>
+    <p>* note <code>\limits</code> puts the sub and super scripts directly above/below the operator</p>
+
+
+    <!-- <h2>  GREEK LETTERS:</h2>
+    <p>  \NAMEHERE - displays greek letter (lowercase first letter for lowercase)</p>
+    <p>  only displays special uppercases (eg, delta but not alpha)</p>
+
+    <h2>  Spacing: </h2>
+    <p>  \ - adds small spacing(leave empty space after or ,)</p>
+    <p>  \! - connects two characters together</p>
+    <p>  then, from the following order of increasing spacing:</p>
+    <p>  \,    \:    \;    \     \quad    \qquad </p> -->
+    <p>  For more help, please visit https://artofproblemsolving.com/wiki/index.php/LaTeX:Symbols</p>
+<!-- 
+    <p>MathJax allows you to render complex mathematical equations and scientific notation in your flashcards.</p>
+    <P>To use MathJax, simply type your equation inside one of the following formats:</P>
+    <code>\\( TEXT HERE \\)</code><br>
+    <code>\\[ TEXT HERE \\]</code><br>
+    <code>$$ TEXT HERE $$</code>
+    <p>Make sure to enable the MathJax preview toggle to see the rendered equations in real-time!</p>
+    <h4>EXAMPLES:</h2>
+    <p>\( x = { -b \pm \sqrt{ b^{ 2 }-4ac } \over 2a }\)</p>
+    <code>\( x = { -b \pm \sqrt{ b^{ 2 }-4ac } \over 2a }\) or \( x = \frac{ -b \pm \sqrt{ b^2-4ac } } { 2a } \)</code>
+    
+    <p>  \( Ag^{ + } \! {}_{ (aq) } + NH_{ 3 \, (aq) } \Rightarrow [Ag(NH_{ 3 })_{ 2 }]^{ + } \! {}_{ (aq) } \)</p>
+    <code>  \( Ag^{ + } \! {}_{ (aq) } + NH_{ 3 \, (aq) } \Rightarrow [Ag(NH_{ 3 })_{ 2 }]^{ + } \! {}_{ (aq) } \)</code>
+
+    <p>\(x^{ 1 \over 5 } = \sqrt[5]{x}\)</p>
+    <code>\(x^{ 1 \over 5 } = \sqrt[5]{x}\)</code> -->
+</div>
 
 <!------------------------ JAVASCRIPT -------------------------->
 <script>
@@ -292,16 +365,18 @@ if (deckForm) {
 // ---------- Character Inputter ----------
 
 const panel = document.getElementById('characterPanel');
-const overlay = document.getElementById('popup-overlay');
+const characterOverlay = document.getElementById('characterPopup-overlay');
+
+const toast = document.getElementById('toast');
 
 function togglePanel() {
     panel.classList.toggle('open'); // add open class
-    overlay.classList.toggle('open'); // add open class
+    characterOverlay.classList.toggle('open'); // add open class
 }
 
 function closeDropdownPanel() {
     panel.classList.remove('open'); // remove open class
-    overlay.classList.remove('open'); // remove open class
+    characterOverlay.classList.remove('open'); // remove open class
 }
 
 function insertChar(char) {
@@ -312,7 +387,11 @@ function insertChar(char) {
 
     else { // if not input is focused
         navigator.clipboard.writeText(char); // copy char to clipboard
-        alert("No input selected. " + char + " has been copied to clipboard."); // alert user (change to snackbar later)
+        toast.classList.add('open');
+        toast.innerText = "No input selected. " + char + " has been copied to clipboard."
+        setTimeout(() => {
+            toast.classList.remove('open');
+        }, 2000);
     }
 }
 
@@ -320,6 +399,20 @@ function insertChar(char) {
 function mathjaxTooltip() {
     alert("MathJax allows you to render complex mathematical equations and scientific notation in your flashcards. To use MathJax, simply type your equation inside one of the following formats: \\( TEXT HERE \\), \\[ TEXT HERE \\], or $$ TEXT HERE $$. Make sure to enable the MathJax preview toggle to see the rendered equations in real-time!");
 }
+
+const popup = document.getElementById('popup');
+const popup_overlay = document.getElementById('popup-overlay');
+
+function togglePopup() {
+    popup.classList.toggle('open'); // add open class
+    popup_overlay.classList.toggle('open'); // add open class
+}
+
+function closePopup() {
+    popup.classList.remove('open'); // remove open class
+    popup_overlay.classList.remove('open'); // remove open class
+}
+
 
 </script>
 

@@ -516,7 +516,7 @@ form.login {
   }
 
   /* grey overlay behind the popup */
-  #popup-overlay {
+  #characterPopup-overlay {
     display: none; /* hide it */
     position: fixed;
     /* make the overlay cover the entire screen */
@@ -528,11 +528,72 @@ form.login {
     z-index: 2; /* 1 below the popup */
   }
 
-  #popup-overlay.open {
+  #characterPopup-overlay.open {
     display: block; /* reveal it */
   }
 
   .characterPanel {
     margin-left: 0;
   }
+}
+
+
+
+#toast {
+  visibility: hidden;
+  min-width: 250px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 2px;
+  padding: 16px;
+  position: fixed;
+  z-index: 5; /* above all content, even overlays */
+  left: 50%;
+  transform: translate(-50%, 0); /* centre horizontally */
+  bottom: 30px;
+  font-size: 17px;
+}
+
+#toast.open {
+  visibility: visible;
+}
+
+#popup {
+  position: fixed;
+  /* make top left corner centred */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* move whole thing 50% of its own size in each direction to centre */
+
+  width: 70vw;
+  visibility: hidden; /* hide it */
+  pointer-events: none; /* stop interaction when hidden */
+  z-index: 3; /* high z index to make it appear above other elements */
+  background: #f1f1f1;
+  padding: 10px;
+  border-radius: 12px;
+}
+
+#popup.open {
+  width: 70vw;
+  visibility: visible; /* reveal it */
+  pointer-events: auto; /* enable interaction when open */
+}
+
+/* grey overlay behind the popup */
+#popup-overlay {
+  display: none; /* hide it */
+  position: fixed;
+  /* make the overlay cover the entire screen */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 2; /* 1 below the popup */
+}
+
+#popup-overlay.open {
+  display: block; /* reveal it */
 }
