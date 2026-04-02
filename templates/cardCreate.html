@@ -1,24 +1,16 @@
 {% extends "layout.html" %}
 
-{% block title %}Create Card{% endblock %}
+{% block title %}Create New Flashcard{% endblock %}
 
 {% block body %}
 
 <!-- Error message -->
-{% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages%}
-        {% for category, message in messages%}
-            <div class="alertContainer">
-                <p class="alert {{ category }}">{{message}}</p>
-                <button onclick="this.parentElement.remove()" class="close-btn {{ category }}">✖</button>
-            </div>
-        {%endfor%}
-    {%endif%}
-{%endwith%}
+{% include "components/alerts.html" %}
 
 <!-- Card creation form -->
 <form id="cardForm" action="{{ url_for('createCard', id=deck_info[1]) }}" method="POST" autocomplete="off">
     <p style="color: rgb(168, 46, 46);">* Indicates required question</p>
+
     <input id="questionInput" name="cardQuestion" type="hidden" required>
     <input id="answerInput" name="cardAnswer" type="hidden" required>
     <input id="hintInput" name="cardHint" type="hidden">

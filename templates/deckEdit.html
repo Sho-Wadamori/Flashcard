@@ -5,16 +5,7 @@
 {% block body %}
 
 <!-- Error message -->
-{% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages%}
-        {% for category, message in messages%}
-            <div class="alertContainer">
-                <p class="alert {{ category }}">{{message}}</p>
-                <button onclick="this.parentElement.remove()" class="close-btn {{ category }}">✖</button>
-            </div>
-        {%endfor%}
-    {%endif%}
-{%endwith%}
+{% include "components/alerts.html" %}
 
 <!-- Deck creation form -->
 <form id="deckForm" action="{{ url_for('editDeck', id=results[0][0]) }}" method="POST" autocomplete="off">

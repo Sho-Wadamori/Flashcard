@@ -4,16 +4,8 @@
 
 {% block body %}
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages%}
-        {% for category, message in messages%}
-            <div class="alertContainer">
-                <p class="alert {{ category }}">{{message}}</p>
-                <button onclick="this.parentElement.remove()" class="close-btn {{ category }}">✖</button>
-            </div>
-        {%endfor%}
-    {%endif%}
-{%endwith%}
+<!-- Error message -->
+{% include "components/alerts.html" %}
 
 <h2 class="scientific">{{ deck_info[0] }}</h2>
 
