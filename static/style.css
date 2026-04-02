@@ -477,6 +477,11 @@ form.login {
   margin-left: 5vw;
 }
 
+.char-buttons {
+  display: grid;
+  grid-template-columns: auto auto auto;
+}
+
 .left-layout {
   width: 0; /* 0 width to not interfere w/ card */
   pointer-events: none;
@@ -573,6 +578,9 @@ form.login {
   background: #f1f1f1;
   padding: 10px;
   border-radius: 12px;
+  overflow-y: scroll;
+
+  max-height: 80vh;
 }
 
 #popup.open {
@@ -596,4 +604,20 @@ form.login {
 
 #popup-overlay.open {
   display: block; /* reveal it */
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
 }
