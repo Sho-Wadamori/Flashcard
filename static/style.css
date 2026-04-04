@@ -439,7 +439,7 @@ form.login {
   border: none;
   cursor: pointer;
   border-radius: 18px; /* make the button round like the icon */
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
   background-color: transparent;
   display: flex;
   justify-content: center;
@@ -449,7 +449,7 @@ form.login {
   pointer-events: none;
   /* smoothly appear from below */
   transform: translateY(10px);
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
 }
 
 /* smoothly reveal button */
@@ -473,47 +473,44 @@ form.login {
 .preview {
   outline: none;
   text-align: center;
+  color: rgb(0, 0, 0);
 }
 
+.preview.hint {
+  color: #fff;
+}
+
+/* placeholder text for input fields */
 .preview.DeckName:empty::before {
   content: "{ Deck Name }*";
-  color: rgb(0, 0, 0);
   pointer-events: none;
-  text-align: center;
 }
 
 .preview.DeckDescription:empty::before {
   content: "{ Deck Description }";
-  color: rgb(0, 0, 0);
   pointer-events: none;
-  text-align: center;
 }
 
 .preview.question:empty::before {
   content: "{ Flashcard Question }*";
-  color: rgb(0, 0, 0);
   pointer-events: none;
-  text-align: center;
 }
 
 .preview.answer:empty::before {
   content: "{ Flashcard Answer }*";
-  color: rgb(0, 0, 0);
   pointer-events: none;
-  text-align: center;
 }
 
 .preview.hint:empty::before {
   content: "{ Hint Text }";
-  color: #fff;
   pointer-events: none;
-  text-align: center;
 }
 
+/* on focus */
 .preview:empty:focus::before {
   color: rgb(107, 107, 107);
-  text-align: center;
 }
+
 
 
 /* ----- Editor Layout & Character Inputter ----- */
@@ -522,6 +519,7 @@ form.login {
   justify-content: center;
 }
 
+/* character panel */
 .characterPanel {
   /* width: 20vw;
   max-width: 550px; */
@@ -533,26 +531,43 @@ form.login {
   border-radius: 12px;
   text-align: center;
   margin-left: 5vw;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* character panel buttons */
 .char-buttons {
   display: grid;
   grid-template-columns: auto auto auto;
 }
 
+/* container of character panel */
 .left-layout {
   width: 0; /* 0 width to not interfere w/ card */
   pointer-events: none;
-  visibility: hidden; /* hide it */
+  transition: width 0.3s ease-in-out; /* animate width and delay visibility change */
+  transition-delay: 0.1s; /* delay the transition to make it smoother */
 }
-
+/* when open */
 .left-layout.open {
   width: 320px; /* give it a width */
   pointer-events: auto;
-  visibility: visible; /* reveal it */
+  transition-delay: 0s;
 }
 
-#popup-overlay { display: none; }
+/* animate inner content (use > * so we can reuse open class) */
+.left-layout > * {
+  opacity: 0;
+  visibility: hidden; /* hide it */
+  transform: translateX(-10px);
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out, visibility 0s linear 0.3s; /* animate opacity and left/right transform, delay visibility */
+}
+
+.left-layout.open > * {
+  opacity: 1;
+  visibility: visible; /* reveal it */
+  transform: translateX(0); /* move it to original position */
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out, visibility 0s linear 0s; /* animate opacity and left/right transform, no delay on visibility */
+}
 
 /* On small screens use popup instead */
 @media (max-width: 1200px) {
@@ -561,7 +576,9 @@ form.login {
     /* make top left corner centred */
     top: 50%;
     left: 50%;
+    transition: none;
     transform: translate(-50%, -50%); /* move whole thing 50% of its own size in each direction to centre */
+    transition: opacity 0.2s ease-in-out, visibility 0s linear 0.2s; /* animate opacity and delay visibility */
 
     width: 70vw;
     visibility: hidden; /* hide it */
@@ -570,17 +587,28 @@ form.login {
     background: #f1f1f1;
     padding: 10px;
     border-radius: 12px;
+    opacity: 0;
   }
-
+  /* when open */
   .left-layout.open {
     width: 70vw;
     visibility: visible; /* reveal it */
     pointer-events: auto; /* enable interaction when open */
+    opacity: 1;
+    transition-delay: 0s;
+  }
+
+  .left-layout > * {
+    transition: none; /* disable animation for inner content */
+    transform: none;
+    /* make sure its visible and allow parent to do the transition */
+    opacity: 1;
+    visibility: visible;
   }
 
   /* grey overlay behind the popup */
-  #characterPopup-overlay {
-    display: none; /* hide it */
+  .characterPopup-overlay {
+    visibility: hidden; /* hide it */
     position: fixed;
     /* make the overlay cover the entire screen */
     top: 0;
@@ -589,37 +617,59 @@ form.login {
     bottom: 0;
     background: rgba(0, 0, 0, 0.4);
     z-index: 2; /* 1 below the popup */
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out, visibility 0s linear 0.2s; /* animate opacity and delay visibility */
+  }
+  /* when open */
+  .characterPopup-overlay.open {
+    visibility: visible; /* reveal it */
+    opacity: 1;
+    transition-delay: 0s;
   }
 
-  #characterPopup-overlay.open {
-    display: block; /* reveal it */
-  }
-
+  /* centre panel when in popup mode */
   .characterPanel {
     margin-left: 0;
+    transition: none; /* disable animation */
   }
+}
+
+.no-transition .characterPopup-overlay,
+.no-transition .left-layout,
+.no-transition .left-layout > * {
+  transition: none !important;
 }
 
 
 
+/* ----- Toast Notification ----- */
 #toast {
   visibility: hidden;
   min-width: 250px;
-  background-color: #333;
+  background-color: #333333d3;
   color: #fff;
   text-align: center;
-  border-radius: 2px;
+  border-radius: 12px;
   padding: 16px;
   position: fixed;
   z-index: 5; /* above all content, even overlays */
   left: 50%;
-  transform: translate(-50%, 0); /* centre horizontally */
+  transform: translate(-50%, 10px); /* centre horizontally */
   bottom: 30px;
   font-size: 17px;
-}
+  opacity: 0;
+  /* x y blur spread */
+  box-shadow: 0 5px 8px 3px rgba(0, 0, 0, 0.2);
 
+  transition: transform 0.5s ease-in-out, visibility 0s linear 0.5s, opacity 0.5s ease-in-out; /* animate from below and delay visibility change */
+}
+/* when open */
 #toast.open {
+  transform: translate(-50%, 0);
   visibility: visible;
+  opacity: 1;
+
+  transition: transform 0.5s ease-in-out, visibility 0s linear 0.0s, opacity 0.5s ease-in-out; /* animate from below and no delay on visibility change */
 }
 
 
@@ -642,17 +692,21 @@ form.login {
   overflow-y: scroll;
 
   max-height: 80vh;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out, visibility 0s linear 0.2s; /* animate opacity and delay visibility */
 }
-
+/* when open */
 #popup.open {
   width: 70vw;
   visibility: visible; /* reveal it */
   pointer-events: auto; /* enable interaction when open */
+  opacity: 1;
+  transition-delay: 0s;
 }
 
 /* grey overlay behind the popup */
 #popup-overlay {
-  display: none; /* hide it */
+  visibility: hidden; /* hide it */
   position: fixed;
   /* make the overlay cover the entire screen */
   top: 0;
@@ -661,6 +715,8 @@ form.login {
   bottom: 0;
   background: rgba(0, 0, 0, 0.4);
   z-index: 2; /* 1 below the popup */
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out, visibility 0s linear 0.2s; /* animate opacity and delay visibility */
 }
 /* when open */
 #popup-overlay.open {
