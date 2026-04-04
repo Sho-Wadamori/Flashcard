@@ -39,19 +39,21 @@
             {% endif %}
         </div>
     </header>
-    <nav class="w3-bar w3-blue-grey">
-        <a href="{{ url_for('home') }}" class="w3-bar-item w3-button">Home</a>
-        <a href="{{ url_for('Decks') }}" class="w3-bar-item w3-button">View Decks</a>
-        <a href="{{ url_for('createDeck') }}" class="w3-bar-item w3-button">Create Deck</a>
-        <a href="{{ url_for('stats') }}" class="w3-bar-item w3-button">Statistics</a>
-        <!-- <div class="w3-dropdown-hover">
-            <button class="w3-button">Dropdown ▾</button>
-                <div class="w3-dropdown-content w3-bar-block w3-card-4">
-                    <a href="#" class="w3-bar-item w3-button">Tab 1</a>
-                    <a href="#" class="w3-bar-item w3-button">Tab 2</a>
-                    <a href="#" class="w3-bar-item w3-button">Tab 3</a>
-                </div>
-        </div> -->
+    <nav class="w3-bar w3-blue-grey navbar">
+        <div class="nav-content">
+            <a href="{{ url_for('home') }}" class="w3-bar-item w3-button" style="width:25%">Home</a>
+            <a href="{{ url_for('Decks') }}" class="w3-bar-item w3-button" style="width:25%">View Decks</a>
+            <a href="{{ url_for('createDeck') }}" class="w3-bar-item w3-button" style="width:25%">Create Deck</a>
+            <a href="{{ url_for('stats') }}" class="w3-bar-item w3-button" style="width:25%">Statistics</a>
+            <!-- <div class="w3-dropdown-hover">
+                <button class="w3-button">Dropdown ▾</button>
+                    <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                        <a href="#" class="w3-bar-item w3-button">Tab 1</a>
+                        <a href="#" class="w3-bar-item w3-button">Tab 2</a>
+                        <a href="#" class="w3-bar-item w3-button">Tab 3</a>
+                    </div>
+            </div> -->
+        </div>
     </nav>
     {% block body %}
     {% endblock %}
