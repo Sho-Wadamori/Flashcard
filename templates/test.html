@@ -237,7 +237,6 @@ function filterFunction() {
 <!-- <h1>a<sub>1234567890-=qwertyuiop[]\asdfghjkl;'zxcvbnm,./</sub>a</h1>
 <h1>a<sup>1234567890-=qwertyuiop[]\asdfghjkl;'zxcvbnm,./</sup>a</h1> -->
 
-<h1></h1>
 
 <script>
 
@@ -251,5 +250,17 @@ function filterFunction() {
 
   document.querySelectorAll("h1").forEach(el => {
     el.innerHTML = renderScientific(el.innerText);
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.ctrlKey && event.key === '/') {
+      console.log('kebind 1 and / were pressed');
+    }
+    if (!event.altKey && !event.shiftKey && !event.ctrlKey && event.key === '2') {
+      console.log('2 key was pressed');
+    }
+    if (!event.altKey && !event.shiftKey && !event.ctrlKey && event.key === '3') {
+      console.log('3 key was pressed');
+    }
   });
 </script>

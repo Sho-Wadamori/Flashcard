@@ -16,7 +16,6 @@
   <p>Cards in this deck:</p>
   <a href="{{ url_for('start_study', id=deck_info[1]) }}"><button id="study-button">Click here to start studying!</button></a>
   <a href="{{ url_for('Decks') }}"><button>Back</button></a>
-  <input type="search" name="decksearch" id="decksearch">
 
   <br><br><form action="{{ url_for('Deck', id=deck_info[1]) }}" method="GET" class='sort-form'>
     <label for="sort_by">Sort by:</label>
@@ -139,6 +138,13 @@ const scrollBtn = document.querySelector(".fixed-button");
 window.addEventListener("scroll", () => {
     scrollBtn.classList.toggle("show", window.scrollY > 200);
 });
+
+const studyButton = document.getElementById("study-button")
+document.addEventListener('keydown', (event) => {
+  if (event.key === 's') {
+    studyButton.click()
+  }
+})
 
 </script>
 

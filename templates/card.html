@@ -1,4 +1,4 @@
-  {% extends "layout.html" %}
+{% extends "layout.html" %}
 
 {% block title %}Study{% endblock %}
 
@@ -9,22 +9,22 @@
 
   <!-- Previous card button -->
   {% if index > 0 %}
-      <a href="{{ url_for('Study', id=deck_id, index=index - 1) }}">
-          <button id="prev_button">Previous</button>
-      </a>
+    <a href="{{ url_for('Study', id=deck_id, index=index - 1) }}">
+      <button id="prev_button">Previous</button>
+    </a>
   {% endif %}
 
   <!-- Next card button -->
   {% if index + 1 < total %}
-      <button id="next_button" form="responseForm" type="submit">Next</button>
+    <button id="next_button" form="responseForm" type="submit">Next</button>
   {% else %}
-      <button id="exit_button" form="responseForm" type="submit">Exit</button>
-      <p>You've completed the deck!</p>
+    <button id="exit_button" form="responseForm" type="submit">Exit</button>
+    <p>You've completed the deck!</p>
   {% endif %}
 
   <!-- Show answer -->
   {% if cards %}
-    <button class="card" id="card_click" data-question="{{ cards[1] }}" data-answer="{{ cards[2] }}">
+    <button class="card" id="card_click" onclick="clickAction()" data-question="{{ cards[1] }}" data-answer="{{ cards[2] }}">
       <h2 class="scientific" id="card">{{ cards[1] }}</h2>
     </button><br>
 
@@ -46,7 +46,7 @@
         <input type="radio" id="skip" name="response" value="skip">
         <label for="skip">Skip [3]</label>
       </div>
-      <p id="keybindhint" style="text-align: center; color: rgb(63, 63, 63);">*press [alt + shift] + Number to change response</p>
+      <p id="keybindhint" style="text-align: center; color: rgb(63, 63, 63);">*press the corresponding number on your keyboard to change response</p>
     </form>
     <button onclick="openPopupTab('studykeys');">Keybinds</button>
 
@@ -69,10 +69,9 @@
 <script>
 
   // ----- Card Flipper -----
-  document.addEventListener("DOMContentLoaded", () => {
-    let showingAnswer = false;
-    const cardButton = document.getElementById("card_click");
-    const card = document.getElementById("card");
+  let showingAnswer = false;
+  const card = document.getElementById("card");
+  const cardButton = document.getElementById("card_click");
 
     const questionText = cardButton.dataset.question;
     const answerText = cardButton.dataset.answer;
@@ -92,25 +91,46 @@
     MathJax.typesetPromise([card]);
   }
 
-    cardButton.onclick = clickAction;
-  });
+
 
 
   // ----- Keybinds -----
-  document.getElementById("correct").accessKey = "1";
-  document.getElementById("incorrect").accessKey = "2";
-  document.getElementById("skip").accessKey = "3";
+  document.addEventListener('keydown', (event) => {
+    if (event.key === '1') {
+      document.getElementById("correct").checked = true;
+    }
+    if (event.key === '2') {
+      document.getElementById("incorrect").checked = true;
+    }
+    if (event.key === '3') {
+      document.getElementById("skip").checked = true;
+    }
 
-  const keybindHint = document.getElementById("keybindhint");
-  const ua = navigator.userAgent;
+    if (event.key === ' ') {
+      clickAction()
+    }
 
+    const next = document.getElementById("next_button");
+    const exit = document.getElementById("exit_button");
+    const prev = document.getElementById("prev_button");
+    if (event.key === 'ArrowRight') {
+      // click if button is rendered
+      if (next) {
+        next.click();
+      }
+      // click if button is rendered
+      else if (exit) {
+        exit.click();
+      }
+    }
+    if (event.key === 'ArrowLeft') {
+      // click if button is rendered
+      if (prev) {
+        prev.click();
+      }
+    }
+  });
 
-  // ----- Browser Checker -----
-  if (ua.indexOf("Firefox") > -1) {
-    keybindHint.textContent = "*press [Alt + Shift] + Number to change response";
-  } else {
-    keybindHint.textContent = "*press [Alt] + Number to change response";
-  }
 
 
   // const responseValue = document.querySelector('input[name="response"]:checked');
