@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="login-body">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
     <title>Sign In | Flashcard Maker</title>
 </head>
-<body>
+<body class="login-body">
     <div class="login-container w3-card-4">
         <h2>Welcome Back!</h2><br>
 
@@ -32,6 +32,21 @@
         </form>
         <p>New to Flashcard Maker?</p> <a href="{{ url_for('signup') }}" style="color: rgb(14, 103, 161);">Sign up here!</a>
     </div>
-    
+
+    <script>
+        function passwordReveal() {
+            var password = document.getElementById("password");
+            var confirm = document.getElementById("confirm_password");
+
+            if (password.type === "password") {
+                password.type = "text";
+                confirm.type = "text";
+            } else {
+                password.type = "password";
+                confirm.type = "password";
+            }
+        }
+    </script>
+
 </body>
 </html>

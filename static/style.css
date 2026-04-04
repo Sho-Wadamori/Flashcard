@@ -225,23 +225,39 @@ button {
 
 
 /* ----- Login/Sign Up ----- */
+.login-body {
+  display: flex;
+  width: 100%;
+  padding: 0 20px;
+  height: 100%;
+  justify-content: center;
+  align-items: center; 
+}
+
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 135px auto; 
-  max-width: 30vw;
-  min-height: 70vh;
+  margin: auto auto;
+  max-width: 576px;
+  width: 100%;
+  height: 670px;
   padding: 2rem;
   text-align: center;
   border-radius: 32px;   
 }
 
-/* set login container width */
+
+/* set login input field width */
 form.login {
-  width: 70%;
+  width: 361px;
 }
 
+@media (max-width: 510px) {
+  form.login {
+    width: calc(70% + 20vw);
+  }
+}
 /* set login input width */
 .login input:not([type="checkbox"]) {
   width: 100%;
