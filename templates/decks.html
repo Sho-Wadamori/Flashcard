@@ -7,57 +7,79 @@
 <!-- Error message -->
 {% include "components/alerts.html" %}
 
-<h2>Decks</h2>
-<p>Select a deck to view its cards.</p>
+<div class="deck-header">
+    <h2>Your Decks</h2>
+    <p>Select a deck to view its cards.</p>
 
-<!-- If decks exist -->
-{% if results %}
-    <!-- a 3 column grid -->
-    <div class="three-column">
-        <!-- Create Deck button -->
+    <!-- If decks exist -->
+    {% if results %}
+
+        <form action="{{ url_for('Decks') }}" method="GET" class='sort-form' style="top: 16px;">
+        <label for="sort_by">Sort by:</label>
+        <select name="sort_by" id="sort_by">
+            <option value="deck_creation" {% if sort_by == 'deck_creation' %}selected{% endif %}>Creation Date</option>
+            <option value="deck_name" {% if sort_by == 'deck_name' %}selected{% endif %}>Name</option>
+            <option value="deck_description" {% if sort_by == 'deck_description' %}selected{% endif %}>Description</option>
+        </select>
+
+        <label for="order">Order:</label>
+        <select name="order" id="order">
+            <option value="DESC" {% if order == 'DESC' %}selected{% endif %}>Descending</option>
+            <option value="ASC" {% if order == 'ASC' %}selected{% endif %}>Ascending</option>
+        </select>
+
+        <button type="submit">Apply</button>
+        </form>
+
+    <!-- No deck message -->
+    {% else %}
+        <p>You have no decks yet.</p>
+
         <a href="{{ url_for('createDeck') }}" style="text-decoration: none;">
             <div class="w3-card-4">
                 <h1 class="plus">+</h1>
             </div>
         </a>
+    {% endif %}
+</div>
 
-        {% for deck in results %}
-        <!-- Deck List -->
-        <div onclick="window.location='{{ url_for('Deck', id=deck[0]) }}'" style="text-decoration: none; cursor: pointer;"> <!-- Make it div to stop conflicts w/ buttons inside -->
-            <div class="w3-card-4">
-                <div class="card-buttons">
-                    <!-- edit deck -->
-                    <a href="{{ url_for('editDeck', id=deck[0]) }}">
-                        <button style="text-decoration: none;" class="edit-button">✏️</button>
-                    </a>
-                    <!-- delete deck -->
-                    <form action="{{ url_for('deleteDeck', id=deck[0]) }}" method="POST">
-                        <input type="hidden" name="deck_id" value="{{ deck[0] }}">
-                        <button type="button" onclick="event.preventDefault(); event.stopPropagation(); showConfirm(this.form);" class="delete-button">❌</button>
-                    </form>
-                </div>
-                <!-- the name then the description -->
-                <h1 class="scientific">{{ deck[1] }}</h1>
-                <p>---------------</p>
-                {% if deck[2] %}
-                    <p style="color: rgb(107, 107, 107);" class="scientific">{{ deck[2] }}</p>
-                {% else %}
-                    <p style="color: rgb(107, 107, 107);">No description</p>
-                {% endif %}
-            </div>
+{% if results %}
+<!-- a 3 column grid -->
+<div class="three-column">
+    <!-- Create Deck button -->
+    <a href="{{ url_for('createDeck') }}" style="text-decoration: none;">
+        <div class="w3-card-4">
+            <h1 class="plus">+</h1>
         </div>
-        {% endfor %}
-    </div>
+    </a>
 
-<!-- No deck message -->
-{% else %}
-<p>You have no decks yet.</p>
-
-<a href="{{ url_for('createDeck') }}" style="text-decoration: none;">
-    <div class="w3-card-4">
-        <h1 class="plus">+</h1>
+    {% for deck in results %}
+    <!-- Deck List -->
+    <div onclick="window.location='{{ url_for('Deck', id=deck[0]) }}'" style="text-decoration: none; cursor: pointer;"> <!-- Make it div to stop conflicts w/ buttons inside -->
+        <div class="w3-card-4">
+            <div class="card-buttons">
+                <!-- edit deck -->
+                <a href="{{ url_for('editDeck', id=deck[0]) }}">
+                    <button style="text-decoration: none;" class="edit-button">✏️</button>
+                </a>
+                <!-- delete deck -->
+                <form action="{{ url_for('deleteDeck', id=deck[0]) }}" method="POST">
+                    <input type="hidden" name="deck_id" value="{{ deck[0] }}">
+                    <button type="button" onclick="event.preventDefault(); event.stopPropagation(); showConfirm(this.form);" class="delete-button">❌</button>
+                </form>
+            </div>
+            <!-- the name then the description -->
+            <h1 class="scientific">{{ deck[1] }}</h1>
+            <p>---------------</p>
+            {% if deck[2] %}
+                <p style="color: rgb(107, 107, 107);" class="scientific">{{ deck[2] }}</p>
+            {% else %}
+                <p style="color: rgb(107, 107, 107);">No description</p>
+            {% endif %}
+        </div>
     </div>
-</a>
+    {% endfor %}
+</div>
 
 {% endif %}
 

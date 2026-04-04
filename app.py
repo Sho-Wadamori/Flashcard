@@ -151,25 +151,52 @@ def home():
 # ---------- list all decks ----------
 @app.route('/decks/')
 def Decks():
+    sort_by = request.args.get('sort_by')
+    order = request.args.get('order')
+    allowed_sort = {'deck_creation', 'deck_name', 'deck_description'}
+    allowed_order = {'ASC', 'DESC'}
+
+    if sort_by not in allowed_sort:
+        sort_by = 'deck_creation'  # default sort by creation date
+    if order not in allowed_order:
+        order = 'DESC'  # default order descending
+
     # get all the decks id, name, description, and creation date
-    sql = """
+    sql = f"""
             SELECT deck_ID, deck_name, deck_description, deck_creation
             FROM Decks
-            Where deck_userID = ?;
+            WHERE deck_userID = ?
+            ORDER BY {sort_by} {order};
         """
     result = query_db(sql, (userID(),))
     # return the results
-    return render_template("decks.html", results=result)
+    return render_template(
+        "decks.html",
+        results=result,
+        sort_by=sort_by,
+        order=order
+    )
 
 
 # ---------- list all flashcards for a single deck ----------
 @app.route('/decks/<int:id>/')
 def Deck(id):
+    sort_by = request.args.get('sort_by')
+    order = request.args.get('order')
+    allowed_sort = {'card_creation', 'card_question', 'card_answer'}
+    allowed_order = {'ASC', 'DESC'}
+
+    if sort_by not in allowed_sort:
+        sort_by = 'card_creation'  # default sort by creation date
+    if order not in allowed_order:
+        order = 'DESC'  # default order descending
+
     # get all the card id, Q, A, and creation date for inputted deck id
-    sql = """
+    sql = f"""
             SELECT card_ID, card_question, card_answer, card_creation
             FROM Flashcards
-            WHERE card_deckID = ? AND card_userID = ?;
+            WHERE card_deckID = ? AND card_userID = ?
+            ORDER BY {sort_by} {order};
         """
     # get the deck name of the inputted deck id
     sql_deck = """
@@ -192,7 +219,9 @@ def Deck(id):
         results=results,
         deck_info=deck_info,
         time_ago=time_ago,
-        format_date=format_date
+        format_date=format_date,
+        sort_by=sort_by,
+        order=order
     )
 
 

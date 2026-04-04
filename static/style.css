@@ -621,3 +621,20 @@ td, th {
 tr:nth-child(even) {
   background-color: #dddddd;
 }
+
+
+.sort-form {
+  position: absolute;
+  top: 0px;
+  right: 16px;
+  padding: 6px;
+  text-align: right;
+}
+
+.deck-header {
+  position: relative;
+  max-width: 1920px;
+  margin: 0 auto;
+  height: 100%;
+  padding: 0 30px;
+}
