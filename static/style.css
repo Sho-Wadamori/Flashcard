@@ -588,6 +588,9 @@ form.login {
   visibility: visible;
 }
 
+
+
+/* ----- General Popups (used in MathJax help) ----- */
 #popup {
   position: fixed;
   /* make top left corner centred */
@@ -625,11 +628,47 @@ form.login {
   background: rgba(0, 0, 0, 0.4);
   z-index: 2; /* 1 below the popup */
 }
-
+/* when open */
 #popup-overlay.open {
-  display: block; /* reveal it */
+  visibility: visible; /* reveal it */
+  opacity: 1;
+  transition-delay: 0s;
 }
 
+
+
+.tab-buttons {
+  display: grid;
+  gap: 10%;
+  margin-bottom: 20px;
+  padding: 10px 20%;
+  grid-template-columns: auto auto auto;
+}
+
+.tab-buttons button {
+  padding: 10px 20px;
+  border: 2px solid black;
+  border-radius: 8px;
+  background-color: white;
+  cursor: pointer;
+  user-select: none;
+}
+
+.tab-buttons button.active {
+  background-color: #0e67a1;
+  color: white;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+
+/* Table in the MathJax help popup (taken from w3schools) */
 table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
@@ -641,7 +680,7 @@ td, th {
   text-align: left;
   padding: 8px;
 }
-
+/* change bg colour for even rows */
 tr:nth-child(even) {
   background-color: #dddddd;
 }

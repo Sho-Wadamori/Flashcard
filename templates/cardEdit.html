@@ -7,6 +7,8 @@
 <!-- Error message -->
 {% include "components/alerts.html" %}
 
+<div id="characterPopup-overlay" class="characterPopup-overlay" onclick="closeDropdownPanel()"></div>
+
 <!-- Card creation form -->
 <form id="cardForm" action="{{ url_for('editCard', id=deck_info[1], card_id=cards[0]) }}" method="POST" autocomplete="off">
     <p style="color: rgb(168, 46, 46);">* Indicates required question</p>
@@ -19,13 +21,9 @@
     <button type="reset">Reset</button><br><br>
 </form>
 
-<!-- Popup Overlay that takes up whole screen -->
-<div id="characterPopup-overlay" onclick="closeDropdownPanel()"></div>
-<div id="popup-overlay" onclick="closePopup()"></div>
-
 <div style="text-align:center; margin-bottom: 20px;">
   <button type="button" onclick="togglePanel()">⌨ Special Characters</button>
-  <button type="button" onclick="togglePopup()">🛈 MathJax Help</button>
+  <button type="button" onclick="openPopupTab('mathjax')">🛈 MathJax Help</button>
 </div>
 
 <div class="editor-layout">
@@ -55,11 +53,8 @@
 <!-- Copied Text Toast -->
 <div id="toast"></div>
 
-<!-- Add the MathJax help html -->
-{% include 'components/MathJaxHelp.html' %}
-
 <!-- import deck editor js -->
 <script src="{{ url_for('static', filename='js/cardEditor.js') }}"></script>
-<script src="{{ url_for('static', filename='js/charInputter&MathJax.js') }}"></script>
+<script src="{{ url_for('static', filename='js/characterInputter.js') }}"></script>
 
 {% endblock %}

@@ -1,8 +1,6 @@
 // load html brefore running
 document.addEventListener("DOMContentLoaded", () => {
 
-    
-    
     // ---------- Render Scientific Text for each instance (ONLY STATIC) ----------
     document.querySelectorAll(".scientific").forEach(i => {
         if (i.textContent.includes('\\(')) { 
@@ -24,5 +22,6 @@ document.addEventListener("DOMContentLoaded", () => {
             confirm.type = "password";
         }
     }
+
 });
 

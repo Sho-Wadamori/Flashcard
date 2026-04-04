@@ -31,15 +31,12 @@ function insertChar(char) {
     }
 }
 
-const popup = document.getElementById('popup');
-const popup_overlay = document.getElementById('popup-overlay');
-
-function togglePopup() {
-    popup.classList.toggle('open'); // add open class
-    popup_overlay.classList.toggle('open'); // add open class
-}
-
-function closePopup() {
-    popup.classList.remove('open'); // remove open class
-    popup_overlay.classList.remove('open'); // remove open class
-}
+// listen for window resizing to prevent styling issues
+let resizeTimer;
+window.addEventListener('resize', () => {
+    document.body.classList.add('no-transition');
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+        document.body.classList.remove('no-transition');
+    }, 100); // remove after 100ms
+});
