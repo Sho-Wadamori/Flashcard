@@ -2,64 +2,67 @@
 
 {% block title %}Study{% endblock %}
 
-  {% block body %}
-  <h2>Study</h2>
+{% block body %}
 
-  <h3>Card {{ index + 1 }} of {{ total }}</h3>
+<h2>Study</h2>
 
+<h3>Card {{ index + 1 }} of {{ total }}</h3>
+
+{% if index + 1 >= total %}
+  <button id="exit_button" form="responseForm" type="submit">Exit</button>
+  <p>You've completed the deck!</p>
+{% endif %}
+
+
+<div class="card-container">
   <!-- Previous card button -->
   {% if index > 0 %}
     <a href="{{ url_for('Study', id=deck_id, index=index - 1) }}">
-      <button id="prev_button">Previous</button>
+      <button id="prev_button"><</button>
     </a>
-  {% endif %}
-
-  <!-- Next card button -->
-  {% if index + 1 < total %}
-    <button id="next_button" form="responseForm" type="submit">Next</button>
   {% else %}
-    <button id="exit_button" form="responseForm" type="submit">Exit</button>
-    <p>You've completed the deck!</p>
+    <button id="prev_button" disabled><</button>
   {% endif %}
-
+  
   <!-- Show answer -->
   {% if cards %}
   <button class="card button-ignore" id="card_click" onclick="clickAction()" data-question="{{ cards[1] }}" data-answer="{{ cards[2] }}">
       <h2 class="scientific" id="card">{{ cards[1] }}</h2>
-    </button><br>
-
-    {% if cards[4] %}
-      <div class="tooltip" style="cursor: help;">
-        Hint💡<span class="tooltiptext scientific" id="hint">{{ cards[4] }}</span>
-      </div>
-    {% endif %}
-
-    <!-- Correct/Incorrect/Skip -->
-    <form action="{{ url_for('Study', id=deck_id, index=index) }}" method="POST" id="responseForm">
-      <div class="radio-buttons">
-        <input type="radio" id="correct" name="response" value="correct">
-        <label for="correct">Correct [1]</label>
-        
-        <input type="radio" id="incorrect" name="response" value="incorrect">
-        <label for="incorrect">Incorrect [2]</label>
-        
-        <input type="radio" id="skip" name="response" value="skip">
-        <label for="skip">Skip [3]</label>
-      </div>
-      <p id="keybindhint" style="text-align: center; color: rgb(63, 63, 63);">*press the corresponding number on your keyboard to change response</p>
-    </form>
-    <button onclick="openPopupTab('studykeys');">Keybinds</button>
-
-  {% else %}
-    <p>No cards in this deck.</p>
+    </button>
   {% endif %}
 
+  <!-- Next card button -->
+  {% if index + 1 < total %}
+    <button id="next_button" form="responseForm" type="submit">></button>
+  {% else %}
+    <button id="next_button" form="responseForm" type="submit" disabled>></button>
+  {% endif %}
+</div>
 
+<!-- if hint exists -->
+{% if cards and cards[4] %}
+  <br><div class="tooltip" style="cursor: help;">
+    Hint💡<span class="tooltiptext scientific" id="hint">{{ cards[4] }}</span>
+  </div>
+{% endif %}
 
+<!-- Correct/Incorrect/Skip -->
+<form action="{{ url_for('Study', id=deck_id, index=index) }}" method="POST" id="responseForm">
+  <div class="radio-buttons">
+    <input type="radio" id="correct" name="response" value="correct">
+    <label for="correct">Correct [1]</label>
+    
+    <input type="radio" id="incorrect" name="response" value="incorrect">
+    <label for="incorrect">Incorrect [2]</label>
+    
+    <input type="radio" id="skip" name="response" value="skip">
+    <label for="skip">Skip [3]</label>
+  </div>
+  <p id="keybindhint" style="text-align: center; color: rgb(63, 63, 63);">* press the corresponding number on your keyboard to change response</p>
+</form>
 
-
-
-
+<!-- Keybinds Help -->
+<button onclick="openPopupTab('studykeys');">Keybinds</button>
 
 
 

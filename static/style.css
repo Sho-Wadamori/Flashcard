@@ -833,6 +833,49 @@ tr:nth-child(even) {
 .homepage-body {
   padding: 0 400px;
 }
+
+
+
+/* ----- Next/Prev Buttons ----- */
+.card-container {
+  position: relative;
+}
+/* position next/prev buttons relative to the card container */
+#prev_button, #next_button {
+  position: absolute;
+  top: 50%;
+  font-size: clamp(70px, 10vw, 192px);
+  transform: translateY(-50%);
+  background-color: transparent;
+  box-shadow: none;
+  color: #607d8b;
+}
+/* disabled next/prev buttons */
+#prev_button:disabled, #next_button:disabled {
+  color: #a1a1a179;
+  cursor: not-allowed;
+}
+/* previous button */
+#prev_button {
+  left: 0;
+  width: 20vw;
+  text-align: center;
+}
+/* next button */
+#next_button {
+  right: 0;
+  width: 20vw;
+  text-align: center;
+}
+
+@media (min-width: 1921px) {
+  #prev_button, #next_button {
+    width: 384px;
+  }
+}
+
+
+
 .profile-btn {
   padding: 13px 19px !important;
   padding-right: 24px !important;
