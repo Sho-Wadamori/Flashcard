@@ -14,7 +14,7 @@
     <!-- If decks exist -->
     {% if results %}
 
-        <form action="{{ url_for('Decks') }}" method="GET" class='sort-form' style="top: 16px;">
+        <form action="{{ url_for('Decks') }}" method="GET" class='sort-form' style="top: 18px;">
         <label for="sort_by">Sort by:</label>
         <select name="sort_by" id="sort_by">
             <option value="deck_creation" {% if sort_by == 'deck_creation' %}selected{% endif %}>Creation Date</option>
@@ -57,17 +57,19 @@
     <!-- Deck List -->
     <div onclick="window.location='{{ url_for('Deck', id=deck[0]) }}'" style="text-decoration: none; cursor: pointer;"> <!-- Make it div to stop conflicts w/ buttons inside -->
         <div class="w3-card-4">
-            <div class="card-buttons">
-                <!-- edit deck -->
-                <a href="{{ url_for('editDeck', id=deck[0]) }}">
-                    <button style="text-decoration: none;" class="edit-button">✏️</button>
-                </a>
-                <!-- delete deck -->
-                <form action="{{ url_for('deleteDeck', id=deck[0]) }}" method="POST">
-                    <input type="hidden" name="deck_id" value="{{ deck[0] }}">
-                    <button type="button" onclick="event.preventDefault(); event.stopPropagation(); showConfirm(this.form);" class="delete-button">❌</button>
-                </form>
-            </div>
+            {% if userID %}
+                <div class="card-buttons">
+                    <!-- edit deck -->
+                    <a href="{{ url_for('editDeck', id=deck[0]) }}">
+                        <button style="text-decoration: none;" class="edit-button button-ignore">✏️</button>
+                    </a>
+                    <!-- delete deck -->
+                    <form action="{{ url_for('deleteDeck', id=deck[0]) }}" method="POST">
+                        <input type="hidden" name="deck_id" value="{{ deck[0] }}">
+                        <button type="button" onclick="event.preventDefault(); event.stopPropagation(); showConfirm(this.form);" class="delete-button button-ignore">❌</button>
+                    </form>
+                </div>
+            {% endif %}
             <!-- the name then the description -->
             <h1 class="scientific">{{ deck[1] }}</h1>
             <p>---------------</p>

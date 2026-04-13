@@ -7,10 +7,29 @@
 <!-- Error message -->
 {% include "components/alerts.html" %}
 
-<h1>Welcome, {{ username }}!</h1>
+<div class="homepage-body">
+    {% if username == 'Guest'  %}
+    <h1>Welcome to Flashcard maker!</h1>
+    <p>You have limited access to this website. Please login or create an account to create your own decks!</p>
+    
+    {% else %}
+    <h1>Welcome back {{ username }}!</h1>
 
-<a href="{{ url_for('Decks') }}"><button>View Decks</button></a>
-<a href="{{ url_for('createDeck') }}"><button>Create Deck</button></a>
+    <h2>Jump Back In</h2>
+    
+    {% endif %}
+<!--     
+        <a href="{{ url_for('Decks') }}"><button>View Decks</button></a>
+        <a href="{{ url_for('createDeck') }}"><button>Create Deck</button></a>
+    -->
+        
+    <h2>Recent Decks Studied</h2>
+    <h2>Bookmarked Decks</h2>
+    <h2>Public Decks</h2>
+    <h2>Your Statistics</h2>
+    <h2>Did you know?</h2>
+</div>
+
 
 <div class="fixed-button">
     <a onclick="window.scrollTo({top: 0, behavior: 'smooth'});">

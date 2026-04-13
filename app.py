@@ -155,26 +155,40 @@ def Decks():
     order = request.args.get('order')
     allowed_sort = {'deck_creation', 'deck_name', 'deck_description'}
     allowed_order = {'ASC', 'DESC'}
-
+    
     if sort_by not in allowed_sort:
         sort_by = 'deck_creation'  # default sort by creation date
     if order not in allowed_order:
         order = 'DESC'  # default order descending
 
-    # get all the decks id, name, description, and creation date
-    sql = f"""
+    # if user is logged in show all their decks
+    if userID():
+        # get all the decks id, name, description, and creation date
+        sql = f"""
+                SELECT deck_ID, deck_name, deck_description, deck_creation
+                FROM Decks
+                WHERE deck_userID = ?
+                ORDER BY {sort_by} {order};
+            """
+        result = query_db(sql, (userID(),))
+
+    # if user not logged in
+    else:
+        sql = f"""
             SELECT deck_ID, deck_name, deck_description, deck_creation
             FROM Decks
-            WHERE deck_userID = ?
+            WHERE deck_visibility = 'public'
             ORDER BY {sort_by} {order};
         """
-    result = query_db(sql, (userID(),))
+        result = query_db(sql)
+
     # return the results
     return render_template(
         "decks.html",
         results=result,
         sort_by=sort_by,
-        order=order
+        order=order,
+        userID=userID()
     )
 
 
@@ -195,23 +209,31 @@ def Deck(id):
     sql = f"""
             SELECT card_ID, card_question, card_answer, card_creation
             FROM Flashcards
-            WHERE card_deckID = ? AND card_userID = ?
+            WHERE card_deckID = ?
             ORDER BY {sort_by} {order};
         """
     # get the deck name of the inputted deck id
+    # only show the deck if it belongs to the user or if it is public/unlisted
     sql_deck = """
-                SELECT deck_name, deck_ID, deck_creation
+                SELECT deck_name, deck_ID, deck_creation, deck_userID
                 FROM Decks
                 WHERE deck_ID = ?
-                AND deck_userID = ?;
+                AND (
+                    deck_userID = ? OR (
+                        deck_visibility = 'public'
+                        OR deck_visibility = 'unlisted'
+                    )
+                );
             """
 
     deck_info = query_db(sql_deck, (id, userID()), True)
-    results = query_db(sql, (id, userID()))
+    results = query_db(sql, (id,))
 
     if not deck_info:
         flash("⚠ Invalid Deck...", "error")
         return redirect(url_for("Decks"))
+
+    is_owner = deck_info[3] == userID()
 
     # return the results
     return render_template(
@@ -221,20 +243,33 @@ def Deck(id):
         time_ago=time_ago,
         format_date=format_date,
         sort_by=sort_by,
-        order=order
+        order=order,
+        is_owner=is_owner
     )
 
 
 # ---------- delete a card ----------
 @app.route('/decks/<int:id>/cards/<int:card_id>/delete/', methods=['POST'])
 def deleteCard(id, card_id):
+    # check if the deck id is valid and belongs to the user
+    sql_deck = """
+        SELECT deck_ID
+        FROM Decks
+        WHERE deck_ID = ?
+        AND deck_userID = ?;
+    """
+    deck_info = query_db(sql_deck, (id, userID()), one=True)
+    if not deck_info:
+        flash("⚠ Invalid Deck...", "error")
+        return redirect(url_for("Decks"))
+
     # delete the card with the inputted card id
     sql = """
             DELETE FROM Flashcards
             WHERE card_ID = ?
-            AND card_userID = ?;
+            AND card_deckID = ?;
         """
-    get_db().execute(sql, (card_id, userID()))
+    get_db().execute(sql, (card_id, id))
     get_db().commit()
     # redirect to the deck page
     flash("✔ Card Deleted Successfuly.", "success")
@@ -270,14 +305,30 @@ def start_study(id):
 # ---------- study a single card based on the index ----------
 @app.route('/decks/<int:id>/study/<int:index>/', methods=['GET', 'POST'])
 def Study(id, index):
+    # check if the deck id is valid and belongs to the user
+    sql_deck = """
+        SELECT deck_ID, deck_userID, deck_visibility
+        FROM Decks
+        WHERE deck_ID = ?;
+    """
+    deck_info = query_db(sql_deck, (id,), one=True)
+    if not deck_info:
+        flash("⚠ Invalid Deck...", "error")
+        return redirect(url_for("Decks"))
+
+    # check if deck is private and if user has permission to view it
+    if deck_info[2] == 'private' and deck_info[1] != userID():
+        flash("⚠ You Do Not Have Permission to Study This Deck...", "error")
+        return redirect(url_for("Decks"))
+
     # get all the card id, Q, A, and creation date for inputted deck id
     sql = """
         SELECT card_ID, card_question,
         card_answer, card_creation, card_hint
         FROM Flashcards
-        WHERE card_deckID = ? AND card_userID = ?;
+        WHERE card_deckID = ?;
     """
-    results = query_db(sql, (id, userID()))
+    results = query_db(sql, (id,))
 
     # get session data
     currentSession = session.get('shuffled_cards', None)
@@ -301,67 +352,68 @@ def Study(id, index):
 
     # request is POST, get the form data and add to database
     if request.method == 'POST':
-        # get response
-        response = request.form.get('response')
-        # get the user's stats for the current card
-        get_stats = """
-            SELECT *
-            FROM UserCardStats
-            WHERE stats_cardID = ?
-            AND stats_userID = ?;
-        """
-        stats = query_db(get_stats, (card_id, userID()))
+        if userID():
+            # get response
+            response = request.form.get('response')
+            # get the user's stats for the current card
+            get_stats = """
+                SELECT *
+                FROM UserCardStats
+                WHERE stats_cardID = ?
+                AND stats_userID = ?;
+            """
+            stats = query_db(get_stats, (card_id, userID()))
 
-        # if the user got the card correct
-        if response == "correct":
+            # if the user got the card correct
+            if response == "correct":
 
-            # if the user has no stats for card, create new entry
-            if not stats:
-                add_stats = """
-                    INSERT INTO UserCardStats (
-                        stats_correct, stats_userID, stats_cardID
-                    )
-                    Values (?, ?, ?)
-                """
-                # add 1 correct
-                get_db().execute(add_stats, (1, userID(), card_id))
-                get_db().commit()
+                # if the user has no stats for card, create new entry
+                if not stats:
+                    add_stats = """
+                        INSERT INTO UserCardStats (
+                            stats_correct, stats_userID, stats_cardID
+                        )
+                        Values (?, ?, ?)
+                    """
+                    # add 1 correct
+                    get_db().execute(add_stats, (1, userID(), card_id))
+                    get_db().commit()
 
-            # if the user has stats for the card, add 1 to correct
-            else:
-                update_stats = """
-                    UPDATE UserCardStats
-                    SET stats_correct = stats_correct + 1
-                    WHERE stats_cardID = ?
-                    AND stats_userID = ?
-                """
-                get_db().execute(update_stats, (card_id, userID()))
-                get_db().commit()
+                # if the user has stats for the card, add 1 to correct
+                else:
+                    update_stats = """
+                        UPDATE UserCardStats
+                        SET stats_correct = stats_correct + 1
+                        WHERE stats_cardID = ?
+                        AND stats_userID = ?
+                    """
+                    get_db().execute(update_stats, (card_id, userID()))
+                    get_db().commit()
 
-        # if the user got the card incorrect
-        elif response == "incorrect":
-            # if the user has no stats for card, create new entry
-            if not stats:
-                add_stats = """
-                    INSERT INTO UserCardStats (
-                        stats_incorrect, stats_userID, stats_cardID
-                    )
-                    Values (?, ?, ?)
-                """
-                # add 1 incorrect
-                get_db().execute(add_stats, (1, userID(), card_id))
-                get_db().commit()
+            # if the user got the card incorrect
+            elif response == "incorrect":
+                # if the user has no stats for card, create new entry
+                if not stats:
+                    add_stats = """
+                        INSERT INTO UserCardStats (
+                            stats_incorrect, stats_userID, stats_cardID
+                        )
+                        Values (?, ?, ?)
+                    """
+                    # add 1 incorrect
+                    get_db().execute(add_stats, (1, userID(), card_id))
+                    get_db().commit()
 
-            # if the user has stats for card, add 1 to incorrect
-            else:
-                update_stats = """
-                    UPDATE UserCardStats
-                    SET stats_incorrect = stats_incorrect + 1
-                    WHERE stats_cardID = ?
-                    AND stats_userID = ?
-                """
-                get_db().execute(update_stats, (card_id, userID()))
-                get_db().commit()
+                # if the user has stats for card, add 1 to incorrect
+                else:
+                    update_stats = """
+                        UPDATE UserCardStats
+                        SET stats_incorrect = stats_incorrect + 1
+                        WHERE stats_cardID = ?
+                        AND stats_userID = ?
+                    """
+                    get_db().execute(update_stats, (card_id, userID()))
+                    get_db().commit()
 
         # go to next page
         if index + 1 < total:
@@ -390,6 +442,10 @@ def Study(id, index):
 # ---------- create a new deck ----------
 @app.route('/decks/create/', methods=['GET', 'POST'])
 def createDeck():
+    if not userID():
+        flash("⚠ You Are Not Logged In. Please Log In to Create a Deck.",
+              "error")
+        return redirect(url_for('Decks'))
     # if request method is POST, get the form data and insert into database
     if request.method == "POST":
         deck_name = request.form['deckName']
@@ -429,19 +485,21 @@ def createDeck():
 # ---------- create a new card ----------
 @app.route('/decks/<int:id>/create/', methods=['GET', 'POST'])
 def createCard(id):
-
     # get the deck name of the inputted deck id
     sql_deck = """
-            SELECT deck_name, deck_ID, deck_creation
+            SELECT deck_name, deck_ID, deck_creation, deck_userID
             FROM Decks
-            WHERE deck_ID = ?
-            AND deck_userID = ?;
+            WHERE deck_ID = ?;
         """
-    deck_info = query_db(sql_deck, (id, userID()))
+    deck_info = query_db(sql_deck, (id,))
 
     # check if deck_info is not empty
     if not deck_info:
         flash("⚠ Invalid Deck...", "error")
+        return redirect(url_for("Decks"))
+
+    if deck_info[0][3] != userID():
+        flash("⚠ You Do Not Own This Deck. You Cannot Create a Card.", "error")
         return redirect(url_for("Decks"))
 
     # if request method is POST, get the form data and insert into database
@@ -463,17 +521,16 @@ def createCard(id):
             sql = """
                     INSERT INTO Flashcards (
                         card_question, card_answer, card_deckID,
-                        card_creation, card_hint, card_userID
+                        card_creation, card_hint
                     )
-                    VALUES (?, ?, ?, datetime('now'), ?, ?);
+                    VALUES (?, ?, ?, datetime('now'), ?);
                 """
 
             get_db().execute(sql, (
                 card_question,
                 card_answer,
                 id,
-                card_hint,
-                userID()
+                card_hint
             ))
             get_db().commit()
             # redirect to the deck page
@@ -482,7 +539,6 @@ def createCard(id):
 
     # if request method is GET, return the sql results
     else:
-
         # return deckinfo
         return render_template("cardCreate.html", deck_info=deck_info[0])
 
@@ -565,9 +621,9 @@ def editCard(id, card_id):
                 card_answer, card_creation, card_hint
                 FROM Flashcards
                 WHERE card_ID = ?
-                AND card_userID = ?;
+                AND card_deckID = ?;
             """
-            card = query_db(sql_card, (card_id, userID()), one=True)
+            card = query_db(sql_card, (card_id, id), one=True)
             return render_template(
                 "cardEdit.html",
                 deck_info=deck_info[0],
@@ -579,8 +635,7 @@ def editCard(id, card_id):
             sql = """
                     UPDATE Flashcards
                     SET card_question = ?, card_answer = ?, card_hint = ?
-                    WHERE card_ID = ? AND card_deckID = ?
-                    AND card_userID = ?;
+                    WHERE card_ID = ? AND card_deckID = ?;
                 """
 
             get_db().execute(sql, (
@@ -588,8 +643,7 @@ def editCard(id, card_id):
                 card_answer,
                 card_hint,
                 card_id,
-                id,
-                userID()
+                id
             ))
             get_db().commit()
             # redirect to the deck page
@@ -604,9 +658,9 @@ def editCard(id, card_id):
             card_answer, card_creation, card_hint
             FROM Flashcards
             WHERE card_ID = ?
-            AND card_userID = ?;
+            AND card_deckID = ?;
         """
-        card = query_db(sql_card, (card_id, userID()), one=True)
+        card = query_db(sql_card, (card_id, id), one=True)
 
         # check if card is not empty
         if not card:
@@ -783,9 +837,9 @@ def stats():
     deck_stats = query_db(userDeckStats, (userID(),))
 
     userCardStats = """
-            SELECT COUNT(card_ID)
-            FROM Flashcards
-            WHERE card_userID = ?;
+            SELECT COUNT(Flashcards.card_ID)
+            FROM Flashcards, Decks
+            WHERE card_deckID = deck_ID AND deck_userID = ?;
     """
     card_stats = query_db(userCardStats, (userID(),))
 
