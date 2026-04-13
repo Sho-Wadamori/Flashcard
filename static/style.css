@@ -18,11 +18,30 @@ body {
 }
 
 /* ----- All Buttons ----- */
-button {
+button:not(.close-btn):not(.card) {
   margin: 0 5px;
   padding: 5px 10px;
   cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
 }
+
+button:hover:not(.close-btn) {
+  background-color: rgb(235, 235, 235);
+}
+
+button:not(.button-ignore) {
+  box-shadow: 1px 1px 3px 0px #495f69;
+  background-color: #607d8b;
+  color: white; 
+}
+
+button:hover:not(.button-ignore) {
+  background-color: #7195a7;
+}
+
+
 
 /* ----- Header (part above navbar) ----- */
 .header-inner {
@@ -332,22 +351,23 @@ form.login {
   display: inline-block;
   padding: 10px 20px;
   margin: 0 5px;
-  border: 2px solid black;
+  box-shadow: 0 1px 13px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
-  background-color: white;
   cursor: pointer;
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
   user-select: none;
   width: 135px;
   text-align: center;
 }
 
 .radio-buttons input[type="radio"]:checked + label {
-  background-color: #0e67a1;
+  background-color: #607d8b;
   color: white;
 }
 
 .radio-buttons label:hover {
-  background-color: rgb(52, 148, 212);
+  background-color: #7195a7;
   color: white;
 }
 
@@ -395,7 +415,6 @@ form.login {
   cursor: pointer;
   background: none;
   border: none;
-  font-size: 20px;
   color: #ffffff;
   justify-content: center;
   font-size: 25px;
@@ -538,6 +557,8 @@ form.login {
 .char-buttons {
   display: grid;
   grid-template-columns: auto auto auto;
+  gap: 10px;
+  column-gap: 0px;
 }
 
 /* container of character panel */
@@ -741,6 +762,9 @@ form.login {
   border-radius: 8px;
   background-color: white;
   cursor: pointer;
+  color: black;
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
   user-select: none;
 }
 
@@ -790,4 +814,18 @@ tr:nth-child(even) {
   margin: 0 auto;
   height: 100%;
   padding: 0 30px;
+.profile-btn {
+  padding: 13px 19px !important;
+  padding-right: 24px !important;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 25px !important;
+  text-decoration: none;
+}
+
+.signin-btn {
+  padding: 18px 28px !important;
+  border-radius: 25px !important;
+  text-decoration: none;
 }
