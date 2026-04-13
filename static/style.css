@@ -800,20 +800,39 @@ tr:nth-child(even) {
 }
 
 
+
+/* ----- sorting and ordering ----- */
 .sort-form {
   position: absolute;
-  top: 0px;
-  right: 16px;
+  top: 0;
+  right: 30px;
   padding: 6px;
   text-align: right;
 }
-
+/* header in deck/s pages */
 .deck-header {
   position: relative;
   max-width: 1920px;
   margin: 0 auto;
   height: 100%;
   padding: 0 30px;
+  margin-bottom: 10px;
+}
+
+/* sort and ordering buttons */
+#sort_by,
+#order {
+  border-width: 1px;
+  border-color: rgb(179, 179, 179);
+  border-radius: 3px;
+  outline: none;
+  background-color: white;
+}
+
+/* add side padding in homepage */
+.homepage-body {
+  padding: 0 400px;
+}
 .profile-btn {
   padding: 13px 19px !important;
   padding-right: 24px !important;
