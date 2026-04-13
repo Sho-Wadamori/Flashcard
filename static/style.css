@@ -4,6 +4,8 @@ html {
   height: 100%;
 }
 
+
+
 /* ----- all text ----- */
 body,h1,h2,h3,h4,h5,h6,p {
   font-family: Righteous, sans-serif;
@@ -11,16 +13,20 @@ body,h1,h2,h3,h4,h5,h6,p {
   /* font-family: Poppins; font-weight: 700; */
 }
 
+
+
 /* ----- body ----- */
 body {
   max-width: 1920px; /* limit width for ultra wide screens */
   margin: 0 auto; /* centre */
 }
 
+
+
 /* ----- All Buttons ----- */
 button:not(.close-btn):not(.card) {
   margin: 0 5px;
-  padding: 5px 10px;
+  padding: 6px 12px;
   cursor: pointer;
   border: none;
   border-radius: 6px;
@@ -75,6 +81,8 @@ button:hover:not(.button-ignore) {
   max-width: 1920px;
   margin: 0 auto;
 }
+
+
 
 /* ----- 3-column used in listing decks/cards ----- */
 .three-column {
@@ -135,9 +143,11 @@ button:hover:not(.button-ignore) {
 /* ----- used in study, edit, and create ----- */
 .card-editor {
   display: grid;
+  place-content: center;
   margin: 0 auto;
   background-color: #f1f1f1;
-  padding: 10vw;
+  padding: 20px;
+  min-height: 300px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   text-align: center;
@@ -240,7 +250,7 @@ button:hover:not(.button-ignore) {
   display: block;
   margin: 0 auto;
   border-bottom: 1px dotted rgb(54, 54, 54); /* Dotted underline */
-  cursor: pointer; /* Change cursor to point */
+  cursor: help; /* Change cursor to point */
   text-align: center;
   width: fit-content; /* Shrink width to fit content */
 }
@@ -252,6 +262,7 @@ button:hover:not(.button-ignore) {
   transform: translateX(-50%);
   background-color: rgba(15, 15, 15, 0.726);
   color: #fff;
+  cursor: text;
   text-align: center;
   border-radius: 6px;
   padding: 5px 0px;
@@ -321,6 +332,8 @@ form.login {
 
 /* show password button */
 .showPasswords {
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
   user-select: none;
   cursor: pointer;
 }
@@ -746,8 +759,7 @@ form.login {
   transition-delay: 0s;
 }
 
-
-
+/* tab buttons */
 .tab-buttons {
   display: grid;
   gap: 10%;
@@ -768,19 +780,20 @@ form.login {
   user-select: none;
 }
 
+/* active tab */
 .tab-buttons button.active {
   background-color: #0e67a1;
   color: white;
 }
 
+/* hide it */
 .tab-content {
   display: none;
 }
-
+/* reveal it */
 .tab-content.active {
   display: block;
 }
-
 
 /* Table in the MathJax help popup (taken from w3schools) */
 table {
@@ -788,7 +801,7 @@ table {
   border-collapse: collapse;
   width: 100%;
 }
-
+/* give all cells grey border */
 td, th {
   border: 1px solid #dddddd;
   text-align: left;
