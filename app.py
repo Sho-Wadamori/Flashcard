@@ -173,26 +173,41 @@ def home():
 # ---------- list all decks ----------
 @app.route('/decks/')
 def Decks():
+    filter = request.args.get('filter')
     sort_by = request.args.get('sort_by')
     order = request.args.get('order')
+    allowed_filter = {'none', 'public', 'unlisted', 'private'}
     allowed_sort = {'deck_creation', 'deck_name', 'deck_description'}
     allowed_order = {'ASC', 'DESC'}
 
+    if filter not in allowed_filter:
+        filter = 'none'  # default filter none
+
     if sort_by not in allowed_sort:
         sort_by = 'deck_creation'  # default sort by creation date
+
     if order not in allowed_order:
         order = 'DESC'  # default order descending
 
     # if user is logged in show all their decks
     if userID():
+        # if filter is not none
+        if filter != 'none':
+            filter_sql = "AND deck_visibility = ?"
+            filter_args = (userID(), filter)
+        else:
+            filter_sql = ""
+            filter_args = (userID(),)
+
         # get all the decks id, name, description, and creation date
         sql = f"""
                 SELECT deck_ID, deck_name, deck_description, deck_creation
                 FROM Decks
                 WHERE deck_userID = ?
+                {filter_sql}
                 ORDER BY {sort_by} {order};
             """
-        result = query_db(sql, (userID(),))
+        result = query_db(sql, filter_args)
 
     # if user not logged in
     else:
@@ -210,6 +225,7 @@ def Decks():
         results=result,
         sort_by=sort_by,
         order=order,
+        filter=filter,
         userID=userID()
     )
 

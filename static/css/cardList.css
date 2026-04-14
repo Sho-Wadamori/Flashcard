@@ -76,6 +76,7 @@
 }
 
 /* sort and ordering buttons */
+#filter,
 #sort_by,
 #order {
   border-width: 1px;

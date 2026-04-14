@@ -14,7 +14,15 @@
     <!-- If decks exist -->
     {% if results %}
 
-        <form action="{{ url_for('Decks') }}" method="GET" class='sort-form' style="top: 18px;">
+    <form action="{{ url_for('Decks') }}" method="GET" class='sort-form' style="top: 18px;">
+        <label for="filter">Filter:</label>
+        <select name="filter" id="filter">
+            <option value="none" {% if filter == 'none' %}selected{% endif %}>None</option>
+            <option value="public" {% if filter == 'public' %}selected{% endif %}>Public</option>
+            <option value="unlisted" {% if filter == 'unlisted' %}selected{% endif %}>Unlisted</option>
+            <option value="private" {% if filter == 'private' %}selected{% endif %}>Private</option>
+        </select>
+
         <label for="sort_by">Sort by:</label>
         <select name="sort_by" id="sort_by">
             <option value="deck_creation" {% if sort_by == 'deck_creation' %}selected{% endif %}>Creation Date</option>
@@ -29,11 +37,23 @@
         </select>
 
         <button type="submit">Apply</button>
-        </form>
+    </form>
 
     <!-- No deck message -->
     {% else %}
         <p>You have no decks yet.</p>
+
+        <form action="{{ url_for('Decks') }}" method="GET" class='sort-form' style="top: 18px;">
+            <label for="filter">Filter:</label>
+            <select name="filter" id="filter">
+                <option value="none" {% if filter == 'none' %}selected{% endif %}>None</option>
+                <option value="public" {% if filter == 'public' %}selected{% endif %}>Public</option>
+                <option value="unlisted" {% if filter == 'unlisted' %}selected{% endif %}>Unlisted</option>
+                <option value="private" {% if filter == 'private' %}selected{% endif %}>Private</option>
+            </select>
+            
+            <button type="submit">Apply</button>
+        </form>
 
         <a href="{{ url_for('createDeck') }}">
             <div class="w3-card-4">
