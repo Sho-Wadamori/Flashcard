@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Righteous">
     <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
     <title>Sign In | Flashcard Maker</title>
 </head>
 <body class="login-body">
@@ -26,11 +27,11 @@
         <form action="{{ url_for('login') }}" method="POST" class="login">
             <input type="text" name="username" id="username" placeholder="Username/Email"><br><br>
             <input type="password" name="password" id="password" placeholder="Password"><br><br>
-            <input type="checkbox" onclick="passwordReveal()" id="showPasswords" class="showPasswords" style="margin-right: 0.5rem;">
+            <input type="checkbox" onclick="passwordReveal()" id="showPasswords" class="showPasswords">
             <label for="showPasswords" class="showPasswords">Show Password</label><br><br>
             <input type="submit" value="Sign In" class="button-ignore"><br>
         </form>
-        <p>New to Flashcard Maker?</p> <a href="{{ url_for('signup') }}" style="color: rgb(14, 103, 161);">Sign up here!</a>
+        <p>New to Flashcard Maker?</p> <a href="{{ url_for('signup') }}" class="btn-ignore-all blue-text">Sign up here!</a>
     </div>
 
     <script>

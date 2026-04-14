@@ -1,0 +1,86 @@
+/* -------------------- Listing Decks/Cards -------------------- */
+/* ----- 3-column used in listing decks/cards ----- */
+.three-column {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2em;
+  text-align: center;
+  align-items: stretch;
+  padding: 0;
+}
+
+/* tablet mode with 2 columns */
+@media (max-width: 1300px) {
+  .three-column {
+    grid-template-columns: 1fr 1fr; /* Stack items vertically on small screens */
+  }
+}
+
+/* phone mode with 1 column */
+@media (max-width: 750px) {
+  .three-column {
+    grid-template-columns: 1fr; /* Stack items vertically on small screens */
+  }
+}
+
+/* deck/card edit & delete buttons */
+.card-buttons {
+  display: flex;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+}
+
+/* Create deck/card button */
+.plus {
+  font-size: 4em;
+}
+
+/* deck title */
+.deck-title {
+  margin-right: 240px;
+}
+
+/* turn overflow to ... after 1 line */
+.ellipse-single {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* turn overflow to ... after 3 lines */
+.ellipse-multi {
+  display: -webkit-box;
+  /* Limit to 3 lines */
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+
+/* ----- sorting and ordering ----- */
+.sort-form {
+  position: absolute;
+  top: 0;
+  right: 30px;
+  padding: 6px;
+  text-align: right;
+}
+/* header in deck/s pages */
+.deck-header {
+  position: relative;
+  max-width: 1920px;
+  margin: 0 auto;
+  height: 100%;
+  padding: 0 30px;
+  margin-bottom: 10px;
+}
+
+/* sort and ordering buttons */
+#sort_by,
+#order {
+  border-width: 1px;
+  border-color: rgb(179, 179, 179);
+  border-radius: 3px;
+  outline: none;
+  background-color: white;
+}

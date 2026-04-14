@@ -1,0 +1,145 @@
+/* -------------------- Site-Wide Reusable Features -------------------- */
+/* ----- Alert Messages ----- */
+.alert {
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  color: rgb(255, 255, 255);
+  text-align: center;
+  font-size: large;
+  padding-right: 60px;
+  padding-left: 60px; /* so text does not overlap w/ X button */
+}
+
+.alert.error {
+  background-color: #f44336;
+} 
+.alert.success {
+  background-color: #04AA6D;
+} 
+.alert.info {
+  background-color: #2196F3;
+}
+
+/* Text-Only Alert Messages */
+.simpleAlert.error {
+  color: rgb(219, 46, 46);
+  margin-bottom: 1em;
+}
+.simpleAlert.success {
+  color: rgb(46, 219, 46);
+  margin-bottom: 1em;
+}
+
+/* Alert container */
+.alertContainer {
+  position: relative;
+}
+
+/* Close button for error messages */
+.close-btn {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: #ffffff;
+  justify-content: center;
+  font-size: 25px;
+  transform: translateY(-50%);
+}
+
+
+/* ----- MathJax text wraping (BREAKS ERROR MESSAGES) ----- */
+.card mjx-container,
+.card mjx-container * {
+  word-break: break-word !important;
+  white-space: normal !important;
+}
+
+.w3-card-4 mjx-container,
+.w3-card-4 mjx-container * {
+  word-break: break-word !important;
+  white-space: normal !important;
+}
+
+/* tries to make MathJax alerts as exception BUT DOES NOT WORK */
+.alert {
+  word-break: normal;
+  overflow-wrap: normal;
+  white-space: normal;
+}
+
+
+/* ----- Scroll To Top Buttons ----- */
+.fixed-button {
+  position: fixed;
+  /* anchor to bottom right */
+  bottom: 20px;
+  right: 20px;
+
+  width: 35px;
+  height: 35px;
+  padding: 0;  
+  border: none;
+  cursor: pointer;
+  border-radius: 18px; /* make the button round like the icon */
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  opacity: 0;
+  pointer-events: none;
+  /* smoothly appear from below */
+  transform: translateY(10px);
+  transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
+}
+
+/* smoothly reveal button */
+.fixed-button.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* button image */
+.fixed-button img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 5px;
+}
+
+
+/* ----- Toast Notification ----- */
+#toast {
+  visibility: hidden;
+  min-width: 250px;
+  background-color: #333333d3;
+  color: #fff;
+  text-align: center;
+  border-radius: 12px;
+  padding: 16px;
+  position: fixed;
+  z-index: 5; /* above all content, even overlays */
+  left: 50%;
+  transform: translate(-50%, 10px); /* centre horizontally */
+  bottom: 30px;
+  font-size: 17px;
+  opacity: 0;
+  /* x y blur spread */
+  box-shadow: 0 5px 8px 3px rgba(0, 0, 0, 0.2);
+
+  transition: transform 0.5s ease-in-out, visibility 0s linear 0.5s, opacity 0.5s ease-in-out; /* animate from below and delay visibility change */
+}
+/* when open */
+#toast.open {
+  transform: translate(-50%, 0);
+  visibility: visible;
+  opacity: 1;
+
+  transition: transform 0.5s ease-in-out, visibility 0s linear 0.0s, opacity 0.5s ease-in-out; /* animate from below and no delay on visibility change */
+}

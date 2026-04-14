@@ -1,0 +1,103 @@
+/* ----- Keybind Help Popup ----- */
+#popup {
+  position: fixed;
+  /* make top left corner centred */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* move whole thing 50% of its own size in each direction to centre */
+
+  width: 70vw;
+  visibility: hidden; /* hide it */
+  pointer-events: none; /* stop interaction when hidden */
+  z-index: 3; /* high z index to make it appear above other elements */
+  background: #f1f1f1;
+  padding: 10px;
+  border-radius: 12px;
+  overflow-y: scroll;
+
+  max-height: 80vh;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out, visibility 0s linear 0.2s; /* animate opacity and delay visibility */
+}
+/* when open */
+#popup.open {
+  width: 70vw;
+  visibility: visible; /* reveal it */
+  pointer-events: auto; /* enable interaction when open */
+  opacity: 1;
+  transition-delay: 0s;
+}
+
+/* grey overlay behind the popup */
+#popup-overlay {
+  visibility: hidden; /* hide it */
+  position: fixed;
+  /* make the overlay cover the entire screen */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 2; /* 1 below the popup */
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out, visibility 0s linear 0.2s; /* animate opacity and delay visibility */
+}
+/* when open */
+#popup-overlay.open {
+  visibility: visible; /* reveal it */
+  opacity: 1;
+  transition-delay: 0s;
+}
+
+/* tab buttons */
+.tab-buttons {
+  display: grid;
+  gap: 10%;
+  margin-bottom: 20px;
+  padding: 10px 20%;
+  grid-template-columns: auto auto auto;
+}
+
+.tab-buttons button {
+  padding: 10px 20px;
+  border: 2px solid black;
+  border-radius: 8px;
+  background-color: white;
+  cursor: pointer;
+  color: black;
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none;
+}
+
+/* active tab */
+.tab-buttons button.active {
+  background-color: #0e67a1;
+  color: white;
+}
+
+/* hide it */
+.tab-content {
+  display: none;
+}
+/* reveal it */
+.tab-content.active {
+  display: block;
+}
+
+/* Table in the MathJax help popup (taken from w3schools) */
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+/* give all cells grey border */
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+/* change bg colour for even rows */
+tr:nth-child(even) {
+  background-color: #dddddd;
+}

@@ -1,0 +1,149 @@
+/* -------------------- Study Page -------------------- */
+
+/* ----- Study Card ----- */
+.card {
+  display: grid;
+  margin: 0 auto;
+  background-color: #f1f1f1;
+  padding: 10vw;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  width: calc(100% - 40vw); /* make wider when narrow */
+  flex-direction: column;
+  cursor: pointer; 
+  border: none;
+  word-break: break-word; /* allow long text to wrap */
+  white-space: normal;
+  max-width: 100%;
+}
+
+@media (min-width: 1921px) {
+  .card {
+    padding: 192px;
+    width: 1100px;
+  }
+}
+
+
+/* ----- Next/Prev Buttons ----- */
+.card-container {
+  position: relative;
+}
+/* position next/prev buttons relative to the card container */
+#prev_button, #next_button {
+  position: absolute;
+  top: 50%;
+  font-size: clamp(70px, 10vw, 192px);
+  transform: translateY(-50%);
+  background-color: transparent;
+  box-shadow: none;
+  color: #607d8b;
+}
+/* disabled next/prev buttons */
+#prev_button:disabled, #next_button:disabled {
+  color: #a1a1a179;
+  cursor: not-allowed;
+}
+/* previous button */
+#prev_button {
+  left: 0;
+  width: 20vw;
+  text-align: center;
+}
+/* next button */
+#next_button {
+  right: 0;
+  width: 20vw;
+  text-align: center;
+}
+
+@media (min-width: 1921px) {
+  #prev_button, #next_button {
+    width: 384px;
+  }
+}
+
+
+/* ----- Hint Tooltip ----- */
+.tooltip {
+  position: relative;
+  display: block;
+  margin: 0 auto;
+  border-bottom: 1px dotted rgb(54, 54, 54); /* Dotted underline */
+  cursor: help; /* Change cursor to point */
+  text-align: center;
+  width: fit-content; /* Shrink width to fit content */
+}
+
+.tooltiptext {
+  visibility: hidden; /* Hide */
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(15, 15, 15, 0.726);
+  color: #fff;
+  cursor: text;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0px;
+  position: absolute;
+  z-index: 1;
+  padding: 5px;
+  width: max-content; /* shrink width to fit content */
+  max-width: 250px; /* maximum width the tooltip can have */
+  white-space: normal; /* allow text to wrap */
+}
+
+/* hide the tooltip text on unhover w/ animation */
+.tooltiptext {
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+/* on hover reveal tooltip */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+
+/* ----- User Response Buttons ----- */
+.radio-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* real radio buttons */
+.radio-buttons input[type="radio"] {
+  display: none; /* hide the actual radio button */
+}
+
+/* new radio button */
+.radio-buttons label {
+  display: inline-block;
+  padding: 10px 20px;
+  margin: 0 5px;
+  box-shadow: 0 1px 13px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  cursor: pointer;
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none;
+  width: 135px;
+  text-align: center;
+}
+
+/* new radio button selected */
+.radio-buttons input[type="radio"]:checked + label {
+  background-color: #607d8b;
+  color: white;
+}
+
+/* new radio button on hover */
+.radio-buttons label:hover {
+  background-color: #7195a7;
+  color: white;
+}

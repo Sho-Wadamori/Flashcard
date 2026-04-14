@@ -8,7 +8,7 @@
 {% include "components/alerts.html" %}
 
 <div class="deck-header">
-  <h2 class="scientific" style="margin-right: 190px;">{{ deck_info[0] }}</h2>
+  <h2 class="scientific deck-title ellipse-single">{{ deck_info[0] }}</h2>
 
   <!-- If cards exist -->
   {% if results %}
@@ -38,7 +38,7 @@
     <a href="{{ url_for('Decks') }}"><button>Back</button></a><br><br>
 
     {% if is_owner %}
-      <a href="{{ url_for('createCard', id=deck_info[1]) }}" style="text-decoration: none;">
+      <a href="{{ url_for('createCard', id=deck_info[1]) }}">
         <div class="w3-card-4">
             <h1 class="plus">+</h1>
         </div>
@@ -54,7 +54,7 @@
 <div class="three-column">
     <!-- Create Card button -->
     {% if is_owner %}
-      <a href="{{ url_for('createCard', id=deck_info[1]) }}" style="text-decoration: none;">
+      <a href="{{ url_for('createCard', id=deck_info[1]) }}">
         <div class="w3-card-4">
           <h1 class="plus">+</h1>
         </div>
@@ -78,9 +78,9 @@
           </div>
         {% endif %}
         <!-- the question then the answer -->
-        <h1 class="scientific">{{ card[1] }}</h1>
+        <h1 class="scientific ellipse-multi">{{ card[1] }}</h1>
         <p>---------------</p>
-        <p class="scientific">{{ card[2] }}</p>
+        <p class="scientific ellipse-multi">{{ card[2] }}</p>
       </div>
     <!-- </a> -->
     {% endfor %}

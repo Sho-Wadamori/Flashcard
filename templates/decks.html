@@ -35,7 +35,7 @@
     {% else %}
         <p>You have no decks yet.</p>
 
-        <a href="{{ url_for('createDeck') }}" style="text-decoration: none;">
+        <a href="{{ url_for('createDeck') }}">
             <div class="w3-card-4">
                 <h1 class="plus">+</h1>
             </div>
@@ -47,7 +47,7 @@
 <!-- a 3 column grid -->
 <div class="three-column">
     <!-- Create Deck button -->
-    <a href="{{ url_for('createDeck') }}" style="text-decoration: none;">
+    <a href="{{ url_for('createDeck') }}">
         <div class="w3-card-4">
             <h1 class="plus">+</h1>
         </div>
@@ -71,10 +71,10 @@
                 </div>
             {% endif %}
             <!-- the name then the description -->
-            <h1 class="scientific">{{ deck[1] }}</h1>
+            <h1 class="scientific ellipse-multi">{{ deck[1] }}</h1>
             <p>---------------</p>
             {% if deck[2] %}
-                <p style="color: rgb(107, 107, 107);" class="scientific">{{ deck[2] }}</p>
+                <p style="color: rgb(107, 107, 107);" class="scientific ellipse-multi">{{ deck[2] }}</p>
             {% else %}
                 <p style="color: rgb(107, 107, 107);">No description</p>
             {% endif %}

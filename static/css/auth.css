@@ -1,0 +1,59 @@
+/* -------------------- Login/Sign Up -------------------- */
+.login-body {
+  display: flex;
+  width: 100%;
+  padding: 0 20px;
+  height: 100%;
+  justify-content: center;
+  align-items: center; 
+}
+
+/* login container */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto auto;
+  max-width: 576px;
+  width: 100%;
+  height: 670px;
+  padding: 2rem;
+  text-align: center;
+  border-radius: 32px;   
+}
+
+/* set login input field width */
+form.login {
+  width: 361px;
+}
+
+@media (max-width: 510px) {
+  form.login {
+    width: calc(70% + 20vw);
+  }
+}
+
+/* set login input width */
+.login input:not([type="checkbox"]) {
+  width: 100%;
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+  border-radius: 8px;
+}
+
+/* show password button */
+.showPasswords {
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none;
+  cursor: pointer;
+  margin-right: 0.5rem;
+}
+
+/* submit button */
+.login input[type="submit"] {
+  background-color: rgb(14, 103, 161);
+  color: white;
+  border: none;
+  cursor: pointer;
+}

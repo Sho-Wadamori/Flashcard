@@ -7,6 +7,12 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Righteous">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/keybind.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cardList.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/editor.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/study.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <!-- load \cancel and \html because edit pages break otherwise -->
@@ -30,11 +36,11 @@
     <!-- Shared Header Bar -->
      <header class="w3-container w3-padding-32">
         <div class="header-inner">
-            <h1 onclick="window.location='{{ url_for('home') }}'" style="cursor: pointer;"><img src="{{ url_for('static', filename='assets/icon.png') }}" alt="Flashcard Maker Logo" style="height: 2em;">Flashcard Maker</h1>
+            <h1 onclick="window.location='{{ url_for('home') }}'" class="logo"><img src="{{ url_for('static', filename='assets/icon.png') }}" alt="Flashcard Maker Logo" style="height: 2em;">Flashcard Maker</h1>
             {% if username != 'Guest' %}
-                <a href="{{ url_for('profile') }}" style="text-decoration: none;"><button class="profile-btn"><img src="{{ url_for('static', filename='assets/profile.png') }}" alt="Login Icon" style="height: 3em;">Profile</button></a>
+                <a href="{{ url_for('profile') }}" class="header-auth"><button class="profile-btn"><img src="{{ url_for('static', filename='assets/profile.png') }}" alt="Login Icon" style="height: 3em;">Profile</button></a>
             {% else %}
-                <a href="{{ url_for('login') }}" style="text-decoration: none;">
+                <a href="{{ url_for('login') }}" class="header-auth">
                     <button class="signin-btn">Sign In</button>
                 </a>
             {% endif %}
@@ -42,10 +48,10 @@
     </header>
     <nav class="w3-bar w3-blue-grey navbar">
         <div class="nav-content">
-            <a href="{{ url_for('home') }}" class="w3-bar-item w3-button" style="width:25%">Home</a>
-            <a href="{{ url_for('Decks') }}" class="w3-bar-item w3-button" style="width:25%">View Decks</a>
-            <a href="{{ url_for('createDeck') }}" class="w3-bar-item w3-button" style="width:25%">Create Deck</a>
-            <a href="{{ url_for('stats') }}" class="w3-bar-item w3-button" style="width:25%">Statistics</a>
+            <a href="{{ url_for('home') }}" class="w3-bar-item w3-button">Home</a>
+            <a href="{{ url_for('Decks') }}" class="w3-bar-item w3-button">View Decks</a>
+            <a href="{{ url_for('createDeck') }}" class="w3-bar-item w3-button">Create Deck</a>
+            <a href="{{ url_for('stats') }}" class="w3-bar-item w3-button">Statistics</a>
             <!-- <div class="w3-dropdown-hover">
                 <button class="w3-button">Dropdown ▾</button>
                     <div class="w3-dropdown-content w3-bar-block w3-card-4">
