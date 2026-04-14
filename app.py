@@ -140,11 +140,33 @@ def uservar():
 def home():
     # flash("Welcome to the Flashcard App!", "success")
     # flash("⚠ Something went wrong...", "error")
+
+    can_resume = bool(session.get('study_deckID') and session.get('shuffled_cards'))
+
+    if not userID():
+        flash("🛈 You have limited Access. Please Login or Sign Up to create your own decks!", "info")
+
+    if can_resume:
+        sql = "SELECT deck_name FROM Decks WHERE deck_ID = ?"
+        deck_name = query_db(sql, (session['study_deckID'],), one=True)[0]
+        total = len(session['shuffled_cards'])
+        percent = (session.get('current_index') / total) * 100
+    else:
+        deck_name = None
+        total = 0
+        percent = 0
+
     return render_template(
         "homepage.html", username=session.get(
             'username', 'Guest'
         ),
-        userID=session.get('userID', 0)
+        userID=session.get('userID', 0),
+        can_resume=can_resume,
+        deckID=session.get('study_deckID', None),
+        index=session.get('current_index', 0),
+        deck_name=deck_name,
+        total=total,
+        percent=percent
     )
 
 
@@ -155,7 +177,7 @@ def Decks():
     order = request.args.get('order')
     allowed_sort = {'deck_creation', 'deck_name', 'deck_description'}
     allowed_order = {'ASC', 'DESC'}
-    
+
     if sort_by not in allowed_sort:
         sort_by = 'deck_creation'  # default sort by creation date
     if order not in allowed_order:
@@ -233,7 +255,11 @@ def Deck(id):
         flash("⚠ Invalid Deck...", "error")
         return redirect(url_for("Decks"))
 
+    # chek if the user is the owner of the deck
     is_owner = deck_info[3] == userID()
+
+    # check if the user can resume studying the deck
+    can_resume = (session.get('study_deckID') == id) and (session.get('shuffled_cards') is not None)
 
     # return the results
     return render_template(
@@ -244,7 +270,8 @@ def Deck(id):
         format_date=format_date,
         sort_by=sort_by,
         order=order,
-        is_owner=is_owner
+        is_owner=is_owner,
+        can_resume=can_resume
     )
 
 
@@ -298,8 +325,16 @@ def start_study(id):
     # set session data to empty to remove previous list
     session.pop('shuffled_cards', None)
     session.pop('study_deckID', None)
+    session.pop('current_index', None)
     # redirect to study
     return redirect(url_for('Study', id=id, index=0))
+
+
+# ---------- redirect to study with saved index ----------
+@app.route('/decks/<int:id>/study/resume/')
+def resume_study(id):
+    saved_index = session.get('current_index', 0)
+    return redirect(url_for('Study', id=id, index=saved_index))
 
 
 # ---------- study a single card based on the index ----------
@@ -340,6 +375,11 @@ def Study(id, index):
         random.shuffle(temp_list)
         session['shuffled_cards'] = temp_list
         session['study_deckID'] = id
+        session['current_index'] = 0
+
+    # set session index to current index
+    else:
+        session['current_index'] = index
 
     # set card_list to the session list
     card_list = session['shuffled_cards']
@@ -417,6 +457,7 @@ def Study(id, index):
 
         # go to next page
         if index + 1 < total:
+            session['current_index'] = index + 1
             return redirect(url_for('Study', id=id, index=index + 1))
 
         # exit to deck page if there are no more cards
@@ -424,6 +465,7 @@ def Study(id, index):
             # clear sessions after exit
             session.pop('shuffled_cards', None)
             session.pop('study_deckID', None)
+            session.pop('current_index', None)
             # redirect to deck page
             flash("✔ You Have Finished Studying This Deck!", "success")
             return redirect(url_for('Deck', id=id))

@@ -15,11 +15,18 @@
 
     
     {% endif %}
-<!--     
-        <a href="{{ url_for('Decks') }}"><button>View Decks</button></a>
-        <a href="{{ url_for('createDeck') }}"><button>Create Deck</button></a>
-    -->
-        
+    
+    {% if can_resume %}
+    <h2>Jump Back In</h2>
+    <div class="resume-container w3-card-4">
+        <h2 class="resume-title ellipse-single">{{ deck_name }}</h2>
+        <div class="w3-round-xlarge resume-progress-outer">
+            <div class="w3-container w3-blue w3-round-xlarge resume-progress-inner" style="width: {{ percent }}%;"></div>
+        </div>
+        <p>{{ index + 1 }}/{{ total }} cards studied</p>
+        <a href="{{ url_for('resume_study', id=deckID) }}"><button>Resume Study</button></a>
+    </div><br>
+    {% endif %}
     <h2>Recent Decks Studied</h2>
     <h2>Bookmarked Decks</h2>
     <h2>Public Decks</h2>
