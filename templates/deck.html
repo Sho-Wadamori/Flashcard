@@ -13,7 +13,7 @@
   <!-- If cards exist -->
   {% if results %}
   {% if can_resume %}
-    <p>You have a study session in progress for this deck.</p>
+    <h6>You have a study session in progress for this deck.</h6>
     <a href="{{ url_for('resume_study', id=deck_info[1]) }}"><button>Resume Study</button></a>
     <a href="{{ url_for('start_study', id=deck_info[1]) }}"><button>Start Fresh</button></a>
   {% else %}
@@ -41,7 +41,7 @@
 
   <!-- Empty deck message -->
   {% else %}
-    <p>This deck has no flashcards yet.</p>
+    <h6>This deck has no flashcards yet.</h6>
     <a href="{{ url_for('Decks') }}"><button>Back</button></a><br><br>
 
     {% if is_owner %}
@@ -56,7 +56,7 @@
 </div>
 
 {% if results %}
-<p>Cards in this deck:</p>
+<h6 style="margin-bottom: 20px; padding: 0 30px;">Cards in this deck:</h6>
 <!-- a 3 column grid -->
 <div class="three-column">
     <!-- Create Card button -->
@@ -118,7 +118,7 @@
   </div>
 
 {% endif %}
-<p>Deck created {{ time_ago(deck_info[2]) }} | {{ format_date(deck_info[2]) }}</p>
+<h6>Deck created {{ time_ago(deck_info[2]) }} | {{ format_date(deck_info[2]) }}</h6>
 
 <!-- confirmation overlay -->
 <div id="overlay" onclick="off()"> <!-- Turn off overlay when clicking outside -->

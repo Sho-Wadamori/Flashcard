@@ -11,10 +11,10 @@
 
 <div class="deck-header">
     <h2>Your Decks</h2>
-    <p>Select a deck to view its cards.</p>
-
+    
     <!-- If decks exist -->
     {% if results %}
+    <h6 style="margin-bottom: 20px;">Select a deck to view its cards.</h6>
 
     <form action="{{ url_for('Decks') }}" method="GET" class='sort-form' style="top: 18px;">
         <label for="filter">Filter:</label>
@@ -43,7 +43,14 @@
 
     <!-- No deck message -->
     {% else %}
-        <p>You have no decks yet.</p>
+    
+        {% if filter != 'none' %}
+        <h6>Some decks may be hidden. <a href="{{ url_for('Decks') }}" class="blue-text">Clear filters</a></h6>
+        </form>
+        {% else %}
+            <h6>You have no decks yet.</h6>
+
+        {% endif %}
 
         <form action="{{ url_for('Decks') }}" method="GET" class='sort-form' style="top: 18px;">
             <label for="filter">Filter:</label>
@@ -79,7 +86,6 @@
     <!-- Deck List -->
     <div onclick="window.location='{{ url_for('Deck', id=deck[0]) }}'" style="text-decoration: none; cursor: pointer;"> <!-- Make it div to stop conflicts w/ buttons inside -->
         <div class="w3-card-4">
-            {% if userID %}
             <div class="dropdown">
                 <button class="dropdown-btn btn-ignore-all" onclick="event.preventDefault(); event.stopPropagation(); toggleDropdown(this)">
                     <svg xmlns="http://www.w3.org/2000/svg"
