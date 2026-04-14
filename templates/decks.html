@@ -58,17 +58,50 @@
     <div onclick="window.location='{{ url_for('Deck', id=deck[0]) }}'" style="text-decoration: none; cursor: pointer;"> <!-- Make it div to stop conflicts w/ buttons inside -->
         <div class="w3-card-4">
             {% if userID %}
-                <div class="card-buttons">
+            <div class="dropdown">
+                <button class="dropdown-btn btn-ignore-all" onclick="event.preventDefault(); event.stopPropagation(); toggleDropdown(this)">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        width="24" focusable="false"
+                        aria-hidden="true"
+                        style="pointer-events: none;
+                        display: inherit;
+                        width: 100%;
+                        height: 100%;
+                        float: right;">
+                        <path d="M12 4a2 2 0 100 4 2 2 0 000-4Zm0 6a2 2 0 100 4 2 2 0 000-4Zm0 6a2 2 0 100 4 2 2 0 000-4Z"></path>
+                    </svg>
+                </button>
+                <div class="dropdown-content">
                     <!-- edit deck -->
                     <a href="{{ url_for('editDeck', id=deck[0]) }}">
-                        <button style="text-decoration: none;" class="edit-button button-ignore">✏️</button>
+                        <img src="{{ url_for('static', filename='assets/edit.png') }}" alt="Edit" style="width: 20px; height: 20px;"> Edit
                     </a>
                     <!-- delete deck -->
                     <form action="{{ url_for('deleteDeck', id=deck[0]) }}" method="POST">
                         <input type="hidden" name="deck_id" value="{{ deck[0] }}">
-                        <button type="button" onclick="event.preventDefault(); event.stopPropagation(); showConfirm(this.form);" class="delete-button button-ignore">❌</button>
+                        <a href="" onclick="event.preventDefault(); event.stopPropagation(); showConfirm(this.form);">
+                            <img src="{{ url_for('static', filename='assets/bin.png') }}" alt="Delete" style="width: 20px; height: 20px;"> Delete
+                        </a>
                     </form>
+                    <!-- study deck -->
+                    <a href="{{ url_for('start_study', id=deck[0]) }}">
+                        <img src="{{ url_for('static', filename='assets/book.png') }}" alt="Study" style="width: 20px; height: 20px;"> Study
+                    </a>
+
+                    <!-- bookmark deck -->
+                    <a href="{{ url_for('Decks') }}">
+                        <img src="{{ url_for('static', filename='assets/bookmarkgrey.png') }}" alt="Bookmark" style="width: 20px; height: 18px;"> Save
+                    </a>
+
+                    <!-- expand/collapse card -->
+                    <a href="" onclick="event.preventDefault(); event.stopPropagation(); expandCard(this);">
+                    <img src="{{ url_for('static', filename='assets/expand.svg') }}" alt="Expand" style="width: 20px; height: 20px;"> <span>Expand</span>
+                    </a>
+
                 </div>
+            </div>
             {% endif %}
             <!-- the name then the description -->
             <h1 class="scientific ellipse-multi">{{ deck[1] }}</h1>
@@ -138,6 +171,59 @@ const scrollBtn = document.querySelector(".fixed-button");
 window.addEventListener("scroll", () => {
     scrollBtn.classList.toggle("show", window.scrollY > 200);
 });
+
+
+// close all dropdowns
+function closeAll() {
+    document.querySelectorAll('.dropdown-content.open').forEach(dropdown => {
+        dropdown.classList.remove('open');
+    });
+}
+
+// close dropdowns when clicking outside
+document.addEventListener('click', () => {
+    closeAll();
+});
+
+// toggle dropdown visibility on button click
+function toggleDropdown(button) {
+    // define dropdown content relative to button
+    const dropdownContent = button.nextElementSibling;
+    // check if open
+    const isOpen = dropdownContent.classList.contains('open');
+    closeAll(); // Close all dropdowns first
+    if (!isOpen) {
+        dropdownContent.classList.add('open'); // open the clicked dropdown
+    }
+};
+
+
+// expand/collapse card
+function expandCard(button) {
+    const text1 = button.parentElement.parentElement.nextElementSibling; // get question/deckname element
+    const text2 = text1.nextElementSibling.nextElementSibling; // get answer/description element
+    const isExpanded = text1.classList.contains('expanded'); // check if currently expanded
+
+    // if expanded
+    if (isExpanded) {
+        // collapse text
+        text1.classList.remove('expanded');
+        text2.classList.remove('expanded');
+        // change icon and text back to expand
+        button.querySelector('img').src = "{{ url_for('static', filename='assets/expand.svg') }}";
+        button.querySelector('span').textContent = "Expand";
+    } 
+
+    // if not expanded
+    else {
+        // expand text
+        text1.classList.add('expanded');
+        text2.classList.add('expanded');
+        // change icon and text to collapse
+        button.querySelector('img').src = "{{ url_for('static', filename='assets/collapse.png') }}";
+        button.querySelector('span').textContent = "Collapse";
+    }
+}
 
 </script>
 
