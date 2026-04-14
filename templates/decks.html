@@ -7,6 +7,8 @@
 <!-- Error message -->
 {% include "components/alerts.html" %}
 
+<div id="share-popupOverlay" onclick="closeSharePopup()"></div>
+
 <div class="deck-header">
     <h2>Your Decks</h2>
     <p>Select a deck to view its cards.</p>
@@ -94,10 +96,12 @@
                     </svg>
                 </button>
                 <div class="dropdown-content">
+                    {% if userID %}
                     <!-- edit deck -->
                     <a href="{{ url_for('editDeck', id=deck[0]) }}">
                         <img src="{{ url_for('static', filename='assets/edit.png') }}" alt="Edit" style="width: 20px; height: 20px;"> Edit
                     </a>
+
                     <!-- delete deck -->
                     <form action="{{ url_for('deleteDeck', id=deck[0]) }}" method="POST">
                         <input type="hidden" name="deck_id" value="{{ deck[0] }}">
@@ -105,24 +109,33 @@
                             <img src="{{ url_for('static', filename='assets/bin.png') }}" alt="Delete" style="width: 20px; height: 20px;"> Delete
                         </a>
                     </form>
+                    {% endif %}
+
                     <!-- study deck -->
                     <a href="{{ url_for('start_study', id=deck[0]) }}">
                         <img src="{{ url_for('static', filename='assets/book.png') }}" alt="Study" style="width: 20px; height: 20px;"> Study
                     </a>
 
+                    {% if userID %}
                     <!-- bookmark deck -->
                     <a href="{{ url_for('Decks') }}">
                         <img src="{{ url_for('static', filename='assets/bookmarkgrey.png') }}" alt="Bookmark" style="width: 20px; height: 18px;"> Save
                     </a>
+                    {% endif %}
 
                     <!-- expand/collapse card -->
                     <a href="" onclick="event.preventDefault(); event.stopPropagation(); expandCard(this);">
                     <img src="{{ url_for('static', filename='assets/expand.svg') }}" alt="Expand" style="width: 20px; height: 20px;"> <span>Expand</span>
                     </a>
 
+                    <!-- share deck -->
+                    <a href="" onclick="event.preventDefault(); event.stopPropagation(); openSharePopup('{{ deck[0] }}', '{{ deck[1] }}');">
+                        <img src="{{ url_for('static', filename='assets/share.png') }}" alt="Share" style="width: 20px; height: 20px;"> Share
+                    </a>
+
                 </div>
             </div>
-            {% endif %}
+
             <!-- the name then the description -->
             <h1 class="scientific ellipse-multi">{{ deck[1] }}</h1>
             <p>---------------</p>
@@ -154,8 +167,66 @@
     </a>
 </div>
 
-<script>
 
+<!-- share popup -->
+<div id="share-popup" onclick="event.stopPropagation();" style="cursor: auto;">
+    <h3>Share The "<span id="share-deckName"></span>" Deck</h3><br>
+
+    <div class="share-buttons">
+        <a id="share-whatsapp" target="_blank">
+            <button class="btn-ignore-all">
+                <img src="{{ url_for('static', filename='assets/whatsapp.png') }}" alt="whatsapp logo"></img>
+                WhatsApp
+            </button>
+        </a>
+        <a id="share-email" target="_blank">
+            <button class="btn-ignore-all">
+                <img src="{{ url_for('static', filename='assets/email.png') }}" alt="email icon"></img>
+                Email
+            </button>
+        </a>
+        <a id="share-facebook" target="_blank">
+            <button class="btn-ignore-all">
+                <img src="{{ url_for('static', filename='assets/facebook.png') }}" alt="facebook logo"></img>
+                Facebook
+            </button>
+        </a>
+        <a id="share-twitter" target="_blank">
+            <button class="btn-ignore-all">
+                <img src="{{ url_for('static', filename='assets/twitter.png') }}" alt="twitter logo"></img>
+                Twitter / X
+            </button>
+        </a>
+        <a id="share-reddit" target="_blank">
+            <button class="btn-ignore-all">
+                <img src="{{ url_for('static', filename='assets/reddit.png') }}" alt="reddit logo"></img>
+                Reddit
+            </button>
+        </a>
+        <a id="share-pinterest" target="_blank">
+            <button class="btn-ignore-all">
+                <img src="{{ url_for('static', filename='assets/pinterest.png') }}" alt="pinterest logo"></img>
+                Pinterest
+            </button>
+        </a>
+        <a id="share-linkedin" target="_blank">
+            <button class="btn-ignore-all">
+                <img src="{{ url_for('static', filename='assets/linkedin.png') }}" alt="linkedin logo"></img>
+                LinkedIn
+            </button>
+        </a>
+    </div><br>
+
+    <input type="text" id="share-link" readonly>
+    <button onclick="navigator.clipboard.writeText(document.getElementById('share-link').value);">Copy</button>
+
+    <button onclick="closeSharePopup()" class="btn-ignore-all share-close">✖</button>
+
+
+</div>
+
+<script>
+// ----- Delete Confirmation -----
 // turn on confirmation overlay
 function on() {
   document.getElementById("overlay").style.display = "block";
@@ -184,6 +255,9 @@ function confirmDelete() {
   off(); // Hide confirmation overlay
 }
 
+
+
+// ----- Scroll to top button -----
 // define button
 const scrollBtn = document.querySelector(".fixed-button");
 
@@ -193,6 +267,8 @@ window.addEventListener("scroll", () => {
 });
 
 
+
+// ----- Dropdown Menu -----
 // close all dropdowns
 function closeAll() {
     document.querySelectorAll('.dropdown-content.open').forEach(dropdown => {
@@ -218,6 +294,8 @@ function toggleDropdown(button) {
 };
 
 
+
+// ----- expand/collapse long cards-----
 // expand/collapse card
 function expandCard(button) {
     const text1 = button.parentElement.parentElement.nextElementSibling; // get question/deckname element
@@ -243,6 +321,54 @@ function expandCard(button) {
         button.querySelector('img').src = "{{ url_for('static', filename='assets/collapse.png') }}";
         button.querySelector('span').textContent = "Collapse";
     }
+}
+
+
+
+// ----- Share Popup -----
+// define popup and overlay
+const sharePopup = document.getElementById('share-popup');
+const sharePopupOverlay = document.getElementById('share-popupOverlay');
+
+const shareDeckName = document.getElementById('share-deckName');
+const shareLink = document.getElementById('share-link');
+const shareWhatsapp = document.getElementById('share-whatsapp');
+const shareEmail = document.getElementById('share-email');
+const shareFacebook = document.getElementById('share-facebook');
+const shareTwitter = document.getElementById('share-twitter');
+const shareReddit = document.getElementById('share-reddit');
+const sharePinterest = document.getElementById('share-pinterest');
+const shareLinkedIn = document.getElementById('share-linkedin');
+
+// when share button is clicked
+function openSharePopup(deckID, deckName) {
+    const deckURL = `${window.location.origin}/deck/${deckID}`; // make deck url
+    // share message converted to url format
+    const message = encodeURIComponent(`Check out my ${deckName} flashcards! ${deckURL}\n${deckURL}`);
+    
+    shareDeckName.textContent = deckName; // set popup title to deck name
+    shareLink.value = deckURL; // set share link to deck url
+    // set all the share links with the message/deck url (some don't allow messages and some accept url parameters)
+    shareWhatsapp.href = `https://api.whatsapp.com/send/?text=${message}`;
+    shareEmail.href = `mailto:?subject=Check out this deck!&body=${message}`;
+    shareFacebook.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(deckURL)}`;
+    shareTwitter.href = `https://twitter.com/intent/tweet?text=${message}`;
+    shareReddit.href = `https://www.reddit.com/submit?url=${encodeURIComponent(deckURL)}&title=${encodeURIComponent('Check out my ${deckName} flashcards!')}`;
+    sharePinterest.href = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(deckURL)}&description=${encodeURIComponent('Check out my ${deckName} flashcards!')}`;
+    shareLinkedIn.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(deckURL)}`;
+
+    // close all dropdowns
+    closeAll()
+
+    // check if popup is already open
+    sharePopup.classList.toggle('open'); // add open class
+    sharePopupOverlay.classList.toggle('open'); // add open class
+}
+
+// close popup
+function closeSharePopup() {
+    sharePopup.classList.remove('open'); // remove open class
+    sharePopupOverlay.classList.remove('open'); // remove open class
 }
 
 </script>
