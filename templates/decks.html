@@ -222,6 +222,8 @@
 
     <button onclick="closeSharePopup()" class="btn-ignore-all share-close">✖</button>
 
+    <button id="share-leftArrow" class="share-leftArrow btn-ignore-all" onclick="scrollShareButtons('left')"><</button>
+    <button id="share-rightArrow" class="share-rightArrow btn-ignore-all" onclick="scrollShareButtons('right')">></button>
 
 </div>
 
@@ -370,6 +372,95 @@ function closeSharePopup() {
     sharePopup.classList.remove('open'); // remove open class
     sharePopupOverlay.classList.remove('open'); // remove open class
 }
+
+
+
+// -----  Share Buttons Scrolling -----
+// define share buttons container
+const shareButtons = document.querySelector('.share-buttons');
+
+// scroll share buttons
+function scrollShareButtons(direction) {
+    if (direction === 'left') {
+        shareButtons.scrollBy({ left: -100, behavior: 'smooth' });
+    } 
+    else if (direction === 'right') {
+        shareButtons.scrollBy({ left: 100, behavior: 'smooth' });
+    }
+    // update arrows after scroll
+    updateScrollArrows()
+};
+
+// run on page load
+updateScrollArrows()
+
+// detect when user scrolls in share buttons
+shareButtons.addEventListener('scroll', (event) => {
+    updateScrollArrows()
+})
+
+
+
+// ----- Mouse Scroll to Scroll Share Buttons -----
+// when mouse scroll is used on share buttons
+shareButtons.addEventListener('wheel', (event) => {
+    event.preventDefault(); // prevent vertical scroll
+    shareButtons.scrollBy({ left: event.deltaY, behavior: 'smooth' }); // scroll horizontally
+});
+
+
+
+ // ----- Keybinds -----
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowLeft') {
+        scrollShareButtons('left');
+    }
+    if (event.key === 'ArrowRight') {
+        scrollShareButtons('right');
+    }
+
+    // if escape is pressed, close popup
+    if (event.key === 'Escape') {
+        closeSharePopup();
+    }
+});
+
+
+
+// ----- Update Scroll Arrow Visibility -----
+// update scroll arrows
+function updateScrollArrows() {
+    // define arrows
+    const leftArrow = document.getElementById('share-leftArrow');
+    const rightArrow = document.getElementById('share-rightArrow');
+
+    // get current scroll pos
+    const scrollPos = shareButtons.scrollLeft;
+    // get max scroll pos
+    const maxScrollLeft = shareButtons.scrollWidth - shareButtons.clientWidth;
+
+    
+    // if scroll pos is at start
+    if (scrollPos <= 0) {
+        // hide left arrow
+        leftArrow.style.display = 'none';
+    }
+    else {
+        // show left arrow
+        leftArrow.style.display = 'block';
+    }
+
+    // if scroll pos is at end
+    if (scrollPos >= maxScrollLeft) {
+        // hide right arrow
+        rightArrow.style.display = 'none';
+    }
+    else {
+        // show right arrow
+        rightArrow.style.display = 'block';
+    }
+}
+
 
 </script>
 

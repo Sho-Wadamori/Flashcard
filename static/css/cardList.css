@@ -241,6 +241,42 @@
   aspect-ratio: 1 / 1;
 }
 
+/* share buttons left arrow */
+.share-leftArrow {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  background-color: white;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 10px;
+  height: 50px;
+  width: 50px;
+  aspect-ratio: 1 / 1;
+  border-radius: 40px;
+}
+
+/* share buttons right arrow */
+.share-rightArrow {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background-color: white;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 10px;
+  height: 50px;
+  width: 50px;
+  aspect-ratio: 1 / 1;
+  border-radius: 40px;
+}
+
 /* grey overlay behind the popup */
 #share-popupOverlay {
   visibility: hidden; /* hide it */
