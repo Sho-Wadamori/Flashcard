@@ -492,6 +492,7 @@ def createDeck():
     if request.method == "POST":
         deck_name = request.form['deckName']
         deck_description = request.form['deckDescription']
+        deck_visibility = request.form['deckVisibility']
 
         # check if the form data is not empty
         if not deck_name:
@@ -502,26 +503,19 @@ def createDeck():
         else:
             sql = """
                     INSERT INTO Decks (
-                        deck_name, deck_description, deck_creation, deck_userID
+                        deck_name, deck_description, deck_creation, deck_userID, deck_visibility
                     )
-                    VALUES (?, ?, datetime('now'), ?);
+                    VALUES (?, ?, datetime('now'), ?, ?);
                 """
-            get_db().execute(sql, (deck_name, deck_description, userID()))
+            get_db().execute(sql, (deck_name, deck_description, userID(), deck_visibility))
             get_db().commit()
             # redirect to the decks list page
             flash("✔ Deck Created Successfully!", "success")
             return redirect(url_for('Decks'))
     # if request method is GET, return the sql results
     else:
-        # get all the decks id, name, description, and creation date
-        sql = """
-                SELECT deck_ID, deck_name, deck_description, deck_creation
-                FROM Decks
-                WHERE deck_userID = ?;
-            """
-        result = query_db(sql, (userID(),))
-        # return the results
-        return render_template("deckCreate.html", results=result)
+        deck_visibility = "private"  # default visibility
+        return render_template("deckCreate.html", visibility=deck_visibility)
 
 
 # ---------- create a new card ----------
@@ -592,6 +586,7 @@ def editDeck(id):
     if request.method == "POST":
         deck_name = request.form['deckName']
         deck_description = request.form['deckDescription']
+        deck_visibility = request.form['deckVisibility']
 
         # check if the form data is not empty
         if not deck_name:
@@ -602,11 +597,11 @@ def editDeck(id):
         else:
             sql = """
                     UPDATE Decks
-                    SET deck_name = ?, deck_description = ?
+                    SET deck_name = ?, deck_description = ?, deck_visibility = ?
                     WHERE deck_ID = ?
                     AND deck_userID = ?;
                 """
-            get_db().execute(sql, (deck_name, deck_description, id, userID()))
+            get_db().execute(sql, (deck_name, deck_description, deck_visibility, id, userID()))
             get_db().commit()
             # redirect to the decks list page
             return redirect(url_for('Decks'))
@@ -614,7 +609,7 @@ def editDeck(id):
     else:
         # get all the decks id, name, description, and creation date
         sql = """
-                SELECT deck_ID, deck_name, deck_description, deck_creation
+                SELECT deck_ID, deck_name, deck_description, deck_creation, deck_visibility
                 FROM Decks
                 WHERE deck_ID = ? AND deck_userID = ?;
             """

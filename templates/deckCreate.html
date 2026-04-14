@@ -18,6 +18,12 @@
     <input type="file" id="myfile" name="myfile"><br><br> -->
     <button type="submit">Submit</button>
     <button type="reset">Reset</button>
+    <label for="deckVisibility">Deck Visibility:</label>
+    <select name="deckVisibility" id="deckVisibility">
+        <option value="private" {% if visibility == 'private' %}selected{% endif %}>Private</option>
+        <option value="unlisted" {% if visibility == 'unlisted' %}selected{% endif %}>Unlisted</option>
+        <option value="public" {% if visibility == 'public' %}selected{% endif %}>Public</option>
+    </select>
 </form>
 
 <div style="text-align:center; margin-bottom: 20px;">
