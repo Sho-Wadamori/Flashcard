@@ -237,6 +237,89 @@ function filterFunction() {
 <!-- <h1>a<sub>1234567890-=qwertyuiop[]\asdfghjkl;'zxcvbnm,./</sub>a</h1>
 <h1>a<sup>1234567890-=qwertyuiop[]\asdfghjkl;'zxcvbnm,./</sup>a</h1> -->
 
+<h1>{{ request.url }}</h1>
+<h1>{{ request.url | urlencode }}</h1>
+
+
+
+
+{% set message = "Check out my deck!%0A" ~ request.url | urlencode %}
+
+<div class="share">
+  <a href="https://api.whatsapp.com/send/?text={{ message }}" target="_blank">
+    <button>
+      <img src="{{ url_for('static', filename='assets/whatsapp.png') }}" alt="whatsapp logo"></img>
+      WhatsApp
+    </button>
+  </a>
+  <a href="mailto:?subject=Check out this deck!&body={{ message }}" target="_blank">
+    <button>
+      <img src="{{ url_for('static', filename='assets/email.png') }}" alt="email logo"></img>
+      Email
+    </button>
+  </a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.url | urlencode }}" target="_blank">
+    <button>
+      <img src="{{ url_for('static', filename='assets/facebook.png') }}" alt="facebook logo"></img>
+      Facebook
+    </button>
+  </a>
+  <a href="https://twitter.com/intent/tweet?text={{ message }}" target="_blank">
+    <button>
+      <img src="{{ url_for('static', filename='assets/twitter.png') }}" alt="twitter logo"></img>
+      Twitter/X
+    </button>
+  </a>
+  <a href="https://www.reddit.com/submit?url={{ request.url | urlencode }}&title={{ 'Check out my deck!' | urlencode }}" target="_blank">
+    <button>
+      <img src="{{ url_for('static', filename='assets/reddit.png') }}" alt="reddit logo"></img>
+      Reddit
+    </button>
+  </a>
+  <a href="https://pinterest.com/pin/create/button/?url={{ request.url | urlencode }}&description={{ 'Check out my deck!' | urlencode }}" target="_blank">
+    <button>
+      <img src="{{ url_for('static', filename='assets/pinterest.png') }}" alt="pinterest logo"></img>
+      Pinterest
+    </button>
+  </a>
+  <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.url | urlencode }}" target="_blank">
+    <button>
+      <img src="{{ url_for('static', filename='assets/linkedin.png') }}" alt="linkedin logo"></img>
+      LinkedIn
+    </button>
+  </a>
+</div>
+
+<input type="text" id="text" value="{{ request.url }}" readonly>
+<button onclick="navigator.clipboard.writeText(document.getElementById('text').value);">Copy</button>
+
+<style>
+  .share {
+    display: flex;
+    gap: 10px;
+    background-color: grey;
+  }
+
+  .share button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background-color: rgb(185, 185, 185);
+    flex-direction: column;
+  }
+
+  .share img {
+    width: 60px;
+    height: 60px;
+  }
+</style>
+
+
+
 
 <script>
 

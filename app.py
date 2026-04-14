@@ -936,10 +936,9 @@ def test():
         sql1 = """
                 SELECT Flashcards.card_question,
                 Flashcards.card_answer, Decks.deck_name
-                FROM Flashcards, Decks
-                WHERE card_userID = ?;
+                FROM Flashcards, Decks;
             """
-        card_list = query_db(sql1, (userID(),))
+        card_list = query_db(sql1)
         return render_template("test.html", card_list=card_list)
 
 
