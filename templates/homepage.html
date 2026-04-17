@@ -11,21 +11,69 @@
     {% if username == 'Guest'  %}
     <h1>Welcome to Flashcard maker!</h1>    
     {% else %}
-    <h1>Welcome back {{ username }}!</h1>
-
-    
+        <h1>Welcome back {{ username }}!</h1>
     {% endif %}
     
     {% if can_resume %}
-    <h2>Jump Back In</h2>
-    <div class="resume-container w3-card-4">
-        <h2 class="resume-title ellipse-single">{{ deck_name }}</h2>
-        <div class="w3-round-xlarge resume-progress-outer">
-            <div class="w3-container w3-blue w3-round-xlarge resume-progress-inner" style="width: {{ percent }}%;"></div>
+        <h2>Jump Back In</h2>
+        <div class="resume-container w3-card-4">
+            <h2 class="resume-title ellipse-single">{{ deck_name }}</h2>
+            <div class="w3-round-xlarge resume-progress-outer" style="height: 20px;">
+                {% if percent > 0 %}
+                <div class="w3-container w3-blue w3-round-xlarge resume-progress-inner" style="width: {{ percent }}%;"></div>
+                {% endif %}
+            </div>
+            <p>{{ index }}/{{ total }} cards studied</p>
+            <a href="{{ url_for('resume_study', id=deckID) }}"><button>Resume Study</button></a>
+        </div><br>
+    {% endif %}
+    
+    {% if username != 'Guest' %}
+    <div class="categoryHeaders">
+        <img src="{{ url_for('static', filename='assets/statistics.png') }}" height="32px">
+        <h2>Your Progress</h2> <a href="{{ url_for('stats') }}"><h6 style="color: rgb(14, 103, 161)">View more ></h6></a>
+    </div>
+    <div class="statsContainer">
+        <div class="statsDaily">
+            <h3>Today's Statistics</h3>
+            <div class="statsInner">
+                <div>
+                    <h5 style="margin-bottom: 0;">Current Streak</h5>
+                    <h2>{{ currentStreak }}</h2>
+
+                    <br>
+                    
+                    <h5 style="margin-bottom: 0;">Cards Studied Today</h5>
+                    <h2>0</h2>
+                </div>
+                <div>
+                    <h1>GRAPH HERE</h1>
+                </div>
+            </div>
         </div>
-        <p>{{ index + 1 }}/{{ total }} cards studied</p>
-        <a href="{{ url_for('resume_study', id=deckID) }}"><button>Resume Study</button></a>
+
+        <div class="statsWeekly">
+            <h3>Weekly Summary</h3>
+            <div class="statsInner">
+                <div style="display: flex; flex-direction: column;">
+                    <h5 style="margin-bottom: 0;">Time Studied This Week</h5>
+                    <h6>0 mins</h6>
+                </div>
+                <div style="display: flex; flex-direction: column;">
+                    <h5 style="margin-bottom: 0;">Cards Studied This Week</h5>
+                    <h6>0 cards</h6>
+                </div>
+            </div><br>
+
+            <p>Correct: {{ answer_stats[0] }}</p>
+            <p>Incorrect: {{ answer_stats[1] }}</p>
+            <p>Skip</p>
+        </div>
+    </div>
+
+        </div>
     </div><br>
+
     {% endif %}
     <h2>Recent Decks Studied</h2>
     <h2>Bookmarked Decks</h2>

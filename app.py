@@ -30,7 +30,8 @@ import random  # for randomising card list
 # from werkzeug.utils import secure_filename  # for file uploads
 from datetime import (
     datetime,
-    timezone
+    timezone,
+    date
 )  # for time formatting
 
 from werkzeug.security import (
@@ -108,7 +109,47 @@ def time_ago(date_string):
     if minutes > 0:
         return f"{minutes} minutes ago"
 
-    return "just now"
+
+# ---------- send day difference ----------
+def is_streak_eligible(last_datetime):
+    # convert str to datetime
+    dt = datetime.strptime(last_datetime, "%Y-%m-%d %H:%M:%S")
+    dt = dt.replace(tzinfo=timezone.utc)
+    dt = dt.astimezone()
+    # convert datetime to day
+    last_date = dt.date()
+
+    today = datetime.now().astimezone().date()
+
+    diff = (today - last_date).days
+
+    return diff
+
+
+# ---------- update streak counter ----------
+def updateStreak():
+    get_streak = """
+        SELECT user_lastStudied, user_streak
+        FROM Users
+        WHERE user_ID = ?;
+    """
+    streaks = query_db(get_streak, (userID(),))
+    diff = is_streak_eligible(streaks[0][0])
+
+    current_streak = int(streaks[0][1])
+
+    if diff >= 2:
+        update_streaks = """
+            UPDATE Users
+            SET user_streak = 0
+            WHERE user_ID = ?;
+        """
+        get_db().execute(update_streaks, (userID(),))
+        get_db().commit()
+
+        current_streak = 0
+
+    return current_streak
 
 
 # ---------- convet YYYY-MM-DD HH:MM:SS to DD/Month/YYYY ----------
@@ -156,6 +197,17 @@ def home():
         total = 0
         percent = 0
 
+    # get stats if user is logged in
+    if userID:
+        userAnswerStats = """
+            SELECT SUM(stats_correct), SUM(stats_incorrect)
+            FROM UserCardStats
+            WHERE stats_userID = ?;
+        """
+        answer_stats = query_db(userAnswerStats, (userID(),))[0]
+
+        currentStreak = updateStreak()
+
     return render_template(
         "homepage.html", username=session.get(
             'username', 'Guest'
@@ -166,7 +218,9 @@ def home():
         index=session.get('current_index', 0),
         deck_name=deck_name,
         total=total,
-        percent=percent
+        percent=percent,
+        answer_stats=answer_stats,
+        currentStreak=currentStreak
     )
 
 
@@ -553,6 +607,40 @@ def Study(id, index):
             session.pop('shuffled_cards', None)
             session.pop('study_deckID', None)
             session.pop('current_index', None)
+
+            if userID():
+                get_streak = """
+                    SELECT user_lastStudied, user_streak
+                    FROM Users
+                    WHERE user_ID = ?;
+                """
+                streaks = query_db(get_streak, (userID(),))
+
+                diff = is_streak_eligible(streaks[0][0])
+
+                if diff == 0:
+                    pass
+
+                elif diff == 1:
+                    update_streak = """
+                        UPDATE Users
+                        SET user_lastStudied = datetime('now'),
+                        user_streak = user_streak + 1
+                        WHERE user_ID = ?;
+                    """
+                    get_db().execute(update_streak, (userID(),))
+                    get_db().commit()
+
+                else:
+                    update_streak = """
+                        UPDATE Users
+                        SET user_lastStudied = datetime('now'),
+                        user_streak = 1
+                        WHERE user_ID = ?;
+                    """
+                    get_db().execute(update_streak, (userID(),))
+                    get_db().commit()
+
             # redirect to deck page
             flash("✔ You Have Finished Studying This Deck!", "success")
             return redirect(url_for('Deck', id=id))

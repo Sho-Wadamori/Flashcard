@@ -1,6 +1,6 @@
 /* -------------------- Homepage -------------------- */
 .homepage-body {
-  padding: 0 400px;
+  padding: 0 350px;
 }
 
 /* container for the resume section */
@@ -8,7 +8,7 @@
   align-items: normal !important;
   padding: 20px 30px;
   width: 70%;
-  background-color:rgb(236, 236, 236);
+  background-color:rgb(255, 255, 255);
 }
 
 /* resume deck title */
@@ -26,4 +26,32 @@
 .resume-progress-inner {
   background-color: #607d8b !important;
   height: 20px;
+}
+
+.categoryHeaders {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.statsContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+  padding: 0 30px;
+  justify-content: center;
+}
+
+.statsDaily,
+.statsWeekly {
+  background-color: #ffffff;
+  width: 500px;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px 0 rgba(0,0,0,0.2);
+}
+
+.statsInner {
+  display: flex;
+  justify-content: space-between;
 }
