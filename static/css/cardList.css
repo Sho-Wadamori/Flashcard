@@ -262,7 +262,6 @@
   background: #f1f1f1;
   padding: 10px;
   border-radius: 12px;
-  overflow-y: scroll;
   text-align: center;
   width: clamp(1px, 90%, 500px);
   padding: 20px;
@@ -280,14 +279,25 @@
   transition-delay: 0s;
 }
 
+/* wraps share buttons and arrows */
+.shareButton-wrapper {
+  position: relative;
+  display: flex;
+}
+
 /* share buttons that contains platform icons and btns */
 .share-buttons {
   display: flex;
-  gap: 7px;
-  justify-content: center;
+  gap: 22px;
   overflow: scroll;
-  padding-left: 180px;
-  padding-right: 0px;
+  overflow-y: hidden;
+}
+
+/* either ends of the share-buttons element */
+.share-buttons::before,
+.share-buttons::after {
+  content: '';
+  min-width: 1px;
 }
 
 /* each platform buttons */
@@ -300,8 +310,9 @@
   justify-content: center;
   gap: 5px;
   flex-direction: column;
-  width: 85px;
+  width: fit-content;
   margin-bottom: 15px;
+  white-space: nowrap;
 }
 
 /* each platform icon */
@@ -325,14 +336,19 @@
   align-items: center;
   justify-content: center;
   aspect-ratio: 1 / 1;
+  transition: color 0.2s ease-in-out;
+}
+/* on hover */
+.share-close:hover {
+  color: #636363;
 }
 
 /* share buttons left arrow */
 .share-leftArrow {
   position: absolute;
-  top: 50%;
-  left: 10px;
-  transform: translateY(-50%);
+  top: 30%;
+  left: 6px;
+  transform: translateY(-30%);
   background-color: white;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
   border: none;
@@ -343,14 +359,15 @@
   width: 50px;
   aspect-ratio: 1 / 1;
   border-radius: 40px;
+  transition: background-color 0.2s ease-in-out;
 }
 
 /* share buttons right arrow */
 .share-rightArrow {
   position: absolute;
-  top: 50%;
-  right: 10px;
-  transform: translateY(-50%);
+  top: 30%;
+  right: 6px;
+  transform: translateY(-30%);
   background-color: white;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
   border: none;
@@ -361,6 +378,12 @@
   width: 50px;
   aspect-ratio: 1 / 1;
   border-radius: 40px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.share-leftArrow:hover,
+.share-rightArrow:hover {
+  background-color: #f1f1f1;
 }
 
 /* grey overlay behind the popup */
@@ -382,4 +405,26 @@
   visibility: visible; /* reveal it */
   opacity: 1;
   transition-delay: 0s;
+}
+
+/* container for the share link and copy btn */
+.linkContainer {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  background-color: #ffffff;
+  padding: 10px 10px;
+  width: 70%;
+  border-radius: 10px;
+  margin: 0 auto;
+  margin-top: 10px;
+}
+
+/* share link input */
+#share-link {
+  border: none;
+  background: none;
+  text-align: center;
+  font-size: 1rem;
+  width: 80%;
 }
