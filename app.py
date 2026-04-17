@@ -179,14 +179,19 @@ def uservar():
 # ---------- homepage ----------
 @app.route('/')
 def home():
-    # flash("Welcome to the Flashcard App!", "success")
-    # flash("⚠ Something went wrong...", "error")
+    # check if unfinished study session exists
+    can_resume = bool(
+        session.get('study_deckID') and session.get('shuffled_cards')
+    )
 
-    can_resume = bool(session.get('study_deckID') and session.get('shuffled_cards'))
-
+    # give message to users not logged in
     if not userID():
-        flash("🛈 You have limited Access. Please Login or Sign Up to create your own decks!", "info")
+        flash("""
+            🛈 You have limited Access.
+            Please Login or Sign Up to create your own decks!
+        """, "info")
 
+    # get info of the unfishished study session
     if can_resume:
         sql = "SELECT deck_name FROM Decks WHERE deck_ID = ?"
         deck_name = query_db(sql, (session['study_deckID'],), one=True)[0]
@@ -411,7 +416,11 @@ def Deck(id):
     is_owner = deck_info[3] == userID()
 
     # check if the user can resume studying the deck
-    can_resume = (session.get('study_deckID') == id) and (session.get('shuffled_cards') is not None)
+    can_resume = (
+        session.get('study_deckID') == id
+    ) and (
+        session.get('shuffled_cards') is not None
+    )
 
     # return the results
     return render_template(
@@ -689,11 +698,14 @@ def createDeck():
         else:
             sql = """
                     INSERT INTO Decks (
-                        deck_name, deck_description, deck_creation, deck_userID, deck_visibility
+                        deck_name, deck_description, deck_creation,
+                        deck_userID, deck_visibility
                     )
                     VALUES (?, ?, datetime('now'), ?, ?);
                 """
-            get_db().execute(sql, (deck_name, deck_description, userID(), deck_visibility))
+            get_db().execute(sql, (
+                deck_name, deck_description, userID(), deck_visibility
+            ))
             get_db().commit()
             # redirect to the decks list page
             flash("✔ Deck Created Successfully!", "success")
@@ -783,11 +795,14 @@ def editDeck(id):
         else:
             sql = """
                     UPDATE Decks
-                    SET deck_name = ?, deck_description = ?, deck_visibility = ?
+                    SET deck_name = ?, deck_description = ?,
+                    deck_visibility = ?
                     WHERE deck_ID = ?
                     AND deck_userID = ?;
                 """
-            get_db().execute(sql, (deck_name, deck_description, deck_visibility, id, userID()))
+            get_db().execute(sql, (
+                deck_name, deck_description, deck_visibility, id, userID()
+            ))
             get_db().commit()
             # redirect to the decks list page
             return redirect(url_for('Decks'))
@@ -795,7 +810,8 @@ def editDeck(id):
     else:
         # get all the decks id, name, description, and creation date
         sql = """
-                SELECT deck_ID, deck_name, deck_description, deck_creation, deck_visibility
+                SELECT deck_ID, deck_name, deck_description,
+                deck_creation, deck_visibility
                 FROM Decks
                 WHERE deck_ID = ? AND deck_userID = ?;
             """
