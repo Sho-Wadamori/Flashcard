@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Decks{% endblock %}
 
 {% block body %}
 
@@ -9,140 +9,111 @@
 
 <div id="share-popupOverlay" onclick="closeSharePopup()"></div>
 
-<div class="homepage-body">
-    {% if username == 'Guest'  %}
-        <h1>Welcome to Flashcard maker!</h1>    
+<div class="deck-header">
+    <h2>Public Decks</h2>
+    
+    <!-- If decks exist -->
+    {% if results %}
+    <h6 style="margin-bottom: 20px;">Select a deck to view its cards.</h6>
+
+    <form action="{{ url_for('public') }}" method="GET" class='sort-form' style="top: 18px;">
+        <label for="sort_by">Sort by:</label>
+        <select name="sort_by" id="sort_by">
+            <option value="deck_creation" {% if sort_by == 'deck_creation' %}selected{% endif %}>Creation Date</option>
+            <option value="deck_name" {% if sort_by == 'deck_name' %}selected{% endif %}>Name</option>
+            <option value="deck_description" {% if sort_by == 'deck_description' %}selected{% endif %}>Description</option>
+        </select>
+
+        <label for="order">Order:</label>
+        <select name="order" id="order">
+            <option value="DESC" {% if order == 'DESC' %}selected{% endif %}>Descending</option>
+            <option value="ASC" {% if order == 'ASC' %}selected{% endif %}>Ascending</option>
+        </select>
+
+        <button type="submit">Apply</button>
+    </form>
+
+    <!-- No deck message -->
     {% else %}
-        <h1>Welcome back {{ username }}!</h1>
-    {% endif %}
-    
-    {% if can_resume %}
-        <h2>Jump Back In</h2>
-        <div class="resume-container w3-card-4">
-            <h2 class="resume-title ellipse-single">{{ deck_name }}</h2>
-            <div class="w3-round-xlarge resume-progress-outer" style="height: 20px;">
-                {% if percent > 0 %}
-                <div class="w3-container w3-blue w3-round-xlarge resume-progress-inner" style="width: {{ percent }}%;"></div>
-                {% endif %}
-            </div>
-            <p>{{ index }}/{{ total }} cards studied</p>
-            <a href="{{ url_for('resume_study', id=deckID) }}"><button>Resume Study</button></a>
-        </div><br>
-    {% endif %}
-    
-    {% if username != 'Guest' %}
-    <div class="categoryHeaders">
-        <img src="{{ url_for('static', filename='assets/statistics.png') }}" height="32px">
-        <h2>Your Progress</h2> <a href="{{ url_for('stats') }}"><h6 style="color: rgb(14, 103, 161)">View more ></h6></a>
-    </div>
-    <div class="statsContainer">
-        <div class="statsDaily">
-            <h3>Today's Statistics</h3>
-            <div class="statsInner">
-                <div>
-                    <h5 style="margin-bottom: 0;">Current Streak</h5>
-                    <h2>{{ currentStreak }}</h2>
 
-                    <br>
-                    
-                    <h5 style="margin-bottom: 0;">Cards Studied Today</h5>
-                    <h2>0</h2>
-                </div>
-                <div>
-                    <h1>GRAPH HERE</h1>
-                </div>
-            </div>
-        </div>
-
-        <div class="statsWeekly">
-            <h3>Weekly Summary</h3>
-            <div class="statsInner">
-                <div style="display: flex; flex-direction: column;">
-                    <h5 style="margin-bottom: 0;">Time Studied This Week</h5>
-                    <h6>0 mins</h6>
-                </div>
-                <div style="display: flex; flex-direction: column;">
-                    <h5 style="margin-bottom: 0;">Cards Studied This Week</h5>
-                    <h6>0 cards</h6>
-                </div>
-            </div><br>
-
-            <p>Correct: {{ answer_stats[0] }}</p>
-            <p>Incorrect: {{ answer_stats[1] }}</p>
-            <p>Skip</p>
-        </div>
-    </div>
-
-        </div>
-    </div><br>
+        <h6>There are no public decks yet.</h6>
 
     {% endif %}
-    
-    <div class="categoryHeaders">
-        <img src="{{ url_for('static', filename='assets/world.png') }}" height="32px">
-        <h2>Public Decks</h2> <a href="{{ url_for('public') }}"><h6 style="color: rgb(14, 103, 161)">View all ></h6></a>
-    </div>
-    <div class="three-column">
-        {% for deck in publicDecks %}
-        <!-- Deck List -->
-        <div onclick="window.location='{{ url_for('Deck', id=deck[0]) }}'" style="text-decoration: none; cursor: pointer;"> <!-- Make it div to stop conflicts w/ buttons inside -->
-            <div class="w3-card-4">
-                <div class="dropdown">
-                    <button class="dropdown-btn btn-ignore-all" onclick="event.preventDefault(); event.stopPropagation(); toggleDropdown(this)">
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            width="24" focusable="false"
-                            aria-hidden="true"
-                            style="pointer-events: none;
-                            display: inherit;
-                            width: 100%;
-                            height: 100%;
-                            float: right;">
-                            <path d="M12 4a2 2 0 100 4 2 2 0 000-4Zm0 6a2 2 0 100 4 2 2 0 000-4Zm0 6a2 2 0 100 4 2 2 0 000-4Z"></path>
-                        </svg>
-                    </button>
-                    <div class="dropdown-content">
-                        <!-- study deck -->
-                        <a href="{{ url_for('start_study', id=deck[0]) }}">
-                            <img src="{{ url_for('static', filename='assets/book.png') }}" alt="Study" style="width: 20px; height: 20px;"> Study
-                        </a>
-
-                        <!-- expand/collapse card -->
-                        <a href="" onclick="event.preventDefault(); event.stopPropagation(); expandCard(this);">
-                        <img src="{{ url_for('static', filename='assets/expand.svg') }}" alt="Expand" style="width: 20px; height: 20px;"> <span>Expand</span>
-                        </a>
-
-                        <!-- share deck -->
-                        <a href="" onclick="event.preventDefault(); event.stopPropagation(); openSharePopup('{{ deck[0] }}', '{{ deck[1] }}');">
-                            <img src="{{ url_for('static', filename='assets/share.png') }}" alt="Share" style="width: 20px; height: 20px;"> Share
-                        </a>
-
-                    </div>
-                </div>
-
-                <!-- the name then the description -->
-                <h1 class="scientific ellipse-multi">{{ deck[1] }}</h1>
-                <p>---------------</p>
-                {% if deck[2] %}
-                    <p style="color: rgb(107, 107, 107);" class="scientific ellipse-multi">{{ deck[2] }}</p>
-                {% else %}
-                    <p style="color: rgb(107, 107, 107);">No description</p>
-                {% endif %}
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-
-
 </div>
 
+{% if results %}
 
+<!-- a 3 column grid -->
+<div class="three-column">
+    {% for deck in results %}
+    <!-- Deck List -->
+    <div onclick="window.location='{{ url_for('Deck', id=deck[0]) }}'" style="text-decoration: none; cursor: pointer;"> <!-- Make it div to stop conflicts w/ buttons inside -->
+        <div class="w3-card-4">
+            <div class="dropdown">
+                <button class="dropdown-btn btn-ignore-all" onclick="event.preventDefault(); event.stopPropagation(); toggleDropdown(this)">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        width="24" focusable="false"
+                        aria-hidden="true"
+                        style="pointer-events: none;
+                        display: inherit;
+                        width: 100%;
+                        height: 100%;
+                        float: right;">
+                        <path d="M12 4a2 2 0 100 4 2 2 0 000-4Zm0 6a2 2 0 100 4 2 2 0 000-4Zm0 6a2 2 0 100 4 2 2 0 000-4Z"></path>
+                    </svg>
+                </button>
+                <div class="dropdown-content">
+                    <!-- study deck -->
+                    <a href="{{ url_for('start_study', id=deck[0]) }}">
+                        <img src="{{ url_for('static', filename='assets/book.png') }}" alt="Study" style="width: 20px; height: 20px;"> Study
+                    </a>
+
+                    <!-- expand/collapse card -->
+                    <a href="" onclick="event.preventDefault(); event.stopPropagation(); expandCard(this);">
+                    <img src="{{ url_for('static', filename='assets/expand.svg') }}" alt="Expand" style="width: 20px; height: 20px;"> <span>Expand</span>
+                    </a>
+
+                    <!-- share deck -->
+                    <a href="" onclick="event.preventDefault(); event.stopPropagation(); openSharePopup('{{ deck[0] }}', '{{ deck[1] }}');">
+                        <img src="{{ url_for('static', filename='assets/share.png') }}" alt="Share" style="width: 20px; height: 20px;"> Share
+                    </a>
+
+                </div>
+            </div>
+
+            <!-- the name then the description -->
+            <h1 class="scientific ellipse-multi">{{ deck[1] }}</h1>
+            <p>---------------</p>
+            {% if deck[2] %}
+                <p style="color: rgb(107, 107, 107);" class="scientific ellipse-multi">{{ deck[2] }}</p>
+            {% else %}
+                <p style="color: rgb(107, 107, 107);">No description</p>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endif %}
+
+<!-- confirmation overlay -->
+<div id="overlay" onclick="off()"> <!-- Turn off overlay when clicking outside -->
+<div class="confirmation-box" onclick="event.stopPropagation()">
+    <p>Are you sure you want to delete this deck?</p>
+    <button onclick="confirmDelete()" class="button-ignore" style="background-color: #f44336; color: white;">Yes</button> 
+    <button onclick="off()" class="button-ignore" style="border: 2px solid #f44336; color: #f44336; background-color: white">No</button>
+</div>
+</div>
+
+<!-- scroll to top button -->
 <div class="fixed-button">
     <a onclick="window.scrollTo({top: 0, behavior: 'smooth'});">
         <img src="{{ url_for('static', filename='assets/scroll.svg') }}" alt="Scroll To Top Button" title="Scroll To Top">
     </a>
 </div>
+
 
 <!-- share popup -->
 <div id="share-popup" onclick="event.stopPropagation();" style="cursor: auto;">
@@ -209,6 +180,38 @@
 <div id="toast"></div>
 
 <script>
+// ----- Delete Confirmation -----
+// turn on confirmation overlay
+function on() {
+  document.getElementById("overlay").style.display = "block";
+}
+
+// turn off confirmation overlay
+function off() {
+  document.getElementById("overlay").style.display = "none";
+}
+
+// variable to store form info
+let formToDelete = null; 
+
+// when delete button is clicked
+function showConfirm(form) {
+  formToDelete = form; // Store the form to send if confirmed
+  on(); // Show confirmation overlay
+}
+
+// if user confirms delete
+function confirmDelete() {
+  if (formToDelete) {
+    formToDelete.submit(); //submit the stored form
+    formToDelete = null; // Clear the stored form
+  }
+  off(); // Hide confirmation overlay
+}
+
+
+
+// ----- Scroll to top button -----
 // define button
 const scrollBtn = document.querySelector(".fixed-button");
 
@@ -424,6 +427,8 @@ function copyURL() {
         toast.classList.remove('open');
     }, 2000);
 }
+
+
 
 </script>
 

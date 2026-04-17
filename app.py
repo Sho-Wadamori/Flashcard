@@ -197,6 +197,16 @@ def home():
         total = 0
         percent = 0
 
+    # get public decks
+    public_sql = """
+        SELECT deck_ID, deck_name, deck_description, deck_creation
+        FROM Decks
+        WHERE deck_visibility = 'public'
+        ORDER BY deck_creation DESC
+        LIMIT 3;
+    """
+    publicDecks = query_db(public_sql)
+
     # get stats if user is logged in
     if userID:
         userAnswerStats = """
@@ -219,6 +229,7 @@ def home():
         deck_name=deck_name,
         total=total,
         percent=percent,
+        publicDecks=publicDecks,
         answer_stats=answer_stats,
         currentStreak=currentStreak
     )
@@ -1061,6 +1072,37 @@ def stats():
         answer_stats=answer_stats[0],
         deck_stats=deck_stats[0],
         card_stats=card_stats[0]
+    )
+
+
+# ---------- Public Decks ----------
+@app.route('/public/')
+def public():
+    sort_by = request.args.get('sort_by')
+    order = request.args.get('order')
+    allowed_sort = {'deck_creation', 'deck_name', 'deck_description'}
+    allowed_order = {'ASC', 'DESC'}
+
+    if sort_by not in allowed_sort:
+        sort_by = 'deck_creation'  # default sort by creation date
+
+    if order not in allowed_order:
+        order = 'DESC'  # default order descending
+
+    sql = f"""
+        SELECT deck_ID, deck_name, deck_description, deck_creation
+        FROM Decks
+        WHERE deck_visibility = 'public'
+        ORDER BY {sort_by} {order};
+    """
+    result = query_db(sql)
+
+    # return the results
+    return render_template(
+        "public.html",
+        results=result,
+        sort_by=sort_by,
+        order=order
     )
 
 
