@@ -13,7 +13,7 @@
     <h2>Your Decks</h2>
     
     <!-- If decks exist -->
-    {% if results %}
+    {% if results or bookmarkResult %}
     <h6 style="margin-bottom: 20px;">Select a deck to view its cards.</h6>
 
     <form action="{{ url_for('Decks') }}" method="GET" class='sort-form' style="top: 18px;">
@@ -72,7 +72,115 @@
     {% endif %}
 </div>
 
-{% if results %}
+{% if results or bookmarkResult %}
+
+
+{% if bookmarkResult %}
+    <h3>Bookmared Decks ( {{ bookmarkLength }} )</h3>
+    <div class="three-column">
+        {% for deck in bookmarkResult[:3] %}
+        <!-- deck List -->
+        <div onclick="window.location='{{ url_for('Deck', id=deck[0]) }}'" style="text-decoration: none; cursor: pointer;">
+            <div class="w3-card-4">
+                <div class="bookmark">
+                    <form action="{{ request.url }}" method="POST">
+                        <input name="bookmarkID" type="hidden" value="{{ deck[0] }}">
+                        <button type="submit" class="bookmark-btn btn-ignore-all" onclick="event.stopPropagation();">
+                            <svg
+                                version="1.1"
+                                id="svg2"
+                                class="bookmarkSVG"
+                                viewBox="0 0 960.61072 515.31427"
+                                xmlns="http://www.w3.org/2000/svg"
+                                xmlns:svg="http://www.w3.org/2000/svg">
+                            <defs
+                                id="defs2" />
+                            <path
+                                d="m 368.33446,50.527415 h 272 V 441.52741 c -39.18406,-22.12363 -77.13749,-46.38462 -114.87573,-70.87744 -20.38571,-12.86537 -32.01198,-6.61688 -47.56177,3.31494 -35.37868,22.0322 -75.48844,47.40056 -109.5625,67.5625 z"
+                                id="path1" />
+                                <path
+                                d="m 354.6401,2.3931935 c 2007.6978,-8.2744012 -1796.1251,8.2657975 295.30853,-0.3867663 10.71507,0.083792 19.48685,3.1464214 27.38583,10.5209868 9.12056,9.706628 11.16359,19.958257 11.13142,33.05142 0.0602,58.968496 0.0908,117.937046 0.1067,176.905586 l 0.002,12.46438 c 0.1943,82.91039 -0.0659,165.8209 0.1401,248.73128 0.0927,21.03109 0.0927,21.03109 -4.83227,26.44274 -4.72781,4.12317 -8.51295,5.24143 -14.69259,5.18975 -7.95824,-1.62068 -14.58682,-6.70352 -21.29151,-11.10498 -45.75429,-29.98297 -73.53375,-44.7159 -139.06055,-87.65479 -3.28982,-1.3475 -5.10784,-0.97412 -8.50341,-0.0254 -42.27937,26.89618 -84.91831,53.39962 -127.45997,79.93335 -3.02543,1.8934 -6.05767,3.77549 -9.09082,5.65649 -3.32632,2.06623 -6.61504,4.17066 -9.86718,6.35157 -6.5296,4.30705 -11.92512,7.32648 -20.05469,6.61718 -5.15482,-1.13931 -7.64331,-3.43563 -10.83985,-7.49609 -2.84451,-5.16226 -2.83254,-10.07296 -2.81613,-15.86224 -0.63203,-282.77137 0.48757,-32.06801 -0.12691,-438.091806 -0.0455,-16.153191 0.447,-29.571336 11.89998,-41.991262 6.52718,-5.8666936 13.92335,-9.2346794 22.66132,-9.2513985 z m -0.30565,34.1342205 c -1.48635,2.972715 -1.12401,5.643028 -1.12304,8.961565 0.0301,141.012761 0.0681,282.025641 0.12305,423.038431 48.25546,-27.85802 94.85605,-58.43947 142.11255,-87.93115 8.98505,-5.08817 16.13245,-0.94904 27.94995,6.24365 127.27937,80.12333 130.12164,81.15146 131.9375,81.6875 0.0972,-142.29005 0.17617,-284.58031 0.24813,-426.870228 -0.006,-3.293424 -0.006,-3.293424 -2.24839,-6.129768 -2.94822,-0.982737 -4.84591,-1.126185 -7.91825,-1.128634 -94.90533,-0.05592 -189.81073,-0.08997 -284.7161,-0.12105 -2.57693,0.271835 -4.18527,0.865075 -6.36565,2.249548 z"
+                                id="path2" />
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="dropdown">
+                    <button class="dropdown-btn btn-ignore-all" onclick="event.preventDefault(); event.stopPropagation(); toggleDropdown(this)">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            width="24" focusable="false"
+                            aria-hidden="true"
+                            style="pointer-events: none;
+                            display: inherit;
+                            width: 100%;
+                            height: 100%;
+                            float: right;">
+                            <path d="M12 4a2 2 0 100 4 2 2 0 000-4Zm0 6a2 2 0 100 4 2 2 0 000-4Zm0 6a2 2 0 100 4 2 2 0 000-4Z"></path>
+                        </svg>
+                    </button>
+                    <div class="dropdown-content">
+                        {% if userID %}
+                        <!-- edit deck -->
+                        <a href="{{ url_for('editDeck', id=deck[0]) }}">
+                            <img src="{{ url_for('static', filename='assets/edit.png') }}" alt="Edit" style="width: 20px; height: 20px;"> Edit
+                        </a>
+
+                        <!-- delete deck -->
+                        <form action="{{ url_for('deleteDeck', id=deck[0]) }}" method="POST">
+                            <input type="hidden" name="deck_id" value="{{ deck[0] }}">
+                            <a onclick="event.preventDefault(); event.stopPropagation(); showConfirm(this.form);">
+                                <img src="{{ url_for('static', filename='assets/bin.png') }}" alt="Delete" style="width: 20px; height: 20px;"> Delete
+                            </a>
+                        </form>
+                        {% endif %}
+
+                        <!-- study deck -->
+                        <a href="{{ url_for('start_study', id=deck[0]) }}">
+                            <img src="{{ url_for('static', filename='assets/book.png') }}" alt="Study" style="width: 20px; height: 20px;"> Study
+                        </a>
+
+                        {% if userID %}
+                        <!-- bookmark deck -->
+                        <form action="{{ request.url }}" method="POST" class="bookmarkDropdown">
+                            <input name="bookmarkID" type="hidden" value="{{ deck[0] }}">
+                            <button type="submit" class="bookmark-dropdownBtn btn-ignore-all" onclick="event.stopPropagation();">
+                                <img src="{{ url_for('static', filename='assets/bookmarkBlack.png') }}" alt="Bookmark" style="width: 20px; height: 18px;"> Bookmark
+                            </button>
+                        </form>
+                        {% endif %}
+
+                        <!-- expand/collapse card -->
+                        <a onclick="event.preventDefault(); event.stopPropagation(); expandCard(this);">
+                        <img src="{{ url_for('static', filename='assets/expand.svg') }}" alt="Expand" style="width: 20px; height: 20px;"> <span>Expand</span>
+                        </a>
+
+                        <!-- share deck -->
+                        <a onclick="event.preventDefault(); event.stopPropagation(); openSharePopup('{{ deck[0] }}', '{{ deck[1] }}');">
+                            <img src="{{ url_for('static', filename='assets/share.png') }}" alt="Share" style="width: 20px; height: 20px;"> Share
+                        </a>
+
+                    </div>
+                </div>
+
+                <!-- the name then the description -->
+                <h1 class="scientific ellipse-multi">{{ deck[1] }}</h1>
+                <p>---------------</p>
+                {% if deck[2] %}
+                    <p style="color: rgb(107, 107, 107);" class="scientific ellipse-multi">{{ deck[2] }}</p>
+                {% else %}
+                    <p style="color: rgb(107, 107, 107);">No description</p>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div><br>
+
+    <h3>All Flashcards</h3>
+{% endif %}
+
 <!-- a 3 column grid -->
 <div class="three-column">
     <!-- Create Deck button -->
@@ -86,6 +194,33 @@
     <!-- Deck List -->
     <div onclick="window.location='{{ url_for('Deck', id=deck[0]) }}'" style="text-decoration: none; cursor: pointer;"> <!-- Make it div to stop conflicts w/ buttons inside -->
         <div class="w3-card-4">
+            {% if userID %}
+            <div class="bookmark">
+                <form action="{{ request.url }}" method="POST">
+                    <input name="bookmarkID" type="hidden" value="{{ deck[0] }}">
+                    <!-- onclick redirect to same page (including filters and sorting) -->
+                    <button type="submit" class="bookmark-btn-disabled btn-ignore-all" onclick="event.stopPropagation();">
+                        <svg
+                            version="1.1"
+                            id="svg2"
+                            class="bookmarkSVG-disabled"
+                            viewBox="0 0 960.61072 515.31427"
+                            xmlns="http://www.w3.org/2000/svg"
+                            xmlns:svg="http://www.w3.org/2000/svg">
+                        <defs
+                            id="defs2" />
+                        <path
+                            d="m 368.33446,50.527415 h 272 V 441.52741 c -39.18406,-22.12363 -77.13749,-46.38462 -114.87573,-70.87744 -20.38571,-12.86537 -32.01198,-6.61688 -47.56177,3.31494 -35.37868,22.0322 -75.48844,47.40056 -109.5625,67.5625 z"
+                            id="path1" />
+                            <path
+                            d="m 354.6401,2.3931935 c 2007.6978,-8.2744012 -1796.1251,8.2657975 295.30853,-0.3867663 10.71507,0.083792 19.48685,3.1464214 27.38583,10.5209868 9.12056,9.706628 11.16359,19.958257 11.13142,33.05142 0.0602,58.968496 0.0908,117.937046 0.1067,176.905586 l 0.002,12.46438 c 0.1943,82.91039 -0.0659,165.8209 0.1401,248.73128 0.0927,21.03109 0.0927,21.03109 -4.83227,26.44274 -4.72781,4.12317 -8.51295,5.24143 -14.69259,5.18975 -7.95824,-1.62068 -14.58682,-6.70352 -21.29151,-11.10498 -45.75429,-29.98297 -73.53375,-44.7159 -139.06055,-87.65479 -3.28982,-1.3475 -5.10784,-0.97412 -8.50341,-0.0254 -42.27937,26.89618 -84.91831,53.39962 -127.45997,79.93335 -3.02543,1.8934 -6.05767,3.77549 -9.09082,5.65649 -3.32632,2.06623 -6.61504,4.17066 -9.86718,6.35157 -6.5296,4.30705 -11.92512,7.32648 -20.05469,6.61718 -5.15482,-1.13931 -7.64331,-3.43563 -10.83985,-7.49609 -2.84451,-5.16226 -2.83254,-10.07296 -2.81613,-15.86224 -0.63203,-282.77137 0.48757,-32.06801 -0.12691,-438.091806 -0.0455,-16.153191 0.447,-29.571336 11.89998,-41.991262 6.52718,-5.8666936 13.92335,-9.2346794 22.66132,-9.2513985 z m -0.30565,34.1342205 c -1.48635,2.972715 -1.12401,5.643028 -1.12304,8.961565 0.0301,141.012761 0.0681,282.025641 0.12305,423.038431 48.25546,-27.85802 94.85605,-58.43947 142.11255,-87.93115 8.98505,-5.08817 16.13245,-0.94904 27.94995,6.24365 127.27937,80.12333 130.12164,81.15146 131.9375,81.6875 0.0972,-142.29005 0.17617,-284.58031 0.24813,-426.870228 -0.006,-3.293424 -0.006,-3.293424 -2.24839,-6.129768 -2.94822,-0.982737 -4.84591,-1.126185 -7.91825,-1.128634 -94.90533,-0.05592 -189.81073,-0.08997 -284.7161,-0.12105 -2.57693,0.271835 -4.18527,0.865075 -6.36565,2.249548 z"
+                            id="path2" />
+                        </svg>
+                    </button>
+                </form>
+            </div>
+            {% endif %}
+
             <div class="dropdown">
                 <button class="dropdown-btn btn-ignore-all" onclick="event.preventDefault(); event.stopPropagation(); toggleDropdown(this)">
                     <svg xmlns="http://www.w3.org/2000/svg"
@@ -124,9 +259,12 @@
 
                     {% if userID %}
                     <!-- bookmark deck -->
-                    <a href="{{ url_for('Decks') }}">
-                        <img src="{{ url_for('static', filename='assets/bookmarkgrey.png') }}" alt="Bookmark" style="width: 20px; height: 18px;"> Save
-                    </a>
+                    <form action="{{ request.url }}" method="POST" class="bookmarkDropdown">
+                        <input name="bookmarkID" type="hidden" value="{{ deck[0] }}">
+                        <button type="submit" class="bookmark-dropdownBtn btn-ignore-all" onclick="event.stopPropagation();">
+                            <img src="{{ url_for('static', filename='assets/bookmarkBlack.png') }}" alt="Bookmark" style="width: 20px; height: 18px;"> Bookmark
+                        </button>
+                    </form>
                     {% endif %}
 
                     <!-- expand/collapse card -->

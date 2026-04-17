@@ -171,63 +171,134 @@ def home():
 
 
 # ---------- list all decks ----------
-@app.route('/decks/')
+@app.route('/decks/', methods=['GET', 'POST'])
 def Decks():
-    filter = request.args.get('filter')
-    sort_by = request.args.get('sort_by')
-    order = request.args.get('order')
-    allowed_filter = {'none', 'public', 'unlisted', 'private'}
-    allowed_sort = {'deck_creation', 'deck_name', 'deck_description'}
-    allowed_order = {'ASC', 'DESC'}
+    if request.method == 'POST':
+        bookmarkID = request.form.get('bookmarkID')
 
-    if filter not in allowed_filter:
-        filter = 'none'  # default filter none
+        clicked_bookmark = """
+            SELECT deck_bookmarked
+            FROM Decks
+            WHERE deck_ID = ?
+            AND deck_userID = ?;
+        """
+        deckBookmark = query_db(clicked_bookmark, (bookmarkID, userID(),))
 
-    if sort_by not in allowed_sort:
-        sort_by = 'deck_creation'  # default sort by creation date
+        all_bookmark = """
+            SELECT COUNT(*)
+            FROM Decks
+            WHERE deck_userID = ?
+            AND deck_bookmarked = 1;
+        """
+        totalBookmarks = query_db(all_bookmark, (userID(),))[0][0]
 
-    if order not in allowed_order:
-        order = 'DESC'  # default order descending
+        if not deckBookmark:
+            flash("⚠ Something Went Wrong...", "error")
+            return redirect(request.url)
 
-    # if user is logged in show all their decks
-    if userID():
-        # if filter is not none
-        if filter != 'none':
-            filter_sql = "AND deck_visibility = ?"
-            filter_args = (userID(), filter)
+        if deckBookmark[0][0] == 0:
+            if totalBookmarks >= 3:
+                flash("""
+                    ⚠ You Can Only Have 3 Decks Bookmarked.
+                    Please Unbookmark A Deck First.
+                """, "error")
+                return redirect(request.url)
+
+            update_bookmark = """
+                UPDATE Decks
+                SET deck_bookmarked = 1
+                WHERE deck_ID = ?
+                AND deck_userID = ?;
+            """
+            get_db().execute(update_bookmark, (bookmarkID, userID(),))
+            get_db().commit()
+
         else:
-            filter_sql = ""
-            filter_args = (userID(),)
+            update_bookmark = """
+                UPDATE Decks
+                SET deck_bookmarked = 0
+                WHERE deck_ID = ?
+                AND deck_userID = ?;
+            """
+            get_db().execute(update_bookmark, (bookmarkID, userID(),))
+            get_db().commit()
 
-        # get all the decks id, name, description, and creation date
-        sql = f"""
+        return redirect(request.url)
+
+    else:
+        filter = request.args.get('filter')
+        sort_by = request.args.get('sort_by')
+        order = request.args.get('order')
+        allowed_filter = {'none', 'public', 'unlisted', 'private'}
+        allowed_sort = {'deck_creation', 'deck_name', 'deck_description'}
+        allowed_order = {'ASC', 'DESC'}
+
+        if filter not in allowed_filter:
+            filter = 'none'  # default filter none
+
+        if sort_by not in allowed_sort:
+            sort_by = 'deck_creation'  # default sort by creation date
+
+        if order not in allowed_order:
+            order = 'DESC'  # default order descending
+
+        # if user is logged in show all their decks
+        if userID():
+            # if filter is not none
+            if filter != 'none':
+                filter_sql = "AND deck_visibility = ?"
+                filter_args = (userID(), filter)
+            else:
+                filter_sql = ""
+                filter_args = (userID(),)
+
+            # get all the decks id, name, description, and creation date
+            sql = f"""
+                    SELECT deck_ID, deck_name, deck_description, deck_creation
+                    FROM Decks
+                    WHERE deck_userID = ?
+                    AND deck_bookmarked = 0
+                    {filter_sql}
+                    ORDER BY {sort_by} {order};
+                """
+            result = query_db(sql, filter_args)
+
+            bookmark_sql = f"""
+                    SELECT deck_ID, deck_name, deck_description, deck_creation
+                    FROM Decks
+                    WHERE deck_userID = ?
+                    AND deck_bookmarked = 1
+                    {filter_sql}
+                    ORDER BY {sort_by} {order};
+                """
+
+            bookmarkResult = query_db(bookmark_sql, filter_args)
+
+        # if user not logged in
+        else:
+            sql = f"""
                 SELECT deck_ID, deck_name, deck_description, deck_creation
                 FROM Decks
-                WHERE deck_userID = ?
-                {filter_sql}
+                WHERE deck_visibility = 'public'
                 ORDER BY {sort_by} {order};
             """
-        result = query_db(sql, filter_args)
+            result = query_db(sql)
 
-    # if user not logged in
-    else:
-        sql = f"""
-            SELECT deck_ID, deck_name, deck_description, deck_creation
-            FROM Decks
-            WHERE deck_visibility = 'public'
-            ORDER BY {sort_by} {order};
-        """
-        result = query_db(sql)
+            bookmarkResult = ""
 
-    # return the results
-    return render_template(
-        "decks.html",
-        results=result,
-        sort_by=sort_by,
-        order=order,
-        filter=filter,
-        userID=userID()
-    )
+        bookmarkLength = len(bookmarkResult)
+
+        # return the results
+        return render_template(
+            "decks.html",
+            results=result,
+            sort_by=sort_by,
+            order=order,
+            filter=filter,
+            userID=userID(),
+            bookmarkResult=bookmarkResult,
+            bookmarkLength=bookmarkLength
+        )
 
 
 # ---------- list all flashcards for a single deck ----------
