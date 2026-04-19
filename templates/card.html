@@ -117,20 +117,11 @@
     const exit = document.getElementById("exit_button");
     const prev = document.getElementById("prev_button");
     if (event.key === 'ArrowRight') {
-      // click if button is rendered
-      if (next) {
         next.click();
-      }
-      // click if button is rendered
-      else if (exit) {
         exit.click();
-      }
     }
     if (event.key === 'ArrowLeft') {
-      // click if button is rendered
-      if (prev) {
         prev.click();
-      }
     }
   });
 
