@@ -1110,12 +1110,66 @@ def stats():
     """
     card_stats = query_db(userCardStats, (userID(),))
 
+    userStats = """
+            SELECT user_name, user_creation, user_streak
+            FROM Users
+            WHERE user_ID = ?;
+    """
+    user_stats = query_db(userStats, (userID(),))
+
+    joinDate = format_date(user_stats[0][1])
+
+    privateStats = """
+        SELECT COUNT(*)
+        FROM Decks
+        WHERE deck_visibility = 'private'
+        AND deck_userID = ?;
+    """
+    private_stats = query_db(privateStats, (userID(),))
+
+    unlistedStats = """
+        SELECT COUNT(*)
+        FROM Decks
+        WHERE deck_visibility = 'unlisted'
+        AND deck_userID = ?;
+    """
+    unlisted_stats = query_db(unlistedStats, (userID(),))
+
+    publicStats = """
+        SELECT COUNT(*)
+        FROM Decks
+        WHERE deck_visibility = 'public'
+        AND deck_userID = ?;
+    """
+    public_stats = query_db(publicStats, (userID(),))
+
+    correctPercent = round((100 * answer_stats[0][0]) / (answer_stats[0][0] + answer_stats[0][1]), 2)
+
+    studyHistory = """
+        SELECT StudyHistory.study_date, StudyHistory.study_cardCount,
+        StudyHistory.study_correct, StudyHistory.study_incorrect,
+        Decks.deck_name, Decks.deck_userID
+        FROM StudyHistory, Decks
+        WHERE StudyHistory.study_userID = ?
+        AND StudyHistory.study_deckID = Decks.deck_ID
+        ORDER BY StudyHistory.study_date DESC;
+    """
+    study_history = query_db(studyHistory, (userID(),))
+
     # return the results
     return render_template(
         "stats.html",
         answer_stats=answer_stats[0],
         deck_stats=deck_stats[0],
-        card_stats=card_stats[0]
+        card_stats=card_stats[0],
+        user_stats=user_stats[0],
+        joinDate=joinDate,
+        private_stats=private_stats[0][0],
+        unlisted_stats=unlisted_stats[0][0],
+        public_stats=public_stats[0][0],
+        study_history=study_history,
+        correctPercent=correctPercent,
+        userID=userID()
     )
 
 
