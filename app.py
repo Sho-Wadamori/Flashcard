@@ -487,6 +487,8 @@ def start_study(id):
     session.pop('shuffled_cards', None)
     session.pop('study_deckID', None)
     session.pop('current_index', None)
+    session.pop('correct', None)
+    session.pop('incorrect', None)
     # redirect to study
     return redirect(url_for('Study', id=id, index=0))
 
@@ -537,6 +539,8 @@ def Study(id, index):
         session['shuffled_cards'] = temp_list
         session['study_deckID'] = id
         session['current_index'] = 0
+        session['correct'] = 0
+        session['incorrect'] = 0
 
     # set session index to current index
     else:
@@ -591,6 +595,8 @@ def Study(id, index):
                     get_db().execute(update_stats, (card_id, userID()))
                     get_db().commit()
 
+                session['correct'] = session.get('correct', 0) + 1
+
             # if the user got the card incorrect
             elif response == "incorrect":
                 # if the user has no stats for card, create new entry
@@ -616,6 +622,8 @@ def Study(id, index):
                     get_db().execute(update_stats, (card_id, userID()))
                     get_db().commit()
 
+                session['incorrect'] = session.get('incorrect', 0) + 1
+
         # go to next page
         if index + 1 < total:
             session['current_index'] = index + 1
@@ -623,12 +631,8 @@ def Study(id, index):
 
         # exit to deck page if there are no more cards
         else:
-            # clear sessions after exit
-            session.pop('shuffled_cards', None)
-            session.pop('study_deckID', None)
-            session.pop('current_index', None)
-
             if userID():
+                # STREAKS SYSTEM
                 get_streak = """
                     SELECT user_lastStudied, user_streak
                     FROM Users
@@ -660,6 +664,30 @@ def Study(id, index):
                     """
                     get_db().execute(update_streak, (userID(),))
                     get_db().commit()
+
+                # HISTORY SYSTEM
+                card_correct = session.get('correct', 0)
+                card_incorrect = session.get('incorrect', 0)
+
+                update_history = """
+                    INSERT INTO StudyHistory (
+                        study_date, study_cardCount, study_correct,
+                        study_incorrect, study_deckID, study_userID
+                    )
+                    VALUES (datetime('now'), ?, ?, ?, ?, ?);
+                """
+
+                get_db().execute(update_history, (
+                    total, card_correct, card_incorrect, id, userID(),
+                ))
+                get_db().commit()
+
+            # clear sessions after exit
+            session.pop('shuffled_cards', None)
+            session.pop('study_deckID', None)
+            session.pop('current_index', None)
+            session.pop('correct', None)
+            session.pop('incorrect', None)
 
             # redirect to deck page
             flash("✔ You Have Finished Studying This Deck!", "success")
