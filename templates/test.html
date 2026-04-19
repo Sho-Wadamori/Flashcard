@@ -293,6 +293,16 @@ function filterFunction() {
 <input type="text" id="text" value="{{ request.url }}" readonly>
 <button onclick="navigator.clipboard.writeText(document.getElementById('text').value);">Copy</button>
 
+<br><br>
+
+{% for i in b %}
+
+<br><br><br><h1>{{ i }}</h1>
+<img src="{{ url_for('static', filename='uploads/' ~ i[0] ~ i[1]) }}" alt="">
+
+{% endfor %}
+
+
 <style>
   .share {
     display: flex;

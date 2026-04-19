@@ -1254,7 +1254,16 @@ def test():
                 FROM Flashcards, Decks;
             """
         card_list = query_db(sql1)
-        return render_template("test.html", card_list=card_list)
+
+        a = """
+            SELECT file_ID, file_type
+            FROM Files
+            WHERE file_userID = 0
+            ORDER BY file_ID DESC;
+        """
+        b = query_db(a)
+
+        return render_template("test.html", card_list=card_list, b=b)
 
 
 # only run the app if app.py is executed directly
