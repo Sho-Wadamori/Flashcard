@@ -38,7 +38,7 @@
         <div class="header-inner">
             <h1 onclick="window.location='{{ url_for('home') }}'" class="logo"><img src="{{ url_for('static', filename='assets/icon.png') }}" alt="Flashcard Maker Logo" style="height: 2em;">Flashcard Maker</h1>
             {% if username != 'Guest' %}
-                <a href="{{ url_for('profile') }}" class="header-auth"><button class="profile-btn"><img src="{{ url_for('static', filename='assets/profile.png') }}" alt="Login Icon" style="height: 3em;">Profile</button></a>
+                <a href="{{ url_for('profile') }}" class="header-auth"><button class="profile-btn"><img src="{{ url_for('static', filename='assets/profile.png') }}" alt="Login Icon" style="height: 2.5em;">Profile</button></a>
             {% else %}
                 <a href="{{ url_for('login') }}" class="header-auth">
                     <button class="signin-btn">Sign In</button>
