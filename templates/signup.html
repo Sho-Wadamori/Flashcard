@@ -25,9 +25,9 @@
         {%endwith%}
 
         <form action="{{ url_for('signup') }}" method="POST" class="login">
-            <input type="text" name="username" id="username" placeholder="Username"><br>
-            <input type="password" name="password" id="password" placeholder="Password"><br>
-            <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password"><br><br>
+            <input type="text" name="username" maxlength="25" id="username" placeholder="Username"><br>
+            <input type="password" name="password" minlength="8" maxlength="128" id="password" placeholder="Password"><br>
+            <input type="password" name="confirm_password" minlength="8" maxlength="128" id="confirm_password" placeholder="Confirm Password"><br><br>
             <input type="checkbox" onclick="passwordReveal()" id="showPasswords" class="showPasswords">
             <label for="showPasswords" class="showPasswords">Show Passwords</label><br><br>
             <input type="submit" value="Sign up" class="button-ignore">
