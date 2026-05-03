@@ -353,7 +353,7 @@
   left: 6px;
   transform: translateY(-30%);
   background-color: white;
-  box-shadow: 0 0 4px var(--shadow-color);
+  box-shadow: 0 2px 4px 0 var(--shadow-color), 0 2px 8px 0 var(--shadow-color);
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
@@ -372,7 +372,7 @@
   right: 6px;
   transform: translateY(-30%);
   background-color: white;
-  box-shadow: 0 0 4px var(--shadow-color);
+  box-shadow: 0 2px 4px 0 var(--shadow-color), 0 2px 8px 0 var(--shadow-color);
   border: none;
   font-size: 1.5rem;
   cursor: pointer;

@@ -9,7 +9,7 @@
   padding: 20px;
   min-height: 300px;
   border-radius: 8px;
-  box-shadow: 0 4px 8px var(--shadow-color);
+  box-shadow: 0 4px 8px var(--shadow-color), 0 4px 16px var(--shadow-color);;
   text-align: center;
   width: calc(100% - 40vw); /* make wider when narrow */
   flex-direction: column;
@@ -137,7 +137,7 @@
   border-radius: 12px;
   text-align: center;
   margin-left: 5vw;
-  box-shadow: 0 4px 8px var(--shadow-color);
+  box-shadow: 0 4px 8px var(--shadow-color), 0 4px 16px var(--shadow-color);
 }
 
 /* character panel buttons */

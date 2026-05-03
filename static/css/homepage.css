@@ -58,7 +58,7 @@
   width: 500px;
   padding: 30px;
   border-radius: 20px;
-  box-shadow: 0 4px 20px 0 var(--shadow-color);
+  box-shadow: 0 4px 20px 0 var(--shadow-color), 0 4px 10px 0 var(--shadow-color);
 }
 
 .statsInner {
