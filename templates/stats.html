@@ -11,7 +11,7 @@
 
     <div style="display: flex; flex-direction: column; width: fit-content;">
 
-        <div style="display: flex;">
+        <div style="display: flex; gap: 30px;">
             <img src="{{ url_for('static', filename='assets/profile.png') }}" alt="profile pic" height="120px">
             <div style="display: flex; flex-direction: column;">
                 <h1>USERNAME</h1>
@@ -20,7 +20,11 @@
         </div>
         
         <div class="w3-round-xlarge resume-progress-outer" style="height: 20px; width: 100%;">
-            <div class="w3-container w3-blue w3-round-xlarge resume-progress-inner" style="width: 35%;"></div>
+            {% if correctPercent != 0 %}
+                <div class="w3-container w3-blue w3-round-xlarge resume-progress-inner" style="width: {{ correctPercent }}%;">Correct %</div>
+            {% else %}
+                <div class="w3-round-xlarge w3-blue resume-progress-none">Correct %</div>
+            {% endif %}
         </div>
 
     </div>
