@@ -66,17 +66,19 @@
                 <div class="dropdown-content">
                     <!-- study deck -->
                     <a href="{{ url_for('start_study', id=deck[0]) }}">
-                        <img src="{{ url_for('static', filename='assets/book.png') }}" alt="Study" style="width: 20px; height: 20px;"> Study
+                        {% include "icons/book.html" %} Study
                     </a>
 
                     <!-- expand/collapse card -->
-                    <a href="" onclick="event.preventDefault(); event.stopPropagation(); expandCard(this);">
-                    <img src="{{ url_for('static', filename='assets/expand.svg') }}" alt="Expand" style="width: 20px; height: 20px;"> <span>Expand</span>
+                    <a onclick="event.preventDefault(); event.stopPropagation(); expandCard(this);">
+                        <span class="expand-icon">{% include "icons/expand.html" %}</span>
+                        <span class="collapse-icon" style="display:none;">{% include "icons/collapse.html" %}</span>
+                        <span class="expand-collapse-text">Expand</span>
                     </a>
 
                     <!-- share deck -->
-                    <a href="" onclick="event.preventDefault(); event.stopPropagation(); openSharePopup('{{ deck[0] }}', '{{ deck[1] }}');">
-                        <img src="{{ url_for('static', filename='assets/share.png') }}" alt="Share" style="width: 20px; height: 20px;"> Share
+                    <a onclick="event.preventDefault(); event.stopPropagation(); openSharePopup('{{ deck[0] }}', '{{ deck[1] }}');">
+                        {% include "icons/share.html" %} Share
                     </a>
 
                 </div>
@@ -199,8 +201,9 @@ function expandCard(button) {
         text1.classList.remove('expanded');
         text2.classList.remove('expanded');
         // change icon and text back to expand
-        button.querySelector('img').src = "{{ url_for('static', filename='assets/expand.svg') }}";
-        button.querySelector('span').textContent = "Expand";
+        button.querySelector('.expand-icon').style.display = '';
+        button.querySelector('.collapse-icon').style.display = 'none';
+        button.querySelector('.expand-collapse-text').textContent = 'Expand';
     } 
 
     // if not expanded
@@ -209,8 +212,9 @@ function expandCard(button) {
         text1.classList.add('expanded');
         text2.classList.add('expanded');
         // change icon and text to collapse
-        button.querySelector('img').src = "{{ url_for('static', filename='assets/collapse.png') }}";
-        button.querySelector('span').textContent = "Collapse";
+        button.querySelector('.expand-icon').style.display = 'none';
+        button.querySelector('.collapse-icon').style.display = '';
+        button.querySelector('.expand-collapse-text').textContent = 'Collapse';
     }
 }
 

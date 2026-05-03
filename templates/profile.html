@@ -10,9 +10,9 @@
 <br>
 
 <div style="display: flex; align-items: center; justify-content: space-around;">
-    <button style="height: 50px; width: 25%;">Profile</button>
+    <button style="height: 50px; width: 25%;" onclick="window.location='{{ url_for('profile') }}'">Profile</button>
     <button style="height: 50px; width: 25%;">Settings</button>
-    <button style="height: 50px; width: 25%;">Stats</button>
+    <button style="height: 50px; width: 25%;" onclick="window.location='{{ url_for('stats') }}'">Stats</button>
 </div>
 
 <div style="display: flex; justify-content: space-between; margin: 30px 500px; gap: 200px">

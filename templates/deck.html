@@ -91,20 +91,22 @@
           <div class="dropdown-content">
             <!-- edit card -->
             <a href="{{ url_for('editCard', id=deck_info[1], card_id=card[0]) }}">
-              <img src="{{ url_for('static', filename='assets/edit.png') }}" alt="Edit" style="width: 20px; height: 20px;"> Edit
+              {% include "icons/edit.html" %} Edit
             </a>
 
             <!-- delete card -->
             <form action="{{ url_for('deleteCard', id=deck_info[1], card_id=card[0]) }}" method="POST">
               <input type="hidden" name="deck_id" value="{{ deck_info[1] }}">
               <a href="" onclick="event.preventDefault(); event.stopPropagation(); showConfirm(this.form)">
-                <img src="{{ url_for('static', filename='assets/bin.png') }}" alt="Delete" style="width: 20px; height: 20px;"> Delete
+                {% include "icons/bin.html" %} Delete
               </a>
             </form>
 
             <!-- expand/collapse card -->
-            <a href="" onclick="event.preventDefault(); event.stopPropagation(); expandCard(this);">
-              <img src="{{ url_for('static', filename='assets/expand.svg') }}" alt="Expand" style="width: 20px; height: 20px;"> <span>Expand</span>
+            <a onclick="event.preventDefault(); event.stopPropagation(); expandCard(this);" style="cursor: pointer;">
+              <span class="expand-icon">{% include "icons/expand.html" %}</span>
+              <span class="collapse-icon" style="display:none;">{% include "icons/collapse.html" %}</span>
+              <span class="expand-collapse-text">Expand</span>
             </a>
           </div>
         </div>
@@ -133,7 +135,7 @@
 <!-- scroll to top button -->
 <div class="fixed-button">
     <a onclick="window.scrollTo({top: 0, behavior: 'smooth'});">
-        <img src="{{ url_for('static', filename='assets/scroll.svg') }}" alt="Scroll To Top Button" title="Scroll To Top">
+      <img src="{{ url_for('static', filename='assets/scroll.svg') }}" alt="Scroll To Top Icon" title="Scroll To Top">
     </a>    
 </div>
 
@@ -214,31 +216,34 @@ function toggleDropdown(button) {
 };
 
 
+// ----- expand/collapse long cards-----
 // expand/collapse card
 function expandCard(button) {
-  const text1 = button.parentElement.parentElement.nextElementSibling; // get question/deckname element
-  const text2 = text1.nextElementSibling.nextElementSibling; // get answer/description element
-  const isExpanded = text1.classList.contains('expanded'); // check if currently expanded
+    const text1 = button.parentElement.parentElement.nextElementSibling; // get question/deckname element
+    const text2 = text1.nextElementSibling.nextElementSibling; // get answer/description element
+    const isExpanded = text1.classList.contains('expanded'); // check if currently expanded
 
-  // if expanded
-  if (isExpanded) {
-    // collapse text
-    text1.classList.remove('expanded');
-    text2.classList.remove('expanded');
-    // change icon and text back to expand
-    button.querySelector('img').src = "{{ url_for('static', filename='assets/expand.svg') }}";
-    button.querySelector('span').textContent = "Expand";
-  } 
+    // if expanded
+    if (isExpanded) {
+        // collapse text
+        text1.classList.remove('expanded');
+        text2.classList.remove('expanded');
+        // change icon and text back to expand
+        button.querySelector('.expand-icon').style.display = '';
+        button.querySelector('.collapse-icon').style.display = 'none';
+        button.querySelector('.expand-collapse-text').textContent = 'Expand';
+    } 
 
-  // if not expanded
-  else {
-    // expand text
-    text1.classList.add('expanded');
-    text2.classList.add('expanded');
-    // change icon and text to collapse
-    button.querySelector('img').src = "{{ url_for('static', filename='assets/collapse.png') }}";
-    button.querySelector('span').textContent = "Collapse";
-  }
+    // if not expanded
+    else {
+        // expand text
+        text1.classList.add('expanded');
+        text2.classList.add('expanded');
+        // change icon and text to collapse
+        button.querySelector('.expand-icon').style.display = 'none';
+        button.querySelector('.collapse-icon').style.display = '';
+        button.querySelector('.expand-collapse-text').textContent = 'Collapse';
+    }
 }
 
 </script>

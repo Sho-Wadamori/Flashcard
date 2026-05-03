@@ -15,7 +15,10 @@
     {% endif %}
     
     {% if can_resume %}
+    <div class="categoryHeaders">
+        {% include "icons/recent.html" %}
         <h2>Jump Back In</h2>
+    </div>
         <div class="resume-container w3-card-4">
             <h2 class="resume-title ellipse-single">{{ deck_name }}</h2>
             <div class="w3-round-xlarge resume-progress-outer" style="height: 20px;">
@@ -30,7 +33,7 @@
     
     {% if username != 'Guest' %}
     <div class="categoryHeaders">
-        <img src="{{ url_for('static', filename='assets/statistics.png') }}" height="32px">
+        {% include "icons/statistics.html" %}
         <h2>Your Progress</h2> <a href="{{ url_for('stats') }}"><h6 style="color: var(--accent-color) !important;">View more ></h6></a>
     </div>
     <div class="statsContainer">
@@ -72,7 +75,7 @@
     </div>
 
     <br><div class="categoryHeaders">
-        <img src="{{ url_for('static', filename='assets/recent.png') }}" alt="Recent Icon" height="32px">
+        {% include "icons/recent.html" %}
         <h2>Recent Decks Studied</h2>
     </div>
     <div class="three-column">
@@ -105,7 +108,7 @@
     {% endif %}
     
     <div class="categoryHeaders">
-        <img src="{{ url_for('static', filename='assets/world.png') }}" alt="Public Icon" height="32px">
+        {% include "icons/world.html" %}
         <h2>Public Decks</h2> <a href="{{ url_for('public') }}"><h6 style="color: var(--accent-color) !important;">View all ></h6></a>
     </div>
     <div class="three-column">
@@ -132,17 +135,19 @@
                     <div class="dropdown-content">
                         <!-- study deck -->
                         <a href="{{ url_for('start_study', id=deck[0]) }}">
-                            <img src="{{ url_for('static', filename='assets/book.png') }}" alt="Study Icon" style="width: 20px; height: 20px;"> Study
+                            {% include "icons/book.html" %} Study
                         </a>
 
                         <!-- expand/collapse card -->
-                        <a href="" onclick="event.preventDefault(); event.stopPropagation(); expandCard(this);">
-                        <img src="{{ url_for('static', filename='assets/expand.svg') }}" alt="Expand Icon" style="width: 20px; height: 20px;"> <span>Expand</span>
+                        <a onclick="event.preventDefault(); event.stopPropagation(); expandCard(this);">
+                            <span class="expand-icon">{% include "icons/expand.html" %}</span>
+                            <span class="collapse-icon" style="display:none;">{% include "icons/collapse.html" %}</span>
+                            <span class="expand-collapse-text">Expand</span>
                         </a>
 
                         <!-- share deck -->
                         <a href="" onclick="event.preventDefault(); event.stopPropagation(); openSharePopup('{{ deck[0] }}', '{{ deck[1] }}');">
-                            <img src="{{ url_for('static', filename='assets/share.png') }}" alt="Share Icon" style="width: 20px; height: 20px;"> Share
+                            {% include "icons/share.html" %} Share
                         </a>
 
                     </div>
@@ -163,7 +168,7 @@
 
 
     <br><div class="categoryHeaders">
-        <img src="{{ url_for('static', filename='assets/questionMark.png') }}" alt="Question Mark Icon" height="32px">
+        {% include "icons/questionMark.html" %}
         <h2>Did you know?</h2>
     </div>
     <div>
@@ -232,9 +237,9 @@ function expandCard(button) {
         text1.classList.remove('expanded');
         text2.classList.remove('expanded');
         // change icon and text back to expand
-        button.querySelector('img').src = "{{ url_for('static', filename='assets/expand.svg') }}";
-        button.querySelector('img').alt = "Expand Icon"
-        button.querySelector('span').textContent = "Expand";
+        button.querySelector('.expand-icon').style.display = '';
+        button.querySelector('.collapse-icon').style.display = 'none';
+        button.querySelector('.expand-collapse-text').textContent = 'Expand';
     } 
 
     // if not expanded
@@ -243,9 +248,9 @@ function expandCard(button) {
         text1.classList.add('expanded');
         text2.classList.add('expanded');
         // change icon and text to collapse
-        button.querySelector('img').src = "{{ url_for('static', filename='assets/collapse.png') }}";
-        button.querySelector('img').alt = "Collapse Icon"
-        button.querySelector('span').textContent = "Collapse";
+        button.querySelector('.expand-icon').style.display = 'none';
+        button.querySelector('.collapse-icon').style.display = '';
+        button.querySelector('.expand-collapse-text').textContent = 'Collapse';
     }
 }
 

@@ -114,21 +114,21 @@
                         {% if userID %}
                         <!-- edit deck -->
                         <a href="{{ url_for('editDeck', id=deck[0]) }}">
-                            <img src="{{ url_for('static', filename='assets/edit.png') }}" alt="Edit Icon" style="width: 20px; height: 20px;"> Edit
+                            {% include "icons/edit.html" %} Edit
                         </a>
 
                         <!-- delete deck -->
                         <form action="{{ url_for('deleteDeck', id=deck[0]) }}" method="POST">
                             <input type="hidden" name="deck_id" value="{{ deck[0] }}">
                             <a onclick="event.preventDefault(); event.stopPropagation(); showConfirm(this.form);">
-                                <img src="{{ url_for('static', filename='assets/bin.png') }}" alt="Delete Icon" style="width: 20px; height: 20px;"> Delete
+                                {% include "icons/bin.html" %} Delete
                             </a>
                         </form>
                         {% endif %}
 
                         <!-- study deck -->
                         <a href="{{ url_for('start_study', id=deck[0]) }}">
-                            <img src="{{ url_for('static', filename='assets/book.png') }}" alt="Study Icon" style="width: 20px; height: 20px;"> Study
+                            {% include "icons/book.html" %} Study
                         </a>
 
                         {% if userID %}
@@ -136,19 +136,21 @@
                         <form action="{{ request.url }}" method="POST" class="bookmarkDropdown">
                             <input name="bookmarkID" type="hidden" value="{{ deck[0] }}">
                             <button type="submit" class="bookmark-dropdownBtn btn-ignore-all" onclick="event.stopPropagation();">
-                                <img src="{{ url_for('static', filename='assets/bookmarkBlack.png') }}" alt="Bookmark Icon" style="width: 20px; height: 18px;"> Bookmark
+                                {% include "icons/bookmarkBlack.html" %} Bookmark
                             </button>
                         </form>
                         {% endif %}
 
                         <!-- expand/collapse card -->
                         <a onclick="event.preventDefault(); event.stopPropagation(); expandCard(this);">
-                        <img src="{{ url_for('static', filename='assets/expand.svg') }}" alt="Expand Icon" style="width: 20px; height: 20px;"> <span>Expand</span>
+                            <span class="expand-icon">{% include "icons/expand.html" %}</span>
+                            <span class="collapse-icon" style="display:none;">{% include "icons/collapse.html" %}</span>
+                            <span class="expand-collapse-text">Expand</span>
                         </a>
 
                         <!-- share deck -->
                         <a onclick="event.preventDefault(); event.stopPropagation(); openSharePopup('{{ deck[0] }}', '{{ deck[1] }}');">
-                            <img src="{{ url_for('static', filename='assets/share.png') }}" alt="Share Icon" style="width: 20px; height: 20px;"> Share
+                            {% include "icons/share.html" %} Share
                         </a>
 
                     </div>
@@ -220,21 +222,21 @@
                     {% if userID %}
                     <!-- edit deck -->
                     <a href="{{ url_for('editDeck', id=deck[0]) }}">
-                        <img src="{{ url_for('static', filename='assets/edit.png') }}" alt="Edit Icon" style="width: 20px; height: 20px;"> Edit
+                        {% include "icons/edit.html" %} Edit
                     </a>
 
                     <!-- delete deck -->
                     <form action="{{ url_for('deleteDeck', id=deck[0]) }}" method="POST">
                         <input type="hidden" name="deck_id" value="{{ deck[0] }}">
                         <a href="" onclick="event.preventDefault(); event.stopPropagation(); showConfirm(this.form);">
-                            <img src="{{ url_for('static', filename='assets/bin.png') }}" alt="Delete Icon" style="width: 20px; height: 20px;"> Delete
+                            {% include "icons/bin.html" %} Delete
                         </a>
                     </form>
                     {% endif %}
 
                     <!-- study deck -->
                     <a href="{{ url_for('start_study', id=deck[0]) }}">
-                        <img src="{{ url_for('static', filename='assets/book.png') }}" alt="Study Icon" style="width: 20px; height: 20px;"> Study
+                        {% include "icons/book.html" %} Study
                     </a>
 
                     {% if userID %}
@@ -242,19 +244,21 @@
                     <form action="{{ request.url }}" method="POST" class="bookmarkDropdown">
                         <input name="bookmarkID" type="hidden" value="{{ deck[0] }}">
                         <button type="submit" class="bookmark-dropdownBtn btn-ignore-all" onclick="event.stopPropagation();">
-                            <img src="{{ url_for('static', filename='assets/bookmarkBlack.png') }}" alt="Bookmark Icon" style="width: 20px; height: 18px;"> Bookmark
+                            {% include "icons/bookmarkBlack.html" %} Bookmark
                         </button>
                     </form>
                     {% endif %}
 
                     <!-- expand/collapse card -->
-                    <a href="" onclick="event.preventDefault(); event.stopPropagation(); expandCard(this);">
-                    <img src="{{ url_for('static', filename='assets/expand.svg') }}" alt="Expand Icon" style="width: 20px; height: 20px;"> <span>Expand</span>
+                    <a onclick="event.preventDefault(); event.stopPropagation(); expandCard(this);">
+                        <span class="expand-icon">{% include "icons/expand.html" %}</span>
+                        <span class="collapse-icon" style="display:none;">{% include "icons/collapse.html" %}</span>
+                        <span class="expand-collapse-text">Expand</span>
                     </a>
 
                     <!-- share deck -->
                     <a href="" onclick="event.preventDefault(); event.stopPropagation(); openSharePopup('{{ deck[0] }}', '{{ deck[1] }}');">
-                        <img src="{{ url_for('static', filename='assets/share.png') }}" alt="Share Icon" style="width: 20px; height: 20px;"> Share
+                        {% include "icons/share.html" %} Share
                     </a>
 
                 </div>
@@ -377,9 +381,9 @@ function expandCard(button) {
         text1.classList.remove('expanded');
         text2.classList.remove('expanded');
         // change icon and text back to expand
-        button.querySelector('img').src = "{{ url_for('static', filename='assets/expand.svg') }}";
-        button.querySelector('img').alt = "Expand Icon";
-        button.querySelector('span').textContent = "Expand";
+        button.querySelector('.expand-icon').style.display = '';
+        button.querySelector('.collapse-icon').style.display = 'none';
+        button.querySelector('.expand-collapse-text').textContent = 'Expand';
     } 
 
     // if not expanded
@@ -388,9 +392,9 @@ function expandCard(button) {
         text1.classList.add('expanded');
         text2.classList.add('expanded');
         // change icon and text to collapse
-        button.querySelector('img').src = "{{ url_for('static', filename='assets/collapse.png') }}";
-        button.querySelector('img').alt = "Collapse Icon";
-        button.querySelector('span').textContent = "Collapse";
+        button.querySelector('.expand-icon').style.display = 'none';
+        button.querySelector('.collapse-icon').style.display = '';
+        button.querySelector('.expand-collapse-text').textContent = 'Collapse';
     }
 }
 
