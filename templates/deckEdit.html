@@ -59,4 +59,31 @@
 <script src="{{ url_for('static', filename='js/deckEditor.js') }}"></script>
 <script src="{{ url_for('static', filename='js/characterInputter.js') }}"></script>
 
+<script>
+
+    const name = document.getElementById("deckName")
+    const description = document.getElementById("deckDescription")
+
+    name.addEventListener('beforeinput', (element) => {
+        const currentLength = element.target.innerText.length
+        console.log(currentLength)
+        console.log(element.inputType)
+        if (currentLength >= 200 && element.inputType.startsWith('insert')) {
+            element.preventDefault()
+
+        }
+    })
+
+    description.addEventListener('beforeinput', (element) => {
+        const currentLength = element.target.innerText.length
+        console.log(currentLength)
+        console.log(element.inputType)
+        if (currentLength >= 400 && element.inputType.startsWith('insert')) {
+            element.preventDefault()
+
+        }
+    })
+
+</script>
+
 {% endblock %}

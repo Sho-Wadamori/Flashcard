@@ -13,9 +13,9 @@
 <form id="cardForm" action="{{ url_for('editCard', id=deck_info[1], card_id=cards[0]) }}" method="POST" autocomplete="off">
     <p style="color: rgb(168, 46, 46);">* Indicates required question</p>
 
-    <input id="questionInput" name="cardQuestion" type="hidden" value="{{ cards[1] }}" required>
-    <input id="answerInput" name="cardAnswer" type="hidden" value="{{ cards[2] }}" required>
-    <input id="hintInput" name="cardHint" type="hidden" value="{{ cards[4] }}">
+    <input id="questionInput" maxlength="700" name="cardQuestion" type="hidden" value="{{ cards[1] }}" required>
+    <input id="answerInput" maxlength="700" name="cardAnswer" type="hidden" value="{{ cards[2] }}" required>
+    <input id="hintInput" maxlength="400" name="cardHint" type="hidden" value="{{ cards[4] }}">
 
     <button type="submit">Submit</button>
     <button type="reset">Reset</button><br><br>
@@ -56,5 +56,44 @@
 <!-- import deck editor js -->
 <script src="{{ url_for('static', filename='js/cardEditor.js') }}"></script>
 <script src="{{ url_for('static', filename='js/characterInputter.js') }}"></script>
+
+<script>
+
+    const question = document.getElementById("question")
+    const answer = document.getElementById("answer")
+    const hint = document.getElementById("hint")
+
+
+    question.addEventListener('beforeinput', (element) => {
+        const currentLength = element.target.innerText.length
+        console.log(currentLength)
+        console.log(element.inputType)
+        if (currentLength >= 700 && element.inputType.startsWith('insert')) {
+            element.preventDefault()
+
+        }
+    })
+
+    answer.addEventListener('beforeinput', (element) => {
+        const currentLength = element.target.innerText.length
+        console.log(currentLength)
+        console.log(element.inputType)
+        if (currentLength >= 700 && element.inputType.startsWith('insert')) {
+            element.preventDefault()
+
+        }
+    })
+
+    hint.addEventListener('beforeinput', (element) => {
+        const currentLength = element.target.innerText.length
+        console.log(currentLength)
+        console.log(element.inputType)
+        if (currentLength >= 400 && element.inputType.startsWith('insert')) {
+            element.preventDefault()
+
+        }
+    })
+
+</script>
 
 {% endblock %}
