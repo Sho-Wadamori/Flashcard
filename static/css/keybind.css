@@ -10,7 +10,7 @@
   visibility: hidden; /* hide it */
   pointer-events: none; /* stop interaction when hidden */
   z-index: 3; /* high z index to make it appear above other elements */
-  background: #f1f1f1;
+  background: var(--secondary-bg-color);
   padding: 10px;
   border-radius: 12px;
   overflow-y: scroll;
@@ -90,6 +90,7 @@ table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
   width: 100%;
+  color: black;
 }
 /* give all cells grey border */
 td, th {
@@ -100,6 +101,9 @@ td, th {
 /* change bg colour for even rows */
 tr:nth-child(even) {
   background-color: #dddddd;
+}
+tr:nth-child(odd) {
+  background-color: #ffffff;
 }
 
 /* popup close button */

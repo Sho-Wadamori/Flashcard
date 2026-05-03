@@ -1,6 +1,31 @@
 /* -------------------- Site-Wide Styles -------------------- */
+:root {
+  
+  --primary-bg-color: #ffffff;
+  --secondary-bg-color: #f1f1f1;
+  --accent-color: #607d8b;
+  --accent-text-color: white;
+  --card-bg-color: #f1f1f1;
+  --card-text-color: black;
+  --text-color: rgb(0, 0, 0);
+  --shadow-color: rgb(0, 0, 0, 0.2);
+ 
+}
+
+/* 
+  --primary-bg-color: #0f1927;
+  --secondary-bg-color: #1e3554;
+  --accent-color: #356293;
+  --accent-text-color: white;
+  --card-bg-color: #1e3554;
+  --card-text-color: white;
+  --text-color: rgb(255, 255, 255);
+  --shadow-color: rgba(0, 0, 0, 0.2);
+*/
+
 html {
-  background-color: white; /* to fix bg colour issues for some browsers/extensions */
+  background-color: var(--primary-bg-color); /* to fix bg colour issues for some browsers/extensions */
+  color: var(--text-color);
   height: 100%;
 }
 body {
@@ -29,21 +54,17 @@ button:not(.btn-ignore-all):not(.card) {
   cursor: pointer;
   border: none;
   border-radius: 6px;
-  box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 5px var(--shadow-color);
 }
 
-button:hover:not(.btn-ignore-all) {
-  background-color: rgb(235, 235, 235);
+button:hover:not(.button-ignore):not(.btn-ignore-all):not(.card) {
+  background-color: color-mix(in hsl, var(--accent-color), rgb(255, 255, 255) 30%) !important;
 }
 
 button:not(.button-ignore):not(.btn-ignore-all) {
-  box-shadow: 1px 1px 3px 0px #495f69;
-  background-color: #607d8b;
-  color: white; 
-}
-
-button:hover:not(.button-ignore):not(.btn-ignore-all) {
-  background-color: #7195a7;
+  box-shadow: 1px 1px 3px 0px var(--shadow-color);
+  background-color: var(--accent-color);
+  color: var(--accent-text-color); 
 }
 
 
@@ -72,10 +93,18 @@ button:hover:not(.button-ignore):not(.btn-ignore-all) {
 .navbar {
   position: relative;
   width: 100vw; /* full width */
+  height: 50px;
   left: 50%;
   right: 50%;
   margin-left: -50vw;
   margin-right: -50vw;
+  background-color: var(--accent-color) !important;
+  color: var(--accent-text-color);
+}
+
+.nav-content a:hover {
+  background-color: color-mix(in hsl, var(--accent-color), rgb(255, 255, 255) 30%) !important;
+  color: var(--accent-text-color) !important;
 }
 
 /* stop navbar content from stretching too far */
@@ -86,7 +115,11 @@ button:hover:not(.button-ignore):not(.btn-ignore-all) {
 
 /* navbar items */
 .w3-bar-item {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
   width: 25% !important;
+  height: 50px;
 }
 
 /* parent container for auth links */
@@ -113,7 +146,8 @@ button:hover:not(.button-ignore):not(.btn-ignore-all) {
 
 /* blue link text */
 .blue-text {
-  color: rgb(14, 103, 161) !important;
+  /* color: rgb(14, 103, 161) !important; */
+  color: var(--accent-color);
   text-decoration: underline !important;
 }
 
@@ -132,4 +166,6 @@ button:hover:not(.button-ignore):not(.btn-ignore-all) {
   overflow: visible;
   white-space: normal;
   max-width: 100%;
+  background-color: var(--secondary-bg-color);
+  box-shadow: 0 4px 10px 0 var(--shadow-color), 0 4px 20px 0 var(--shadow-color);
 }

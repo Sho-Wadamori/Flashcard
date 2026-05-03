@@ -7,7 +7,7 @@
 <!-- CHANGE CARD COLOURS AND SHADOWS -->
 
 <!-- GRID VER -->
-<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; background-color: #f1f1f1; box-shadow: 0 0px 20px 3px rgba(0,0,0,0.2); padding: 40px 60px; border-radius: 15px; align-items: center; gap: 150px; margin: 0px 14px; margin-top: 30px;">
+<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; background-color: var(--secondary-bg-color); box-shadow: 0 0px 20px 3px rgba(0,0,0,0.2); padding: 40px 60px; border-radius: 15px; align-items: center; gap: 150px; margin: 0px 14px; margin-top: 30px;">
 
     <div style="display: flex; flex-direction: column; width: fit-content;">
 
@@ -41,7 +41,7 @@
 
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin: 0px 14px; margin-top: 30px;">
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; background-color: #f1f1f1; box-shadow: 0 0px 20px 3px rgba(0,0,0,0.2); padding: 20px; border-radius: 15px; text-align: center; align-items: center;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; background-color: var(--secondary-bg-color); box-shadow: 0 0px 20px 3px rgba(0,0,0,0.2); padding: 20px; border-radius: 15px; text-align: center; align-items: center;">
 
         <div>
             <h3>Correct Today</h3>
@@ -62,7 +62,7 @@
 
 
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; background-color: #f1f1f1; box-shadow: 0 0px 20px 3px rgba(0,0,0,0.2); padding: 20px; border-radius: 15px; text-align: center; align-items: center;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; background-color: var(--secondary-bg-color); box-shadow: 0 0px 20px 3px rgba(0,0,0,0.2); padding: 20px; border-radius: 15px; text-align: center; align-items: center;">
         
         <div>
             <h3>Total Correct</h3>
@@ -96,39 +96,39 @@
 
 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin: 30px 194px; justify-content: center;">
     <div style="display: flex; flex-direction: column;">
-        <h6 style="margin-top: 0px; margin-bottom: 0; color: rgb(124, 124, 124);">number of decks</h6>
+        <h6 style="margin-top: 0px; margin-bottom: 0; color: var(--accent-color);">number of decks</h6>
         <h1 style="margin-top: 0px; margin-bottom: 0; font-size: 3rem;">{{ deck_stats[0] }}</h1>
     </div>
 
     <div style="display: flex; flex-direction: column; text-align: left;">
-        <h6 style="margin-top: 0px; margin-bottom: 0; color: rgb(124, 124, 124);">number of flashcards</h6>
+        <h6 style="margin-top: 0px; margin-bottom: 0; color: var(--accent-color);">number of flashcards</h6>
         <h1 style="margin-top: 0px; margin-bottom: 0; font-size: 3rem;">{{ card_stats[0] }}</h1>
     </div>
 
     <div style="display: flex; flex-direction: column;">
-        <h6 style="margin-top: 0px; margin-bottom: 0; color: rgb(124, 124, 124);">percent correct</h6>
+        <h6 style="margin-top: 0px; margin-bottom: 0; color: var(--accent-color);">percent correct</h6>
         <h1 style="margin-top: 0px; margin-bottom: 0; font-size: 3rem;">{{ correctPercent }}%</h1>
     </div>
 
     <div style="display: flex; flex-direction: column; text-align: left;">
-        <h6 style="margin-top: 0px; margin-bottom: 0; color: rgb(124, 124, 124);">number of private decks</h6>
+        <h6 style="margin-top: 0px; margin-bottom: 0; color: var(--accent-color);">number of private decks</h6>
         <h1 style="margin-top: 0px; margin-bottom: 0; font-size: 3rem;">{{ private_stats }}</h1>
     </div>
     
     <div style="display: flex; flex-direction: column;">
-        <h6 style="margin-top: 0px; margin-bottom: 0; color: rgb(124, 124, 124);">number of unlisted decks</h6>
+        <h6 style="margin-top: 0px; margin-bottom: 0; color: var(--accent-color);">number of unlisted decks</h6>
         <h1 style="margin-top: 0px; margin-bottom: 0; font-size: 3rem;">{{ unlisted_stats }}</h1>
     </div>
     
     <div style="display: flex; flex-direction: column; text-align: left;">
-        <h6 style="margin-top: 0px; margin-bottom: 0; color: rgb(124, 124, 124);">number of public decks</h6>
+        <h6 style="margin-top: 0px; margin-bottom: 0; color: var(--accent-color);">number of public decks</h6>
         <h1 style="margin-top: 0px; margin-bottom: 0; font-size: 3rem;">{{ public_stats }}</h1>
     </div>
 
 
 </div>
 
-<br><br><div style="display: flex; margin: 0px 14px; width: auto; height: 60px; background-color: #f1f1f1; box-shadow: 0 0px 20px 3px rgba(0,0,0,0.2); border-radius: 15px; justify-content: center; align-items: center;">
+<br><br><div style="display: flex; margin: 0px 14px; width: auto; height: 60px; background-color: var(--secondary-bg-color); box-shadow: 0 0px 20px 3px rgba(0,0,0,0.2); border-radius: 15px; justify-content: center; align-items: center;">
     <h1>Study History</h1>
 </div>
 

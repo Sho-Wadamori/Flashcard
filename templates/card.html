@@ -18,10 +18,10 @@
   <!-- Previous card button -->
   {% if index > 0 %}
     <a href="{{ url_for('Study', id=deck_id, index=index - 1) }}">
-      <button id="prev_button"><</button>
+      <button class="btn-ignore-all" id="prev_button"><</button>
     </a>
   {% else %}
-    <button id="prev_button" disabled><</button>
+    <button class="btn-ignore-all" id="prev_button" disabled><</button>
   {% endif %}
   
   <!-- Show answer -->
@@ -33,9 +33,9 @@
 
   <!-- Next card button -->
   {% if index + 1 < total %}
-    <button id="next_button" form="responseForm" type="submit">></button>
+    <button class="btn-ignore-all" id="next_button" form="responseForm" type="submit">></button>
   {% else %}
-    <button id="next_button" form="responseForm" type="submit" disabled>></button>
+    <button class="btn-ignore-all" id="next_button" form="responseForm" type="submit" disabled>></button>
   {% endif %}
 </div>
 
@@ -58,7 +58,7 @@
     <input type="radio" id="skip" name="response" value="skip">
     <label for="skip">Skip [3]</label>
   </div>
-  <p id="keybindhint" style="text-align: center; color: rgb(63, 63, 63);">* press the corresponding number on your keyboard to change response</p>
+  <p id="keybindhint" style="text-align: center; color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%);">* press the corresponding number on your keyboard to change response</p>
 </form>
 
 <!-- Keybinds Help -->

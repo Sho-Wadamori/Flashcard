@@ -58,6 +58,7 @@
                         display: inherit;
                         width: 100%;
                         height: 100%;
+                        fill: var(--text-color);
                         float: right;">
                         <path d="M12 4a2 2 0 100 4 2 2 0 000-4Zm0 6a2 2 0 100 4 2 2 0 000-4Zm0 6a2 2 0 100 4 2 2 0 000-4Z"></path>
                     </svg>
@@ -99,7 +100,7 @@
 <!-- confirmation overlay -->
 <div id="overlay" onclick="off()"> <!-- Turn off overlay when clicking outside -->
 <div class="confirmation-box" onclick="event.stopPropagation()">
-    <p>Are you sure you want to delete this deck?</p>
+    <p style="color: var(--text-color);">Are you sure you want to delete this deck?</p>
     <button onclick="confirmDelete()" class="button-ignore" style="background-color: #f44336; color: white;">Yes</button> 
     <button onclick="off()" class="button-ignore" style="border: 2px solid #f44336; color: #f44336; background-color: white">No</button>
 </div>

@@ -85,7 +85,7 @@
   border: none;
   cursor: pointer;
   border-radius: 18px; /* make the button round like the icon */
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 10px var(--shadow-color);
   background-color: transparent;
   display: flex;
   justify-content: center;
@@ -131,7 +131,7 @@
   font-size: 17px;
   opacity: 0;
   /* x y blur spread */
-  box-shadow: 0 5px 8px 3px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 8px 3px var(--shadow-color);
 
   transition: transform 0.5s ease-in-out, visibility 0s linear 0.5s, opacity 0.5s ease-in-out; /* animate from below and delay visibility change */
 }

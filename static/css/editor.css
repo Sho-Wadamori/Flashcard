@@ -5,11 +5,11 @@
   display: grid;
   place-content: center;
   margin: 0 auto;
-  background-color: #f1f1f1;
+  background-color: var(--card-bg-color);
   padding: 20px;
   min-height: 300px;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px var(--shadow-color);
   text-align: center;
   width: calc(100% - 40vw); /* make wider when narrow */
   flex-direction: column;
@@ -18,6 +18,7 @@
   word-break: break-word; /* allow long text to wrap */
   white-space: normal;
   max-width: 100%;
+  color: var(--card-text-color);
 }
 
 @media (min-width: 1921px) {
@@ -46,10 +47,10 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: white;
+  background: var(--secondary-bg-color);
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px var(--shadow-color);
   text-align: center;
   z-index: 3; /* Higher than overlay */
 }
@@ -80,7 +81,6 @@
 .preview {
   outline: none;
   text-align: center;
-  color: rgb(0, 0, 0);
 }
 
 .preview.hint {
@@ -132,12 +132,12 @@
   max-height: 55vh;
   overflow-y: auto;
   min-width: 300px;
-  background: #f1f1f1;
+  background: var(--secondary-bg-color);
   padding: 10px;
   border-radius: 12px;
   text-align: center;
   margin-left: 5vw;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px var(--shadow-color);
 }
 
 /* character panel buttons */
@@ -190,7 +190,7 @@
     visibility: hidden; /* hide it */
     pointer-events: none; /* stop interaction when hidden */
     z-index: 3; /* high z index to make it appear above other elements */
-    background: #f1f1f1;
+    background: var(--secondary-bg-color);
     padding: 10px;
     border-radius: 12px;
     opacity: 0;
@@ -262,7 +262,20 @@
   }
 }
 
-/* remove transitions */
+
+/* ----- Deck Visibility Dropdown ----- */
+#deckVisibility {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  outline: none;
+  /* background-color: white; */
+  background-color: var(--accent-color);
+  color: var(--accent-text-color);
+}
+
+
+/* ----- REMOVE TRANSITIONS ----- */
 .no-transition .characterPopup-overlay,
 .no-transition .left-layout,
 .no-transition .left-layout > * {
