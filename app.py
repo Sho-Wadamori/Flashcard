@@ -176,6 +176,12 @@ def uservar():
     }
 
 
+# ---------- obfuscate email using astrisk ----------
+def obfuscate_email(email):
+    fistPart, domain = email.split('@')
+    return fistPart[0] + '*****@' + domain
+
+
 # ---------- homepage ----------
 @app.route('/')
 def home():
@@ -1039,36 +1045,88 @@ def signup():
 
 
 # ---------- profile ----------
-@app.route('/profile/')
+@app.route('/profile/', methods=['GET', 'POST'])
 def profile():
-    if not userID():
-        session.pop('username', None)
-        session.pop('userID', None)
-        flash(
-            "⚠ You Are Not Logged In. Please Log In to View Your Profile.",
-            "error"
+    getEmail = """
+        SELECT email
+        FROM Users
+        WHERE user_ID = ?
+    """
+    emailSQL = query_db(getEmail, (userID(),))[0][0]
+    if emailSQL == None:
+        email = ""
+    else:
+        email = emailSQL
+    print(f"EMAIL: {email}")
+
+    
+    if request.method == "POST":
+        action = request.form.get('action')
+
+        if action == "remove":
+            removeEmail = """
+                UPDATE Users
+                SET email = NULL
+                WHERE user_ID = ? 
+            """
+            get_db().execute(removeEmail, (userID(),))
+            get_db().commit()
+            flash("Recovery email removed.", "success")
+            return redirect(url_for('profile'))
+
+        elif action == "change":
+            newEmail = request.form['newEmail']
+
+            print(newEmail)
+
+            update_email = """
+                UPDATE Users
+                SET email = ?
+                WHERE user_ID = ?;
+            """
+            get_db().execute(update_email, (newEmail, userID(),))
+            get_db().commit()
+            flash("Email updated.", "success")
+
+            return redirect(url_for('profile'))
+
+    else:
+        if not userID():
+            session.pop('username', None)
+            session.pop('userID', None)
+            flash(
+                "⚠ You Are Not Logged In. Please Log In to View Your Profile.",
+                "error"
+            )
+            return redirect(url_for('home'))
+
+        sql = """
+                SELECT user_name, user_creation
+                FROM Users
+                WHERE user_ID = ?;
+            """
+
+        results = query_db(sql, (userID(),))
+
+        if not results:
+            flash("⚠ User Details Not Found. Logging Out.", "error")
+            return redirect(url_for('logout'))
+
+        # obfuscate email
+        if email:
+            obfuscatedEmail = obfuscate_email(email)
+        else:
+            obfuscatedEmail = "No Email Added"
+
+        # return the results
+        return render_template(
+            "profile.html",
+            results=results[0],
+            format_date=format_date,
+            time_ago=time_ago,
+            email=email,
+            obfuscatedEmail=obfuscatedEmail
         )
-        return redirect(url_for('home'))
-
-    sql = """
-            SELECT user_name, user_creation
-            FROM Users
-            WHERE user_ID = ?;
-        """
-
-    results = query_db(sql, (userID(),))
-
-    if not results:
-        flash("⚠ User Details Not Found. Logging Out.", "error")
-        return redirect(url_for('logout'))
-
-    # return the results
-    return render_template(
-        "profile.html",
-        results=results[0],
-        format_date=format_date,
-        time_ago=time_ago
-    )
 
 
 # ---------- logout ----------
