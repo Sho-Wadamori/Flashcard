@@ -1053,13 +1053,12 @@ def profile():
         WHERE user_ID = ?
     """
     emailSQL = query_db(getEmail, (userID(),))[0][0]
-    if emailSQL == None:
+    if emailSQL is None:
         email = ""
     else:
         email = emailSQL
     print(f"EMAIL: {email}")
 
-    
     if request.method == "POST":
         action = request.form.get('action')
 
@@ -1067,7 +1066,7 @@ def profile():
             removeEmail = """
                 UPDATE Users
                 SET email = NULL
-                WHERE user_ID = ? 
+                WHERE user_ID = ?
             """
             get_db().execute(removeEmail, (userID(),))
             get_db().commit()
@@ -1229,6 +1228,22 @@ def stats():
         correctPercent=correctPercent,
         userID=userID()
     )
+
+
+# ---------- Settings ----------
+@app.route('/settings/', methods=['POST', 'GET'])
+def settings():
+    # if request.method == "POST":
+    return render_template("settings.html", userID=userID())
+    # else:
+
+
+# ---------- Theme Changer ----------
+@app.route('/settings/theme', methods=['POST', 'GET'])
+def theme():
+    # if request.method == "POST":
+    return render_template("theme.html")
+    # else:
 
 
 # ---------- Public Decks ----------
