@@ -340,10 +340,11 @@
   justify-content: center;
   aspect-ratio: 1 / 1;
   transition: color 0.2s ease-in-out;
+  color: var(--text-color);
 }
 /* on hover */
 .share-close:hover {
-  color: #636363;
+  color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%);
 }
 
 /* share buttons left arrow */
@@ -352,7 +353,8 @@
   top: 30%;
   left: 6px;
   transform: translateY(-30%);
-  background-color: white;
+  background-color: var(--accent-color);
+  color: var(--accent-text-color);
   box-shadow: 0 2px 4px 0 var(--shadow-color), 0 2px 8px 0 var(--shadow-color);
   border: none;
   font-size: 1.5rem;
@@ -371,7 +373,8 @@
   top: 30%;
   right: 6px;
   transform: translateY(-30%);
-  background-color: white;
+  background-color: var(--accent-color);
+  color: var(--accent-text-color);
   box-shadow: 0 2px 4px 0 var(--shadow-color), 0 2px 8px 0 var(--shadow-color);
   border: none;
   font-size: 1.5rem;
@@ -386,7 +389,7 @@
 
 .share-leftArrow:hover,
 .share-rightArrow:hover {
-  background-color: #f1f1f1;
+  background-color: color-mix(in hsl, var(--accent-color), rgb(0, 0, 0) 10%);
 }
 
 /* grey overlay behind the popup */

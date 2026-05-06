@@ -27,6 +27,7 @@ html {
   background-color: var(--primary-bg-color); /* to fix bg colour issues for some browsers/extensions */
   color: var(--text-color);
   height: 100%;
+  scrollbar-color: var(--secondary-bg-color) var(--primary-bg-color)
 }
 body {
   max-width: 1920px; /* limit width for ultra wide screens */

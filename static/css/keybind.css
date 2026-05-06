@@ -121,8 +121,9 @@ tr:nth-child(odd) {
   align-items: center;
   justify-content: center;
   aspect-ratio: 1 / 1;
+  color: var(--text-color);
 }
 /* on hover */
 .popup-close:hover {
-  color: #636363;
+  color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%);
 }
