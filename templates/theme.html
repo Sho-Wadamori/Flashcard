@@ -10,50 +10,56 @@
     
     <div>
         <label for="bg">Background Colour</label>
-        <input type="color" name="bg" id="bg" oninput="document.documentElement.style.setProperty('--primary-bg-color', this.value)">
+        <input type="color" class="colorPick" value="{{ settings[0] }}" name="bg" id="bg" oninput="document.documentElement.style.setProperty('--primary-bg-color', this.value)">
     </div>
 
     <div>
         <label for="bg2">Secondary Background Colour</label>
-        <input type="color" name="bg2" id="bg2" oninput="document.documentElement.style.setProperty('--secondary-bg-color', this.value)">
+        <input type="color" class="colorPick" value="{{ settings[1] }}" name="bg2" id="bg2" oninput="document.documentElement.style.setProperty('--secondary-bg-color', this.value)">
     </div>
 
     <div>
         <label for="text">Text Colour</label>
-        <input type="color" name="text" id="text" oninput="document.documentElement.style.setProperty('--text-color', this.value)">
+        <input type="color" class="colorPick" value="{{ settings[2] }}" name="text" id="text" oninput="document.documentElement.style.setProperty('--text-color', this.value)">
     </div>
 
     <div>
         <label for="accent">Accent Colour</label>
-        <input type="color" name="accent" id="accent" oninput="document.documentElement.style.setProperty('--accent-color', this.value)">
+        <input type="color" class="colorPick" value="{{ settings[3] }}" name="accent" id="accent" oninput="document.documentElement.style.setProperty('--accent-color', this.value)">
     </div>
 
     <div>
         <label for="accentTXT">Accent Text Colour</label>
-        <input type="color" name="accentTXT" id="accentTXT" oninput="document.documentElement.style.setProperty('--accent-text-color', this.value)">
+        <input type="color" class="colorPick" value="{{ settings[4] }}" name="accentTXT" id="accentTXT" oninput="document.documentElement.style.setProperty('--accent-text-color', this.value)">
     </div>
 
     <div>
         <label for="card">Card Background Colour</label>
-        <input type="color" name="card" id="card" oninput="document.documentElement.style.setProperty('--card-bg-color', this.value)">
+        <input type="color" class="colorPick" value="{{ settings[5] }}" name="card" id="card" oninput="document.documentElement.style.setProperty('--card-bg-color', this.value)">
     </div>
 
     <div>
         <label for="cardTXT">Card Text Colour</label>
-        <input type="color" name="cardTXT" id="cardTXT" oninput="document.documentElement.style.setProperty('--card-text-color', this.value)">
+        <input type="color" class="colorPick" value="{{ settings[6] }}" name="cardTXT" id="cardTXT" oninput="document.documentElement.style.setProperty('--card-text-color', this.value)">
     </div>
 
     <div>
         <label for="shadow">Shadow Colour</label>
-        <input type="color" name="shadow" id="shadow" oninput="updateshadow()">
+        <input type="color" class="colorPick" value="{{ settings[7] }}" name="shadow" id="shadow" oninput="updateshadow()">
     </div>
 
     <div>
         <label for="shadow-alpha">Shadow Opacity</label>
-        <input type="range" max="1" min="0" step="0.1" name="shadow-alpha" id="shadow-alpha" value="{{ shadow_alpha }}" oninput="updateshadow()">
+        <input type="range" class="colorPick" value="{{ shadow_alpha }}" name="shadow-alpha" id="shadow-alpha" min="0" max="1" step="0.1" oninput="updateshadow()">
     </div>
 
-    <button type="reset">Reset</button>
+    <button type="reset" onclick="
+        setTimeout(() => {
+            document.querySelectorAll('.colorPick').forEach(dropdown => {
+                dropdown.dispatchEvent(new Event('input', { bubbles: true }));
+            });
+        }, 0)
+    ">Reset</button>
     <button type="submit">Save Temp</button>
     <button type="submit">Save</button>
 </form>
@@ -907,7 +913,6 @@ document.getElementById("bg2").value = getComputedStyle(document.documentElement
 document.getElementById("text").value = getComputedStyle(document.documentElement).getPropertyValue('--text-color').trim()
 document.getElementById("accent").value = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim()
 document.getElementById("accentTXT").value = getComputedStyle(document.documentElement).getPropertyValue('--accent-text-color').trim()
-
 document.getElementById("card").value = getComputedStyle(document.documentElement).getPropertyValue('--card-bg-color').trim()
 document.getElementById("cardTXT").value = getComputedStyle(document.documentElement).getPropertyValue('--card-text-color').trim()
 document.getElementById("shadow").value = getComputedStyle(document.documentElement).getPropertyValue('--shadow-color').trim()

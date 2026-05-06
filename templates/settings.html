@@ -9,11 +9,18 @@
 
 <br>
 
-<div style="display: flex; align-items: center; justify-content: space-around;">
-    <button style="height: 50px; width: 25%;" onclick="window.location='{{ url_for('profile') }}'">Profile</button>
-    <button style="height: 50px; width: 25%;" onclick="window.location='{{ url_for('settings') }}'">Settings</button>
-    <button style="height: 50px; width: 25%;" onclick="window.location='{{ url_for('stats') }}'">Stats</button>
+<div class="profileTabContainer">
+    <button class="profileTabs" onclick="window.location='{{ url_for('profile') }}'">Profile</button>
+    <button class="profileTabs" onclick="window.location='{{ url_for('settings') }}'">Settings</button>
+    <button class="profileTabs" onclick="window.location='{{ url_for('stats') }}'">Stats</button>
 </div>
+
+<br>
+
+<button style="width: 100%;" onclick="window.location='{{ url_for('theme') }}'">Theme</button>
+
+<br>
+<br>
 
 <form action="{{ url_for('settings') }}" method="POST" id="removeEmail">
     <input type="hidden" name="action" value="remove">
