@@ -4,36 +4,9 @@
 
 {% block body %}
 
-<style>
+<br>
 
-.pageMini {
-    margin: 0;
-    width: 100%;
-    height: 500px;
-    padding: 10px;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    border: 1px solid black;
-}
-
-.examplePages {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    grid-auto-flow: row;
-}
-
-.pageMiniInner {
-    transform: scale(0.5);
-    transform-origin: top left;
-    /* scale: 0.5; */
-    width: 200%;
-    height: 50%;
-}
-
-</style>
-
-<form style="display: grid; grid-template-columns: 1fr 1fr 1fr; grid-auto-flow: row; width: 60%; text-align: center; margin: auto; gap: 10px;" action="{{ url_for('theme') }}" method="POST">
+<form class="colourPickerGrid" action="{{ url_for('theme') }}" method="POST">
     
     <div>
         <label for="bg">Background Colour</label>
@@ -72,52 +45,31 @@
 
     <div>
         <label for="shadow">Shadow Colour</label>
-        <input type="color" name="shadow" id="shadow" oninput="document.documentElement.style.setProperty('--shadow-color', this.value)">
+        <input type="color" name="shadow" id="shadow" oninput="updateshadow()">
     </div>
 
     <div>
-
+        <label for="shadow-alpha">Shadow Opacity</label>
+        <input type="range" max="1" min="0" step="0.1" name="shadow-alpha" id="shadow-alpha" value="{{ shadow_alpha }}" oninput="updateshadow()">
     </div>
 
-    <input type="reset">
-    <input type="submit">
+    <button type="reset">Reset</button>
+    <button type="submit">Save Temp</button>
+    <button type="submit">Save</button>
 </form>
-<br>
-<br>
-
-<div>
-    <label for="filter">Filter:</label>
-    <select name="filter" id="filter">
-        <option value="none" selected>None</option>
-        <option value="public">Public</option>
-        <option value="unlisted">Unlisted</option>
-        <option value="private">Private</option>
-    </select>
-
-    <label for="sort_by">Sort by:</label>
-    <select name="sort_by" id="sort_by">
-        <option value="deck_creation"selected>Creation Date</option>
-        <option value="deck_name">Name</option>
-        <option value="deck_description">Description</option>
-    </select>
-
-    <label for="order">Order:</label>
-    <select name="order" id="order">
-        <option value="DESC" selected>Descending</option>
-        <option value="ASC">Ascending</option>
-    </select>
-
-    <button>Apply</button>
-</div>
 
 <br>
+<br>
+
 <h1>EXAMPLE PAGES</h1>
 <br>
 
-
-<!-- <h3>Deck List</h3> -->
-
+<div style="display: flex; justify-content: space-around;">
+    <h3>Deck List</h3>
+    <h3>User Statistics</h3>
+</div>
 <div class="examplePages">
+    <!-- Deck List -->
     <div class="pageMini">
         <div class="pageMiniInner">
             <div class="three-column">
@@ -211,6 +163,7 @@
         </div>
     </div>
 
+    <!-- Stats -->
     <div class="pageMini">
         <div class="pageMiniInner">
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; background-color: var(--secondary-bg-color); box-shadow: 0 0px 20px 3px rgba(0,0,0,0.2); padding: 40px 60px; border-radius: 15px; align-items: center; gap: 150px; margin: 0px 14px;">
@@ -328,6 +281,16 @@
         </div>
     </div>
 
+</div>
+
+<br>
+
+<div style="display: flex; justify-content: space-around;">
+    <h3>Deck Create Page</h3>
+    <h3>Study Page</h3>
+</div>
+<div class="examplePages">
+    <!-- Deck Create -->
     <div class="pageMini">
         <div class="pageMiniInner">
             <div id="characterPopup-overlay" class="characterPopup-overlay" onclick="closeDropdownPanel()"></div>
@@ -337,8 +300,6 @@
                 <p style="color: rgb(168, 46, 46);">* Indicates required question</p>
                 <input id="deckInput" name="deckName" type="hidden" required>
                 <input id="descriptionInput" name="deckDescription" type="hidden">
-                <!-- <label>Cover Image:</label>
-                <input type="file" id="myfile" name="myfile"><br><br> -->
                 <button>Submit</button>
                 <button>Reset</button>
                 <label for="deckVisibility">Deck Visibility:</label>
@@ -369,7 +330,7 @@
                 </div>
             </div>
 
-            <p style="color: rgb(107, 107, 107); text-align: center;">* deck description defaults to "No description."</p>
+            <p style="color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%); text-align: center;">* deck description defaults to "No description."</p>
 
             <!-- MathJax Rendering Toggle -->
             <input type="checkbox" id="MathJaxCheck" onclick="toggleMathJax()" checked>
@@ -411,6 +372,7 @@
         </div>
     </div>
 
+    <!-- Study -->
     <div class="pageMini">
         <div class="pageMiniInner">
             <h2>Study</h2>
@@ -517,7 +479,16 @@
 
         </div>
     </div>
+</div>
 
+<br>
+
+<div style="display: flex; justify-content: space-around;">
+    <h3>Homepage</h3>
+    <h3>Share Popup</h3>
+</div>
+<div class="examplePages">
+    <!-- Homepage -->
     <div class="pageMini">
         <div class="pageMiniInner">
             <div>
@@ -734,6 +705,51 @@ function toggleDropdown(button) {
         dropdownContent.classList.add('open'); // open the clicked dropdown
     }
 };
+
+
+// calculate shadow
+function updateshadow() {
+    var alpha = document.getElementById('shadow-alpha').value
+    var alphaHEX = ""
+    var shadowColor = document.getElementById('shadow').value
+
+    if (alpha == 0.0) {
+        alphaHEX = "00"
+    }
+    if (alpha == 0.1) {
+        alphaHEX = "1A"
+    }
+    if (alpha == 0.2) {
+        alphaHEX = "33"
+    }
+    if (alpha == 0.3) {
+        alphaHEX = "4D"
+    }
+    if (alpha == 0.4) {
+        alphaHEX = "66"
+    }
+    if (alpha == 0.5) {
+        alphaHEX = "80"
+    }
+    if (alpha == 0.6) {
+        alphaHEX = "99"
+    }
+    if (alpha == 0.7) {
+        alphaHEX = "B3"
+    }
+    if (alpha == 0.8) {
+        alphaHEX = "CC"
+    }
+    if (alpha == 0.9) {
+        alphaHEX = "E6"
+    }
+    if (alpha == 1.0) {
+        alphaHEX = "FF"
+    }
+
+    var realShadowColor = shadowColor + alphaHEX
+    document.documentElement.style.setProperty('--shadow-color', realShadowColor)
+}
 
 </script>
 
