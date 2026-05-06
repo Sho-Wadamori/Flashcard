@@ -167,19 +167,30 @@ def userID():
     return session.get('userID', 0)
 
 
-# ---------- user information ----------
-@app.context_processor
-def uservar():
-    return {
-        "username": session.get("username", "Guest"),
-        "userID": session.get("userID", 0)
-    }
-
-
 # ---------- obfuscate email using astrisk ----------
 def obfuscate_email(email):
     fistPart, domain = email.split('@')
     return fistPart[0] + '*****@' + domain
+
+
+# ---------- layout page ----------
+@app.context_processor
+def uservar():
+    settingsSQL = """
+        SELECT settings_bg1, settings_bg2, settings_text,
+        settings_accentBG, settings_accentTXT, settings_cardBG,
+        settings_cardTXT, settings_shadow, settings_fontSize,
+        settings_animation
+        FROM Settings
+        WHERE settings_userID = ?
+    """
+    settings = query_db(settingsSQL, (userID(),))[0]
+
+    return {
+        "username": session.get("username", "Guest"),
+        "userID": session.get("userID", 0),
+        "settings": settings
+    }
 
 
 # ---------- homepage ----------
@@ -1029,14 +1040,24 @@ def signup():
 
         else:
             hashed_password = generate_password_hash(password)
-            sql = """
+            usersql = """
                     INSERT INTO Users (
                         user_name, user_password, user_creation
                     )
                     VALUES (?, ?, datetime('now'));
                 """
-            get_db().execute(sql, (username, hashed_password))
+            get_db().execute(usersql, (username, hashed_password))
             get_db().commit()
+
+            settingssql = """
+                    INSERT INTO Settings (
+                        settings_userID
+                    )
+                    VALUES (?);
+                """
+            get_db().execute(settingssql, (userID()))
+            get_db().commit()
+
             flash("✔ Account Created Successfully! Please Log In.", "success")
             return render_template("login.html")
 
@@ -1241,9 +1262,58 @@ def settings():
 # ---------- Theme Changer ----------
 @app.route('/settings/theme', methods=['POST', 'GET'])
 def theme():
-    # if request.method == "POST":
-    return render_template("theme.html")
-    # else:
+    if request.method == "POST":
+        colour = request.form.get('shadow')
+        alpha = float(request.form.get('shadow-alpha'))
+
+        alpha_hex = format(round(alpha * 255), '02x')
+        full_color = f"{colour}{alpha_hex}"
+
+        bg = request.form.get('bg')
+        bg2 = request.form.get('bg2')
+        text = request.form.get('text')
+        accent = request.form.get('accent')
+        accentTXT = request.form.get('accentTXT')
+        card = request.form.get('card')
+        cardTXT = request.form.get('cardTXT')
+
+        update_settings = """
+            UPDATE Settings
+            SET settings_bg1 = ?, settings_bg2 = ?, settings_text = ?,
+            settings_accentBG = ?, settings_accentTXT = ?, settings_cardBG = ?,
+            settings_cardTXT = ?, settings_shadow = ?
+            WHERE settings_userID = ?;
+        """
+        get_db().execute(update_settings, (
+            bg,
+            bg2,
+            text,
+            accent,
+            accentTXT,
+            card,
+            cardTXT,
+            full_color,
+            userID()
+        ),)
+        get_db().commit()
+
+    
+
+    settingsSQL = """
+        SELECT settings_bg1, settings_bg2, settings_text,
+        settings_accentBG, settings_accentTXT, settings_cardBG,
+        settings_cardTXT, settings_shadow, settings_fontSize,
+        settings_animation
+        FROM Settings
+        WHERE settings_userID = ?
+    """
+    settings = query_db(settingsSQL, (userID(),))[0]
+
+    shadow_hex = settings[7]
+    shadow_color = shadow_hex[:7]
+    shadow_alpha = round(int(shadow_hex[7:], 16) / 255, 2)
+
+    return render_template("theme.html", settings=settings, shadow_color=shadow_color, shadow_alpha=shadow_alpha)
 
 
 # ---------- Public Decks ----------

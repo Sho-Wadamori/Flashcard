@@ -27,6 +27,17 @@
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
     <title>{% block title %}{% endblock %} | Flashcard Maker</title>
+    <!-- change css root colours -->
+    <script>
+        document.documentElement.style.setProperty('--primary-bg-color', '{{ settings[0] }}');
+        document.documentElement.style.setProperty('--secondary-bg-color', '{{ settings[1] }}');
+        document.documentElement.style.setProperty('--text-color', '{{ settings[2] }}');
+        document.documentElement.style.setProperty('--accent-color', '{{ settings[3] }}');
+        document.documentElement.style.setProperty('--accent-text-color', '{{ settings[4] }}');
+        document.documentElement.style.setProperty('--card-bg-color', '{{ settings[5] }}');
+        document.documentElement.style.setProperty('--card-text-color', '{{ settings[6] }}');
+        document.documentElement.style.setProperty('--shadow-color', '{{ settings[7] }}');
+    </script>
 </head>
 
 <body class="w3-container">
