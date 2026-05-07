@@ -60,11 +60,12 @@
 
 .tab-buttons button {
   padding: 10px 20px;
-  border: 2px solid black;
+  /* border: 2px solid black; */
+  border: none;
   border-radius: 8px;
-  background-color: white;
+  background-color: var(--accent-color);
   cursor: pointer;
-  color: black;
+  color: var(--accent-text-color);
   -webkit-user-select: none; /* Safari */
   -ms-user-select: none; /* IE 10 and IE 11 */
   user-select: none;
@@ -72,8 +73,8 @@
 
 /* active tab */
 .tab-buttons button.active {
-  background-color: #0e67a1;
-  color: white;
+  background-color: color-mix(in hsl, var(--accent-color), var(--primary-bg-color) 40%);
+  color: var(--accent-text-color);
 }
 
 /* hide it */
@@ -90,20 +91,20 @@ table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
   width: 100%;
-  color: black;
+  color: var(--text-color);
 }
 /* give all cells grey border */
 td, th {
-  border: 1px solid #dddddd;
+  border: 1px solid color-mix(in hsl, var(--secondary-bg-color), rgb(151, 151, 151) 40%);
   text-align: left;
   padding: 8px;
 }
 /* change bg colour for even rows */
 tr:nth-child(even) {
-  background-color: #dddddd;
+  background-color: var(--secondary-bg-color);
 }
 tr:nth-child(odd) {
-  background-color: #ffffff;
+  background-color: color-mix(in hsl, var(--secondary-bg-color), rgb(151, 151, 151) 40%);
 }
 
 /* popup close button */
