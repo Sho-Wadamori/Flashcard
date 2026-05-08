@@ -34,7 +34,7 @@
     {% if username != 'Guest' %}
     <div class="categoryHeaders">
         {% include "icons/statistics.html" %}
-        <h2>Your Progress</h2> <a href="{{ url_for('stats') }}"><h6 style="color: var(--accent-color) !important;">View more ></h6></a>
+        <h2>Your Progress</h2> <a href="{{ url_for('stats') }}"><h6 style="color: color-mix(in hsl, var(--accent-color), rgb(255, 255, 255) 40%) !important;">View more ></h6></a>
     </div>
     <div class="statsContainer">
         <div class="statsDaily">
@@ -109,7 +109,7 @@
     
     <div class="categoryHeaders">
         {% include "icons/world.html" %}
-        <h2>Public Decks</h2> <a href="{{ url_for('public') }}"><h6 style="color: var(--accent-color) !important;">View all ></h6></a>
+        <h2>Public Decks</h2> <a href="{{ url_for('public') }}"><h6 style="color: color-mix(in hsl, var(--accent-color), rgb(255, 255, 255) 40%) !important;">View all ></h6></a>
     </div>
     <div class="three-column">
         {% for deck in publicDecks %}
