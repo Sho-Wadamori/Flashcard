@@ -1297,7 +1297,7 @@ def theme():
         ),)
         get_db().commit()
 
-    
+        flash("✔ Changes Saved!", "success")
 
     settingsSQL = """
         SELECT settings_bg1, settings_bg2, settings_text,
