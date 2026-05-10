@@ -11,47 +11,47 @@
 
 <form class="colourPickerGrid" action="{{ url_for('theme') }}" method="POST">
     
-    <div>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
         <label for="bg">Background Colour</label>
         <input type="color" class="colorPick" value="{{ settings[0] }}" name="bg" id="bg" oninput="document.documentElement.style.setProperty('--primary-bg-color', this.value)">
     </div>
 
-    <div>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
         <label for="bg2">Secondary Background Colour</label>
         <input type="color" class="colorPick" value="{{ settings[1] }}" name="bg2" id="bg2" oninput="document.documentElement.style.setProperty('--secondary-bg-color', this.value)">
     </div>
 
-    <div>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
         <label for="text">Text Colour</label>
         <input type="color" class="colorPick" value="{{ settings[2] }}" name="text" id="text" oninput="document.documentElement.style.setProperty('--text-color', this.value)">
     </div>
 
-    <div>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
         <label for="accent">Accent Colour</label>
         <input type="color" class="colorPick" value="{{ settings[3] }}" name="accent" id="accent" oninput="document.documentElement.style.setProperty('--accent-color', this.value)">
     </div>
 
-    <div>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
         <label for="accentTXT">Accent Text Colour</label>
         <input type="color" class="colorPick" value="{{ settings[4] }}" name="accentTXT" id="accentTXT" oninput="document.documentElement.style.setProperty('--accent-text-color', this.value)">
     </div>
 
-    <div>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
         <label for="card">Card Background Colour</label>
         <input type="color" class="colorPick" value="{{ settings[5] }}" name="card" id="card" oninput="document.documentElement.style.setProperty('--card-bg-color', this.value)">
     </div>
 
-    <div>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
         <label for="cardTXT">Card Text Colour</label>
         <input type="color" class="colorPick" value="{{ settings[6] }}" name="cardTXT" id="cardTXT" oninput="document.documentElement.style.setProperty('--card-text-color', this.value)">
     </div>
 
-    <div>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
         <label for="shadow">Shadow Colour</label>
         <input type="color" class="colorPick" value="{{ settings[7] }}" name="shadow" id="shadow" oninput="updateshadow()">
     </div>
 
-    <div>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
         <label for="shadow-alpha">Shadow Opacity</label>
         <input type="range" class="colorPick alphaSlider" value="{{ shadow_alpha }}" name="shadow-alpha" id="shadow-alpha" min="0" max="1" step="0.1" oninput="updateshadow()">
     </div>

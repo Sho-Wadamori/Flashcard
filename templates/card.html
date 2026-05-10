@@ -4,9 +4,21 @@
 
 {% block body %}
 
-<h2>Study</h2>
+<h2 style="text-align: center;">Study</h2>
 
-<h3>Card {{ index + 1 }} of {{ total }}</h3>
+<h3 style="text-align: center;">Card {{ index + 1 }} of {{ total }}</h3>
+{% if index + 1 >= total  %}
+<div class="w3-round-xlarge studyProgressOuter progressFull"></div>
+{% else %}
+<div class="w3-round-xlarge studyProgressOuter">
+  {% if index > 0 %}
+  <div class="w3-container w3-blue w3-round-xlarge studyProgressInner" style="width: calc({{ index + 1 }}% / {{ total }} * 100);"></div>
+  {% endif %}
+</div>
+{% endif %}
+
+<br>
+
 
 {% if index + 1 >= total %}
   <button id="exit_button" form="responseForm" type="submit">Exit</button>

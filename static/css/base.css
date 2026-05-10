@@ -170,3 +170,20 @@ button:not(.button-ignore):not(.btn-ignore-all) {
   background-color: var(--secondary-bg-color);
   box-shadow: 0 4px 10px 0 var(--shadow-color), 0 4px 20px 0 var(--shadow-color);
 }
+
+input[type="color"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 30px;
+  height: 34px;
+  border: none;
+  /* border-radius: 50%; */
+  padding: 0;
+  background-color: transparent;
+  outline: none;
+}
+
+input[type="color"]::-webkit-color-swatch {
+  border-radius: 50%;
+  border: 1px solid var(--text-color);
+}

@@ -163,3 +163,29 @@
   background-color: color-mix(in hsl, var(--accent-color), rgb(255, 255, 255) 30%);
   /* color: white; */
 }
+
+
+
+
+
+
+
+.studyProgressInner {
+  background-color: var(--accent-color) !important;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  margin-left: -2px;
+}
+
+.studyProgressOuter {
+  margin: auto;
+  width: 35%;
+  height: 30px;
+  background-color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%);
+}
+
+.studyProgressOuter.progressFull {
+  height: 30px;
+  background-color: var(--accent-color);
+}
