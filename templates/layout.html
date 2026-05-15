@@ -80,5 +80,15 @@
     </nav>
     {% block body %}
     {% endblock %}
+
+    <!-- remove animation if animation setting is false -->
+    {% if settings[10] == 0 %}
+        <style>
+            * {
+                transition: none !important;
+                animation: none !important;
+            }
+        </style>
+    {% endif %}
 </body>
 </html>

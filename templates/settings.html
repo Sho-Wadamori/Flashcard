@@ -20,6 +20,16 @@
 <button style="width: 100%;" onclick="window.location='{{ url_for('theme') }}'">Theme</button>
 
 <br>
+
+<form action="{{ url_for('settings') }}" class="animimationToggle">
+    <label for="animToggle">Animations</label>
+    <input type="checkbox" name="animToggle" id="animToggle"><br>
+
+    <br>
+    
+    <button type="submit">Save Changes</button>
+</form>
+<br>
 <br>
 
 <form action="{{ url_for('settings') }}" method="POST" id="removeEmail">
