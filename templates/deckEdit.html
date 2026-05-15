@@ -11,7 +11,7 @@
 
 <!-- Deck creation form -->
 <form id="deckForm" action="{{ url_for('editDeck', id=results[0][0]) }}" method="POST" autocomplete="off">
-    <p style="color: rgb(168, 46, 46);">* Indicates required question</p>
+    <p style="color: var(--warning-color);">* Indicates required question</p>
     <input id="deckInput" name="deckName" value="{{ results[0][1] }}" type="hidden" required>
     <input id="descriptionInput" name="deckDescription" value="{{ results[0][2] }}" type="hidden">
     <!-- <label>Cover Image:</label>

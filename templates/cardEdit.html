@@ -11,7 +11,7 @@
 
 <!-- Card creation form -->
 <form id="cardForm" action="{{ url_for('editCard', id=deck_info[1], card_id=cards[0]) }}" method="POST" autocomplete="off">
-    <p style="color: rgb(168, 46, 46);">* Indicates required question</p>
+    <p style="color: var(--warning-color);">* Indicates required question</p>
 
     <input id="questionInput" maxlength="700" name="cardQuestion" type="hidden" value="{{ cards[1] }}" required>
     <input id="answerInput" maxlength="700" name="cardAnswer" type="hidden" value="{{ cards[2] }}" required>

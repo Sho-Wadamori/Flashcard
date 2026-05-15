@@ -179,7 +179,7 @@ def uservar():
     settingsSQL = """
         SELECT settings_bg1, settings_bg2, settings_text,
         settings_accentBG, settings_accentTXT, settings_cardBG,
-        settings_cardTXT, settings_shadow, settings_fontSize,
+        settings_cardTXT, settings_warning, settings_shadow, settings_fontSize,
         settings_animation
         FROM Settings
         WHERE settings_userID = ?
@@ -1255,7 +1255,19 @@ def stats():
 @app.route('/settings/', methods=['POST', 'GET'])
 def settings():
     # if request.method == "POST":
-    return render_template("settings.html", userID=userID())
+    settings_sql = """
+        SELECT settings_animation, settings_fontSize
+        FROM Settings
+        WHERE settings_userID = ?;
+    """
+    settings = query_db(settings_sql, (userID(),))[0]
+
+    return render_template(
+        "settings.html",
+        userID=userID(),
+        animation=settings[0],
+        fontSize=settings[1]
+    )
     # else:
 
 
@@ -1276,12 +1288,15 @@ def theme():
         accentTXT = request.form.get('accentTXT')
         card = request.form.get('card')
         cardTXT = request.form.get('cardTXT')
+        warning = request.form.get('warning')
+        fontSize = request.form.get('fontSize')
 
         update_settings = """
             UPDATE Settings
             SET settings_bg1 = ?, settings_bg2 = ?, settings_text = ?,
             settings_accentBG = ?, settings_accentTXT = ?, settings_cardBG = ?,
-            settings_cardTXT = ?, settings_shadow = ?
+            settings_cardTXT = ?, settings_warning = ?, settings_shadow = ?,
+            settings_fontSize = ?
             WHERE settings_userID = ?;
         """
         get_db().execute(update_settings, (
@@ -1292,7 +1307,9 @@ def theme():
             accentTXT,
             card,
             cardTXT,
+            warning,
             full_color,
+            fontSize,
             userID()
         ),)
         get_db().commit()
@@ -1302,18 +1319,23 @@ def theme():
     settingsSQL = """
         SELECT settings_bg1, settings_bg2, settings_text,
         settings_accentBG, settings_accentTXT, settings_cardBG,
-        settings_cardTXT, settings_shadow, settings_fontSize,
-        settings_animation
+        settings_cardTXT, settings_warning, settings_shadow,
+        settings_fontSize, settings_animation
         FROM Settings
         WHERE settings_userID = ?
     """
     settings = query_db(settingsSQL, (userID(),))[0]
 
-    shadow_hex = settings[7]
-    shadow_color = shadow_hex[:7]
+    shadow_hex = settings[8]
+    shadow_color = shadow_hex[:8]
     shadow_alpha = round(int(shadow_hex[7:], 16) / 255, 2)
 
-    return render_template("theme.html", settings=settings, shadow_color=shadow_color, shadow_alpha=shadow_alpha)
+    return render_template(
+        "theme.html",
+        settings=settings,
+        shadow_color=shadow_color,
+        shadow_alpha=shadow_alpha
+    )
 
 
 # ---------- Public Decks ----------

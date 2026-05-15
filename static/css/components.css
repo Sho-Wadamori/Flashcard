@@ -6,7 +6,7 @@
   border-radius: 8px;
   color: rgb(255, 255, 255);
   text-align: center;
-  font-size: large;
+  font-size: large !important;
   padding-right: 60px;
   padding-left: 60px; /* so text does not overlap w/ X button */
 }
@@ -23,7 +23,7 @@
 
 /* Text-Only Alert Messages */
 .simpleAlert.error {
-  color: rgb(219, 46, 46);
+  color: var(--warning-color);
   margin-bottom: 1em;
 }
 .simpleAlert.success {
@@ -46,7 +46,7 @@
   border: none;
   color: #ffffff;
   justify-content: center;
-  font-size: 25px;
+  font-size: 1.5rem !important;
   transform: translateY(-50%);
 }
 
@@ -128,7 +128,6 @@
   left: 50%;
   transform: translate(-50%, 10px); /* centre horizontally */
   bottom: 30px;
-  font-size: 17px;
   opacity: 0;
   /* x y blur spread */
   box-shadow: 0 5px 8px 3px var(--shadow-color);

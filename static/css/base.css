@@ -8,6 +8,7 @@
   --accent-text-color: #ffffff;
   --card-bg-color: #f1f1f1;
   --card-text-color: #000000;
+  --warning-color: #ff5252;
   --shadow-color: #00000033;
  
 }
@@ -186,4 +187,29 @@ input[type="color"] {
 input[type="color"]::-webkit-color-swatch {
   border-radius: 50%;
   border: 1px solid var(--text-color);
+}
+
+/* override w3.css font sizes */
+h1 {
+  font-size: 2.5em;
+}
+
+h2 {
+  font-size: 2em;
+}
+
+h3 {
+  font-size: 1.6em;
+}
+
+h4 {
+  font-size: 1.3em;
+}
+
+h5 {
+  font-size: 1.2em;
+}
+
+h6 {
+  font-size: 1em;
 }
