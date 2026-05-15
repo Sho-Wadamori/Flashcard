@@ -1082,6 +1082,18 @@ def profile():
 
     if request.method == "POST":
         action = request.form.get('action')
+        Delete = request.form.get('DeleteAccount')
+        Reset = request.form.get('ResetAccount')
+
+        print(f"Delete: {Delete} | Reset: {Reset}")
+
+        if Delete == 'True':
+            print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA DELDEL")
+            return redirect(url_for('profile'))
+
+        if Reset == 'True':
+            print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA REST")
+            return redirect(url_for('profile'))
 
         if action == "remove":
             removeEmail = """

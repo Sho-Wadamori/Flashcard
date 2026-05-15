@@ -91,13 +91,67 @@
 <!-- danger zone -->
 <div class="dangerZoneContainer">
     <h1 class="dangerZoneText">DANGER ZONE</h1>
-    <div class="dangerZoneButtons">
-        <button class="dangerZoneButton">DELETE ACCOUNT</button>
-        <button class="dangerZoneButton">RESET ACCOUNT</button>
-    </div>
+    <form class="dangerZoneButtons" action="{{ url_for('profile') }}" method="POST">
+        <input name="DeleteAccount" id="DeleteAccount" type="hidden" value="False">
+        <input name="ResetAccount" id="ResetAccount" type="hidden" value="False">
+        <button type="button" class="dangerZoneButton button-ignore" onclick="showConfirm(this.form, 'DELETE')">DELETE ACCOUNT</button>
+        <button type="button" class="dangerZoneButton button-ignore" onclick="showConfirm(this.form, 'RESET')">RESET ACCOUNT</button>
+    </form>
 </div>
 
 <br>
 
+<!-- confirmation overlay -->
+<div id="overlay" onclick="off()"> <!-- Turn off overlay when clicking outside -->
+  <div class="confirmation-box" onclick="event.stopPropagation()">
+    <p style="color: var(--text-color);">Are you sure you want to delete your account?</p>
+    <button onclick="confirmDelete()" class="button-ignore" style="background-color: var(--warning-color); color: white;">Yes</button> 
+    <button onclick="off()" class="button-ignore" style="border: 2px solid var(--warning-color); color: var(--warning-color); background-color: white">No</button>
+  </div>
+</div>
+
+
+<script>
+document.getElementById("ResetAccount").value = 'False'
+document.getElementById("DeleteAccount").value = 'False'
+
+// ----- Delete Confirmation -----
+// turn on confirmation overlay
+function on() {
+  document.getElementById("overlay").style.display = "block";
+}
+
+// turn off confirmation overlay
+function off() {
+  document.getElementById("overlay").style.display = "none";
+}
+
+// variable to store form info
+let formToDelete = null; 
+
+// when delete button is clicked
+function showConfirm(form, name) {
+    buttonName = name
+    formToDelete = form; // Store the form to send if confirmed
+    on(); // Show confirmation overlay
+}
+
+// if user confirms delete
+function confirmDelete() {
+    if (formToDelete) {
+        if (buttonName == "DELETE") {
+            document.getElementById("DeleteAccount").value = 'True'
+            document.getElementById("ResetAccount").value = 'False'
+        }
+        if (buttonName == "RESET") {
+            document.getElementById("ResetAccount").value = 'True'
+            document.getElementById("DeleteAccount").value = 'False'
+        }
+        formToDelete.submit(); //submit the stored form
+        formToDelete = null; // Clear the stored form
+    }
+    off(); // Hide confirmation overlay
+}
+</script>
 
 {% endblock %}
