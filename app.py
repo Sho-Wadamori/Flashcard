@@ -1266,7 +1266,24 @@ def stats():
 # ---------- Settings ----------
 @app.route('/settings/', methods=['POST', 'GET'])
 def settings():
-    # if request.method == "POST":
+    if request.method == "POST":
+        anim = request.form.get('animToggle')
+        print(anim)
+        if anim is None:
+            enable = 0
+        else:
+            enable = 1
+
+        update_settings = """
+            UPDATE Settings
+            SET settings_animation = ?
+            WHERE settings_userID = ?;
+        """
+        get_db().execute(update_settings, (enable, userID()),)
+        get_db().commit()
+
+        flash("✔ Changes Saved!", "success")
+
     settings_sql = """
         SELECT settings_animation, settings_fontSize
         FROM Settings
