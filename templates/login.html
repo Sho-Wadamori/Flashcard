@@ -25,11 +25,23 @@
         {%endwith%}
         
         <form action="{{ url_for('login') }}" method="POST" class="login">
-            <input type="text" name="username" maxlength="25" id="username" placeholder="Username"><br><br>
-            <input type="password" name="password" minlength="8" maxlength="128" id="password" placeholder="Password"><br><br>
-            <input type="checkbox" onclick="passwordReveal()" id="showPasswords" class="showPasswords">
-            <label for="showPasswords" class="showPasswords">Show Password</label><br><br>
-            <input type="submit" value="Sign In" class="button-ignore"><br>
+            <div class="inputContainer">
+                <div class="inputIcon">{% include "icons/username.html" %}</div>
+                <input type="text" name="username" maxlength="25" id="username" placeholder="Username">
+            </div>
+            <br>
+            <div class="inputContainer">
+                <div class="inputIcon">{% include "icons/password.html" %}</div>
+                <input type="password" name="password" minlength="8" maxlength="128" id="password" placeholder="Password">
+            </div>
+            <br>
+            <div class="showPasswordContainer">
+                <input type="checkbox" onclick="passwordReveal()" id="showPasswords" class="showPasswords">
+                <label for="showPasswords" class="showPasswords">Show Password</label>
+            </div>
+            <br>
+            <input type="submit" value="Sign In" class="button-ignore">
+            <br>
         </form>
         <p>New to Flashcard Maker?</p> <a href="{{ url_for('signup') }}" class="btn-ignore-all" style="color: rgb(14, 103, 161); text-decoration: underline;">Sign up here!</a>
     </div>
@@ -42,7 +54,9 @@
             if (password.type === "password") {
                 password.type = "text";
                 confirm.type = "text";
-            } else {
+            }
+            
+            else {
                 password.type = "password";
                 confirm.type = "password";
             }

@@ -49,6 +49,10 @@ form.login {
   cursor: pointer;
   margin-right: 0.5rem;
 }
+.showPasswords[type=checkbox] {
+  width: 16px;
+  height: 16px;
+}
 
 /* submit button */
 .login input[type="submit"] {
@@ -56,4 +60,30 @@ form.login {
   color: white;
   border: none;
   cursor: pointer;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+}
+
+.inputContainer {
+  position: relative;
+}
+
+.inputContainer input[type="text"],
+.inputContainer input[type="password"] {
+  padding-left: 35px;
+  padding-right: 35px;
+}
+
+.showPasswordContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

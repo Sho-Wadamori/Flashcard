@@ -135,8 +135,8 @@
 <!-- scroll to top button -->
 <div class="fixed-button">
     <a onclick="window.scrollTo({top: 0, behavior: 'smooth'});">
-      <img src="{{ url_for('static', filename='assets/scroll.svg') }}" alt="Scroll To Top Icon" title="Scroll To Top">
-    </a>    
+      {% include "icons/scroll.html" %}
+    </a>
 </div>
 
 

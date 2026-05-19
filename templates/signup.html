@@ -25,11 +25,24 @@
         {%endwith%}
 
         <form action="{{ url_for('signup') }}" method="POST" class="login">
-            <input type="text" name="username" maxlength="25" id="username" placeholder="Username (max 25 characters)"><br>
-            <input type="password" name="password" minlength="8" maxlength="128" id="password" placeholder="Password (min 8 characters)"><br>
-            <input type="password" name="confirm_password" minlength="8" maxlength="128" id="confirm_password" placeholder="Confirm Password"><br><br>
-            <input type="checkbox" onclick="passwordReveal()" id="showPasswords" class="showPasswords">
-            <label for="showPasswords" class="showPasswords">Show Passwords</label><br><br>
+            <div class="inputContainer">
+                <div class="inputIcon">{% include "icons/username.html" %}</div>
+                <input type="text" name="username" maxlength="25" id="username" placeholder="Username (max 25 characters)">
+            </div>
+            <div class="inputContainer">
+                <div class="inputIcon">{% include "icons/password.html" %}</div>
+                <input type="password" name="password" minlength="8" maxlength="128" id="password" placeholder="Password (min 8 characters)">
+            </div>
+            <div class="inputContainer">
+                <div class="inputIcon">{% include "icons/password.html" %}</div>
+                <input type="password" name="confirm_password" minlength="8" maxlength="128" id="confirm_password" placeholder="Confirm Password">
+            </div>
+            <br>
+            <div class="showPasswordContainer">
+                <input type="checkbox" onclick="passwordReveal()" id="showPasswords" class="showPasswords">
+                <label for="showPasswords" class="showPasswords">Show Passwords</label>
+            </div>
+            <br>
             <input type="submit" value="Sign up" class="button-ignore">
         </form>
         <p>Already have an account?</p> <a href="{{ url_for('login') }}" class="btn-ignore-all" style="color: rgb(14, 103, 161); text-decoration: underline;">Sign in here!</a>

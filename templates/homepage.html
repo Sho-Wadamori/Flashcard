@@ -73,37 +73,34 @@
             <p>Skip</p>
         </div>
     </div>
-
+<!-- 
     <br><div class="categoryHeaders">
         {% include "icons/recent.html" %}
         <h2>Recent Decks Studied</h2>
     </div>
     <div class="three-column">
-        <div onclick="window.location='{{ url_for('Decks') }}'" style="text-decoration: none; cursor: pointer;"> <!-- Make it div to stop conflicts w/ buttons inside -->
+        <div onclick="window.location='{{ url_for('Decks') }}'" style="text-decoration: none; cursor: pointer;">
             <div class="w3-card-4">
-                <!-- the name then the description -->
                 <h1 class="scientific ellipse-multi">DECK NAME</h1>
                 <p>---------------</p>
                 <p style="color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%);" class="scientific ellipse-multi">DECK DESCRIPTION</p>
             </div>
         </div>
-        <div onclick="window.location='{{ url_for('Decks') }}'" style="text-decoration: none; cursor: pointer;"> <!-- Make it div to stop conflicts w/ buttons inside -->
+        <div onclick="window.location='{{ url_for('Decks') }}'" style="text-decoration: none; cursor: pointer;">
             <div class="w3-card-4">
-                <!-- the name then the description -->
                 <h1 class="scientific ellipse-multi">DECK NAME</h1>
                 <p>---------------</p>
                 <p style="color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%);" class="scientific ellipse-multi">DECK DESCRIPTION</p>
             </div>
         </div>
-        <div onclick="window.location='{{ url_for('Decks') }}'" style="text-decoration: none; cursor: pointer;"> <!-- Make it div to stop conflicts w/ buttons inside -->
+        <div onclick="window.location='{{ url_for('Decks') }}'" style="text-decoration: none; cursor: pointer;">
             <div class="w3-card-4">
-                <!-- the name then the description -->
                 <h1 class="scientific ellipse-multi">DECK NAME</h1>
                 <p>---------------</p>
                 <p style="color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%);" class="scientific ellipse-multi">DECK DESCRIPTION</p>
             </div>
         </div>
-    </div><br>
+    </div><br> -->
 
     {% endif %}
     
@@ -176,9 +173,10 @@
     </div>
 </div>
 
+<!-- scroll to top button -->
 <div class="fixed-button">
     <a onclick="window.scrollTo({top: 0, behavior: 'smooth'});">
-        <img src="{{ url_for('static', filename='assets/scroll.svg') }}" alt="Scroll To Top Icon" title="Scroll To Top">
+      {% include "icons/scroll.html" %}
     </a>
 </div>
 

@@ -90,12 +90,17 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: white;
   opacity: 0;
   pointer-events: none;
   /* smoothly appear from below */
   transform: translateY(10px);
   transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
+}
+
+.scroll {
+  width: 225px;
+  height: 225px;
+  scale: 0.25;
 }
 
 /* smoothly reveal button */
