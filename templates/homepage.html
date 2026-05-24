@@ -38,25 +38,21 @@
     </div>
     <div class="statsContainer">
         <div class="statsDaily">
-            <h3>Today's Statistics</h3>
+            <!-- <h1 style="font-size: 2rem;">CURRENT STREAK</h1> -->
             <div class="statsInner">
-                <div>
-                    <h5 style="margin-bottom: 0;">Current Streak</h5>
-                    <h2>{{ currentStreak }}</h2>
-
-                    <br>
-                    
-                    <h5 style="margin-bottom: 0;">Cards Studied Today</h5>
-                    <h2>0</h2>
-                </div>
-                <div>
-                    <h1>GRAPH HERE</h1>
-                </div>
+                {% if currentStreak == 0 %}
+                <h2>You do not have a streak yet...</h2>
+                <h4>Study a deck to begin a streak!</h4>
+                {% else %}
+                <h2>I'm on a</h2>
+                <h1 style="font-size: 8rem; margin-top: -20px; margin-bottom: -20px;">{{ currentStreak }}</h1>
+                <h2>day streak!!</h2>
+                {% endif %}
             </div>
         </div>
 
         <div class="statsWeekly">
-            <h3>Weekly Summary</h3>
+            <h3>All Time Stats</h3>
             <div class="statsInner">
                 <div style="display: flex; flex-direction: column;">
                     <h5 style="margin-bottom: 0;">Time Studied This Week</h5>
