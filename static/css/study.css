@@ -84,10 +84,10 @@
   position: relative;
   display: block;
   margin: 0 auto;
-  border-bottom: 1px dotted rgb(54, 54, 54); /* Dotted underline */
-  cursor: help; /* Change cursor to point */
+  border-bottom: 1px dotted rgb(54, 54, 54);
+  cursor: help;
   text-align: center;
-  width: fit-content; /* Shrink width to fit content */
+  width: fit-content;
 }
 
 .tooltiptext {
@@ -104,9 +104,9 @@
   position: absolute;
   z-index: 1;
   padding: 5px;
-  width: max-content; /* shrink width to fit content */
-  max-width: 250px; /* maximum width the tooltip can have */
-  white-space: normal; /* allow text to wrap */
+  width: max-content;
+  max-width: 250px;
+  white-space: normal;
 }
 
 /* hide the tooltip text on unhover w/ animation */
@@ -143,8 +143,8 @@
   box-shadow: 0 1px 13px var(--shadow-color);
   border-radius: 8px;
   cursor: pointer;
-  -webkit-user-select: none; /* Safari */
-  -ms-user-select: none; /* IE 10 and IE 11 */
+  -webkit-user-select: none;
+  -ms-user-select: none;
   user-select: none;
   width: 135px;
   text-align: center;
@@ -155,13 +155,11 @@
 /* new radio button selected */
 .radio-buttons input[type="radio"]:checked + label {
   background-color: color-mix(in hsl, var(--accent-color), rgb(26, 26, 26) 40%);
-  /* color: white; */
 }
 
 /* new radio button on hover */
 .radio-buttons label:hover {
   background-color: color-mix(in hsl, var(--accent-color), rgb(255, 255, 255) 30%);
-  /* color: white; */
 }
 
 

@@ -66,8 +66,8 @@
 
     question.addEventListener('beforeinput', (element) => {
         const currentLength = element.target.innerText.length
-        console.log(currentLength)
-        console.log(element.inputType)
+
+        // target insert inputs and pastes when > 700 chars
         if (currentLength >= 700 && element.inputType.startsWith('insert')) {
             element.preventDefault()
 
@@ -76,8 +76,8 @@
 
     answer.addEventListener('beforeinput', (element) => {
         const currentLength = element.target.innerText.length
-        console.log(currentLength)
-        console.log(element.inputType)
+
+        // target insert inputs and pastes when > 700 chars
         if (currentLength >= 700 && element.inputType.startsWith('insert')) {
             element.preventDefault()
 
@@ -86,8 +86,8 @@
 
     hint.addEventListener('beforeinput', (element) => {
         const currentLength = element.target.innerText.length
-        console.log(currentLength)
-        console.log(element.inputType)
+
+        // target insert inputs and pastes when > 400 chars
         if (currentLength >= 400 && element.inputType.startsWith('insert')) {
             element.preventDefault()
 

@@ -66,8 +66,8 @@
 
     name.addEventListener('beforeinput', (element) => {
         const currentLength = element.target.innerText.length
-        console.log(currentLength)
-        console.log(element.inputType)
+        
+        // target insert inputs and pastes when > 200 chars
         if (currentLength >= 200 && element.inputType.startsWith('insert')) {
             element.preventDefault()
 
@@ -76,8 +76,8 @@
 
     description.addEventListener('beforeinput', (element) => {
         const currentLength = element.target.innerText.length
-        console.log(currentLength)
-        console.log(element.inputType)
+
+        // target insert inputs and pastes when > 400 chars
         if (currentLength >= 400 && element.inputType.startsWith('insert')) {
             element.preventDefault()
 

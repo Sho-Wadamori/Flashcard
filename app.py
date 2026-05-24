@@ -30,8 +30,7 @@ import random  # for randomising card list
 # from werkzeug.utils import secure_filename  # for file uploads
 from datetime import (
     datetime,
-    timezone,
-    date
+    timezone
 )  # for time formatting
 
 from werkzeug.security import (
@@ -261,8 +260,10 @@ def home():
 @app.route('/decks/', methods=['GET', 'POST'])
 def Decks():
     if request.method == 'POST':
+        # get bookmarked deck's ID
         bookmarkID = request.form.get('bookmarkID')
 
+        # check whether bookmarked deck is already bookmarked
         clicked_bookmark = """
             SELECT deck_bookmarked
             FROM Decks
@@ -271,6 +272,7 @@ def Decks():
         """
         deckBookmark = query_db(clicked_bookmark, (bookmarkID, userID(),))
 
+        # get number of already bookmarked decks
         all_bookmark = """
             SELECT COUNT(*)
             FROM Decks
@@ -283,7 +285,9 @@ def Decks():
             flash("⚠ Something Went Wrong...", "error")
             return redirect(request.url)
 
+        # if bookmarking
         if deckBookmark[0][0] == 0:
+            # if total bookmarked is >= 3 return error
             if totalBookmarks >= 3:
                 flash("""
                     ⚠ You Can Only Have 3 Decks Bookmarked.
@@ -291,6 +295,7 @@ def Decks():
                 """, "error")
                 return redirect(request.url)
 
+            # else update the deck_bookmarked to 1
             update_bookmark = """
                 UPDATE Decks
                 SET deck_bookmarked = 1
@@ -300,6 +305,7 @@ def Decks():
             get_db().execute(update_bookmark, (bookmarkID, userID(),))
             get_db().commit()
 
+        # if unbookmarking, set deck_bookmarked to 0
         else:
             update_bookmark = """
                 UPDATE Decks
@@ -724,7 +730,10 @@ def Study(id, index):
 # ---------- create a new deck ----------
 @app.route('/decks/create/', methods=['GET', 'POST'])
 def createDeck():
+    # check if user is logged in
     if not userID():
+        session.pop('username', None)
+        session.pop('userID', None)
         flash("⚠ You Are Not Logged In. Please Log In to Create a Deck.",
               "error")
         return redirect(url_for('Decks'))
@@ -1038,7 +1047,9 @@ def signup():
             flash("⚠ Username Already Exists.", "error")
             return render_template("signup.html")
 
+        # if all checks pass update user info into database
         else:
+            # hash passwords
             hashed_password = generate_password_hash(password)
             usersql = """
                     INSERT INTO Users (
@@ -1068,6 +1079,16 @@ def signup():
 # ---------- profile ----------
 @app.route('/profile/', methods=['GET', 'POST'])
 def profile():
+    # check if user is logged in
+    if not userID():
+        session.pop('username', None)
+        session.pop('userID', None)
+        flash("""
+            ⚠ You Are Not Logged In. Please Log In to See Your Profile.
+        """, "error")
+        return redirect(url_for('home'))
+
+    # get email
     getEmail = """
         SELECT email
         FROM Users
@@ -1078,9 +1099,9 @@ def profile():
         email = ""
     else:
         email = emailSQL
-    print(f"EMAIL: {email}")
 
     if request.method == "POST":
+        # get forms
         action = request.form.get('action')
         Delete = request.form.get('DeleteAccount')
         Reset = request.form.get('ResetAccount')
@@ -1095,6 +1116,7 @@ def profile():
             print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA REST")
             return redirect(url_for('profile'))
 
+        # remove email if form is remove
         if action == "remove":
             removeEmail = """
                 UPDATE Users
@@ -1106,10 +1128,9 @@ def profile():
             flash("Recovery email removed.", "success")
             return redirect(url_for('profile'))
 
+        # change email if form is change
         elif action == "change":
             newEmail = request.form['newEmail']
-
-            print(newEmail)
 
             update_email = """
                 UPDATE Users
@@ -1123,6 +1144,7 @@ def profile():
             return redirect(url_for('profile'))
 
     else:
+        # check if user is logged in
         if not userID():
             session.pop('username', None)
             session.pop('userID', None)
@@ -1140,6 +1162,7 @@ def profile():
 
         results = query_db(sql, (userID(),))
 
+        # check if results exists just in case
         if not results:
             flash("⚠ User Details Not Found. Logging Out.", "error")
             return redirect(url_for('logout'))
@@ -1173,12 +1196,14 @@ def logout():
 # ---------- stats ----------
 @app.route('/stats/')
 def stats():
+    # check if user is logged in
     if not userID():
         session.pop('username', None)
         session.pop('userID', None)
         flash("⚠ You Are Not Logged In. Please Log In to See Stats.", "error")
         return redirect(url_for('home'))
 
+    # get correct and incorrect totals
     userAnswerStats = """
             SELECT SUM(stats_correct), SUM(stats_incorrect)
             FROM UserCardStats
@@ -1186,6 +1211,7 @@ def stats():
         """
     answer_stats = query_db(userAnswerStats, (userID(),))
 
+    # get total number of decks
     userDeckStats = """
             SELECT COUNT(deck_ID)
             FROM Decks
@@ -1193,6 +1219,7 @@ def stats():
     """
     deck_stats = query_db(userDeckStats, (userID(),))
 
+    # get total number of cards
     userCardStats = """
             SELECT COUNT(Flashcards.card_ID)
             FROM Flashcards, Decks
@@ -1200,6 +1227,7 @@ def stats():
     """
     card_stats = query_db(userCardStats, (userID(),))
 
+    # get user stats
     userStats = """
             SELECT user_name, user_creation, user_streak
             FROM Users
@@ -1207,8 +1235,10 @@ def stats():
     """
     user_stats = query_db(userStats, (userID(),))
 
+    # format join date to DD/Month/YYYY
     joinDate = format_date(user_stats[0][1])
 
+    # get num of private decks
     privateStats = """
         SELECT COUNT(*)
         FROM Decks
@@ -1217,6 +1247,7 @@ def stats():
     """
     private_stats = query_db(privateStats, (userID(),))
 
+    # get num of unlisted decks
     unlistedStats = """
         SELECT COUNT(*)
         FROM Decks
@@ -1225,6 +1256,7 @@ def stats():
     """
     unlisted_stats = query_db(unlistedStats, (userID(),))
 
+    # get num of public decks
     publicStats = """
         SELECT COUNT(*)
         FROM Decks
@@ -1233,8 +1265,14 @@ def stats():
     """
     public_stats = query_db(publicStats, (userID(),))
 
-    correctPercent = round((100 * answer_stats[0][0]) / (answer_stats[0][0] + answer_stats[0][1]), 2)
+    # calculate correct %
+    correctPercent = round(
+        (100 * answer_stats[0][0]) / (
+                answer_stats[0][0] + answer_stats[0][1]
+            ), 2
+        )
 
+    # get all study history data
     studyHistory = """
         SELECT StudyHistory.study_date, StudyHistory.study_cardCount,
         StudyHistory.study_correct, StudyHistory.study_incorrect,
@@ -1266,14 +1304,26 @@ def stats():
 # ---------- Settings ----------
 @app.route('/settings/', methods=['POST', 'GET'])
 def settings():
+    # check if user is logged in
+    if not userID():
+        session.pop('username', None)
+        session.pop('userID', None)
+        flash("""
+            ⚠ You Are Not Logged In. Please Log In to Change Settings.
+        """, "error")
+        return redirect(url_for('home'))
+
     if request.method == "POST":
+        # get animation setting
         anim = request.form.get('animToggle')
-        print(anim)
+
+        # check if animation is enabled
         if anim is None:
             enable = 0
         else:
             enable = 1
 
+        # update database with setting
         update_settings = """
             UPDATE Settings
             SET settings_animation = ?
@@ -1297,19 +1347,30 @@ def settings():
         animation=settings[0],
         fontSize=settings[1]
     )
-    # else:
 
 
 # ---------- Theme Changer ----------
 @app.route('/settings/theme', methods=['POST', 'GET'])
 def theme():
+    # check if user is logged in
+    if not userID():
+        session.pop('username', None)
+        session.pop('userID', None)
+        flash("""
+            ⚠ You Are Not Logged In. Please Log In to Change Themes.
+        """, "error")
+        return redirect(url_for('home'))
+
     if request.method == "POST":
+        # get colour and alpha form values
         colour = request.form.get('shadow')
         alpha = float(request.form.get('shadow-alpha'))
 
+        # combine the colour and alpha to get a 8 digit hex code
         alpha_hex = format(round(alpha * 255), '02x')
         full_color = f"{colour}{alpha_hex}"
 
+        # get form data from other colour pickers
         bg = request.form.get('bg')
         bg2 = request.form.get('bg2')
         text = request.form.get('text')
@@ -1320,6 +1381,7 @@ def theme():
         warning = request.form.get('warning')
         fontSize = request.form.get('fontSize')
 
+        # update themes
         update_settings = """
             UPDATE Settings
             SET settings_bg1 = ?, settings_bg2 = ?, settings_text = ?,
@@ -1345,6 +1407,7 @@ def theme():
 
         flash("✔ Changes Saved!", "success")
 
+    # get themes
     settingsSQL = """
         SELECT settings_bg1, settings_bg2, settings_text,
         settings_accentBG, settings_accentTXT, settings_cardBG,
@@ -1355,6 +1418,7 @@ def theme():
     """
     settings = query_db(settingsSQL, (userID(),))[0]
 
+    # convert 8 digit hex to alpha value from 0 to 1
     shadow_hex = settings[8]
     shadow_color = shadow_hex[:8]
     shadow_alpha = round(int(shadow_hex[7:], 16) / 255, 2)
@@ -1370,8 +1434,10 @@ def theme():
 # ---------- Public Decks ----------
 @app.route('/public/')
 def public():
+    # get form data
     sort_by = request.args.get('sort_by')
     order = request.args.get('order')
+    # limit allowed values
     allowed_sort = {'deck_creation', 'deck_name', 'deck_description'}
     allowed_order = {'ASC', 'DESC'}
 

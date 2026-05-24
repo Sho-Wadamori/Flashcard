@@ -25,14 +25,14 @@
 */
 
 html {
-  background-color: var(--primary-bg-color); /* to fix bg colour issues for some browsers/extensions */
+  background-color: var(--primary-bg-color);
   color: var(--text-color);
   height: 100%;
   scrollbar-color: var(--secondary-bg-color) var(--primary-bg-color)
 }
 body {
   max-width: 1920px; /* limit width for ultra wide screens */
-  margin: 0 auto; /* centre */
+  margin: 0 auto; /* centre it */
 }
 
 
@@ -148,7 +148,6 @@ button:not(.button-ignore):not(.btn-ignore-all) {
 
 /* blue link text */
 .blue-text {
-  /* color: rgb(14, 103, 161) !important; */
   color: color-mix(in hsl, var(--accent-color), rgb(255, 255, 255) 40%);
   text-decoration: underline !important;
 }
@@ -164,7 +163,7 @@ button:not(.button-ignore):not(.btn-ignore-all) {
   padding: 2rem;
   box-sizing: border-box;
   border-radius: 8px;
-  word-break: break-word; /* allow long text to wrap */
+  word-break: break-word;
   overflow: visible;
   white-space: normal;
   max-width: 100%;
@@ -172,24 +171,24 @@ button:not(.button-ignore):not(.btn-ignore-all) {
   box-shadow: 0 4px 10px 0 var(--shadow-color), 0 4px 20px 0 var(--shadow-color);
 }
 
+/* hide original colour input */
 input[type="color"] {
   -webkit-appearance: none;
   -moz-appearance: none;
   width: 30px;
   height: 34px;
   border: none;
-  /* border-radius: 50%; */
   padding: 0;
   background-color: transparent;
   outline: none;
 }
-
+/* make new one that is rounded and has a border */
 input[type="color"]::-webkit-color-swatch {
   border-radius: 50%;
   border: 1px solid var(--text-color);
 }
 
-/* override w3.css font sizes */
+/* override w3.css font sizes so changes in font sizes are applied */
 h1 {
   font-size: 2.5em;
 }
@@ -212,4 +211,9 @@ h5 {
 
 h6 {
   font-size: 1em;
+}
+
+/* remove random white dot */
+.MJX_LiveRegion, .MJX_HoverRegion, .MJX_ToolTip {
+  background-color: transparent !important;
 }
