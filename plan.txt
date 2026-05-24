@@ -29,12 +29,17 @@ login.html - login
 signup.html - sign up
 profile.html - profile info, editing, and logout
 stats.html - user stats
+theme.html - theme changer
+settings.html - settings page
+
 test.html - test page
 
 alerts.html - alert banner used in most pages
 charInputter.html - character inputter
 MathJaxHelp.html - mathjax help popup used in card and deck editing pages
+share.html - share popup
 
+/templates/icons/... - svg images in html format so colours can be changed w/ css
 
 style.css - css stylesheet file
 database.db - database
@@ -74,11 +79,18 @@ keyboard shortcut
  - https://ralzohairi.medium.com/adding-custom-keyboard-shortcuts-to-your-website-b4151fda2e7a
 Special character inputter
 ordering of decks/cards
-
+filtering cards/decks
+sharing flashcards
+ - public board (needs safety consideration)
+stats 
+ - user(cards learned, cards due, success rate, study streak, longest streak, time studied)
+ - per card(times wrong, times correct, total attempted, avg time to answer, time studied)
+homepage
+ - stats (store in User table)
+ - public board
 
 
 Things to add: 
-filtering cards/decks
 spaced repetition
 flag difficult cards, then study flagged cards (flagged column in flashcard table)
 question difficuly(appear more/less frequently)
@@ -88,7 +100,6 @@ search decks/flashcards (fuzzy)
  - Ifrit, elasticsearch, jina, or just use sql LIKE operator
 
 sharing flashcards
- - public board (needs safety consideration)
  - rating
  - share only to certain user
  - comments (needs safety consideration)
@@ -97,8 +108,6 @@ image or audio upload
  - werkzeug.utils.secure_filename
 
 stats 
- - user(cards learned, cards due, success rate, study streak, longest streak, time studied)
- - per card(times wrong, times correct, total attempted, avg time to answer, time studied)
  - study heatmap/calendar
 
 homepage
@@ -106,8 +115,6 @@ homepage
  - study Now | View Decks | Create Deck
  - bookmark/favourite decks (fav column in Decks table)
  - Recents (store recent 3 - 5 decks in User table, append later.)
- - stats (store in User table)
- - public board
  - fun trivia? (cycle through trivia list daily)
 
 
@@ -127,6 +134,11 @@ colourblind mode
 ---------------------------------------------------
 
 Appearances:
+Done:
+dark more/theme colour
+customisation of deck style, colour, background, font, etc (https://www.w3schools.com/howto/howto_html_colorpicker.asp)
+
+
 animations
  - card flip
  - deck shuffle
@@ -134,5 +146,3 @@ animations
  - goal reached
  - streak
 fancier buttons
-dark more/theme colour
-customisation of deck style, colour, background, font, etc (https://www.w3schools.com/howto/howto_html_colorpicker.asp)
