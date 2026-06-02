@@ -136,6 +136,16 @@
         <h1 class="statsNumber">{{ public_stats }}</h1>
     </div>
 
+    <div class="statsGrid">
+        <h6 class="statsTitle">total time studied</h6>
+        <h1 class="statsNumber">{{ totalDuration }}</h1>
+    </div>
+
+    <div class="statsGrid">
+        <h6 class="statsTitle">number of study sessions</h6>
+        <h1 class="statsNumber">{{ totalSessions }}</h1>
+    </div>
+
 </div>
 
 <br>
@@ -153,19 +163,21 @@
         <th>incorrect</th>
         <th>skipped</th>
         <th>total cards</th>
+        <th>study duration</th>
         <th>ownership</th>
         <th>date</th>
     </tr>
     {% if study_history %}
     {% for history in study_history %}
     <tr>
-        <td>{{ history[4] }}</td>
+        <td>{{ history[5] }}</td>
         <td>{{ history[2] }}</td>
         <td>{{ history[3] }}</td>
         <td>{{ history[1] - history[2] - history[3] }}</td>
         <td>{{ history[1] }}</td>
+        <td>{{ history[4] }}</td>
         <td>
-            {% if history[5] == userID %}
+            {% if history[6] == userID %}
                 Owned by me
             {% else %}
                 Not owned by me

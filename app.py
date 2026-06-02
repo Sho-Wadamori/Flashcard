@@ -26,6 +26,7 @@ from flask import (
 
 import os  # for file extension and name extraction
 import random  # for randomising card list
+import time  # for timer
 
 # from werkzeug.utils import secure_filename  # for file uploads
 from datetime import (
@@ -512,6 +513,7 @@ def start_study(id):
     session.pop('current_index', None)
     session.pop('correct', None)
     session.pop('incorrect', None)
+    session.pop('study_startTime', None)
     # redirect to study
     return redirect(url_for('Study', id=id, index=0))
 
@@ -520,6 +522,7 @@ def start_study(id):
 @app.route('/decks/<int:id>/study/resume/')
 def resume_study(id):
     saved_index = session.get('current_index', 0)
+    session['study_startTime'] = time.time()
     return redirect(url_for('Study', id=id, index=saved_index))
 
 
@@ -564,6 +567,7 @@ def Study(id, index):
         session['current_index'] = 0
         session['correct'] = 0
         session['incorrect'] = 0
+        session['study_startTime'] = time.time()
 
     # set session index to current index
     else:
@@ -654,6 +658,7 @@ def Study(id, index):
 
         # exit to deck page if there are no more cards
         else:
+            endTime = time.time()
             if userID():
                 # STREAKS SYSTEM
                 get_streak = """
@@ -691,17 +696,22 @@ def Study(id, index):
                 # HISTORY SYSTEM
                 card_correct = session.get('correct', 0)
                 card_incorrect = session.get('incorrect', 0)
+                study_duration = round(endTime - session.get(
+                    'study_startTime', endTime
+                ))
 
                 update_history = """
                     INSERT INTO StudyHistory (
                         study_date, study_cardCount, study_correct,
-                        study_incorrect, study_deckID, study_userID
+                        study_incorrect, study_deckID, study_userID,
+                        study_duration
                     )
-                    VALUES (datetime('now'), ?, ?, ?, ?, ?);
+                    VALUES (datetime('now'), ?, ?, ?, ?, ?, ?);
                 """
 
                 get_db().execute(update_history, (
-                    total, card_correct, card_incorrect, id, userID(),
+                    total, card_correct, card_incorrect,
+                    id, userID(), study_duration
                 ))
                 get_db().commit()
 
@@ -711,6 +721,7 @@ def Study(id, index):
             session.pop('current_index', None)
             session.pop('correct', None)
             session.pop('incorrect', None)
+            session.pop('study_startTime', None)
 
             # redirect to deck page
             flash("✔ You Have Finished Studying This Deck!", "success")
@@ -1265,6 +1276,28 @@ def stats():
     """
     public_stats = query_db(publicStats, (userID(),))
 
+    # get total study time
+    studyTime = """
+    SELECT SUM(study_duration)
+    FROM StudyHistory
+    WHERE study_userID = ?;
+    """
+    totalDuration = query_db(studyTime, (userID(),))[0][0]
+
+    if totalDuration >= 3600:
+        hours = totalDuration // 3600
+        minutes = (totalDuration % 3600) // 60
+        seconds = totalDuration % 60
+        totalDuration = f"{hours}h {minutes}m {seconds}s"
+
+    elif totalDuration >= 60:
+        minutes = totalDuration // 60
+        seconds = totalDuration % 60
+        totalDuration = f"{minutes}m {seconds}s"
+
+    else:
+        totalDuration = f"{totalDuration}s"
+
     # calculate correct %
     correctPercent = round(
         (100 * answer_stats[0][0]) / (
@@ -1276,13 +1309,14 @@ def stats():
     studyHistory = """
         SELECT StudyHistory.study_date, StudyHistory.study_cardCount,
         StudyHistory.study_correct, StudyHistory.study_incorrect,
-        Decks.deck_name, Decks.deck_userID
+        StudyHistory.study_duration, Decks.deck_name, Decks.deck_userID
         FROM StudyHistory, Decks
         WHERE StudyHistory.study_userID = ?
         AND StudyHistory.study_deckID = Decks.deck_ID
         ORDER BY StudyHistory.study_date DESC;
     """
     study_history = query_db(studyHistory, (userID(),))
+    totalSessions = len(study_history)
 
     # return the results
     return render_template(
@@ -1297,6 +1331,8 @@ def stats():
         public_stats=public_stats[0][0],
         study_history=study_history,
         correctPercent=correctPercent,
+        totalDuration=totalDuration,
+        totalSessions=totalSessions,
         userID=userID()
     )
 
