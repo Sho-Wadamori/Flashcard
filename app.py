@@ -1362,13 +1362,6 @@ def theme():
         return redirect(url_for('home'))
 
     if request.method == "POST":
-        # get colour and alpha form values
-        colour = request.form.get('shadow')
-        alpha = float(request.form.get('shadow-alpha'))
-
-        # combine the colour and alpha to get a 8 digit hex code
-        alpha_hex = format(round(alpha * 255), '02x')
-        full_color = f"{colour}{alpha_hex}"
 
         # get form data from other colour pickers
         bg = request.form.get('bg')
@@ -1379,6 +1372,7 @@ def theme():
         card = request.form.get('card')
         cardTXT = request.form.get('cardTXT')
         warning = request.form.get('warning')
+        shadowFull = request.form.get('shadowFull')
         fontSize = request.form.get('fontSize')
 
         # update themes
@@ -1399,7 +1393,7 @@ def theme():
             card,
             cardTXT,
             warning,
-            full_color,
+            shadowFull,
             fontSize,
             userID()
         ),)

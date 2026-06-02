@@ -66,6 +66,10 @@
         <input type="number" class="colorPick" name="fontSize" id="fontSize" min="10" max="30" value="{{ settings[9] }}" oninput="document.body.style.fontSize = this.value + 'px'">
     </div>
 
+    <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+        <input type="hidden" style="display: none; visibility: hidden;" name="shadowFull" id="shadowFull">
+    </div>
+
     <button type="reset" onclick="
         setTimeout(() => {
             document.querySelectorAll('.colorPick').forEach(dropdown => {
@@ -568,7 +572,7 @@
                     
                     <div class="categoryHeaders">
                         {% include "icons/statistics.html" %}
-                        <h2>Your Progress</h2> <a><h6 style="color: color-mix(in hsl, var(--accent-color), rgb(255, 255, 255) 40%) !important;">View more ></h6></a>
+                        <h2>Your Progress</h2> <a><h6 style="color: color-mix(in hsl, var(--accent-color), rgb(130, 130, 130) 40%) !important;">View more ></h6></a>
                     </div>
                     <div class="statsContainer">
                         <div class="statsDaily">
@@ -641,7 +645,7 @@
                     
                     <div class="categoryHeaders">
                         {% include "icons/world.html" %}
-                        <h2>Public Decks</h2> <a><h6 style="color: color-mix(in hsl, var(--accent-color), rgb(255, 255, 255) 40%) !important;">View all ></h6></a>
+                        <h2>Public Decks</h2> <a><h6 style="color: color-mix(in hsl, var(--accent-color), rgb(130, 130, 130) 40%) !important;">View all ></h6></a>
                     </div>
                     <div class="three-column">
                         {% for i in range(3) %}
@@ -1322,6 +1326,8 @@
 
 <script>
 
+updateshadow()
+
 document.getElementById("bg").value = getComputedStyle(document.documentElement).getPropertyValue('--primary-bg-color').trim()
 document.getElementById("bg2").value = getComputedStyle(document.documentElement).getPropertyValue('--secondary-bg-color').trim()
 document.getElementById("text").value = getComputedStyle(document.documentElement).getPropertyValue('--text-color').trim()
@@ -1400,6 +1406,8 @@ function updateshadow() {
 
     var realShadowColor = shadowColor + alphaHEX
     document.documentElement.style.setProperty('--shadow-color', realShadowColor)
+
+    document.getElementById('shadowFull').value = realShadowColor
 }
 
 </script>

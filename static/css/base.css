@@ -148,7 +148,7 @@ button:not(.button-ignore):not(.btn-ignore-all) {
 
 /* blue link text */
 .blue-text {
-  color: color-mix(in hsl, var(--accent-color), rgb(255, 255, 255) 40%);
+  color: color-mix(in hsl, var(--accent-color), rgb(130, 130, 130) 40%);
   text-decoration: underline !important;
 }
 
