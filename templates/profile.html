@@ -36,12 +36,27 @@
 <!-- User Info with username, email, password -->
 <div class="userInformationContainer">
     <!-- username -->
-    <div class="userInformation">
+    <div id="username" class="userInformation">
         <h3>Username: </h3>
         <h3>{{ results[0] }}</h3>
-        <button>Change</button>
+        <button onclick="
+            document.getElementById('username').style.display = 'none';
+            document.getElementById('changeUsername').style.display = 'grid';
+        ">Change</button>
         <div></div>
     </div>
+
+    <!-- hidden username form -->
+    <form action="{{ url_for('profile') }}" method="POST" id="changeUsername" class="changeUsernameForm">
+        <label><h3>Username: </h3></label>
+        <input type="hidden" name="actionUsername" value="changeUsername">
+        <input type="text" name="newUsername" value="{{ results[0] }}">
+        <button type="submit">Save</button>
+        <button type="button" onclick="
+            document.getElementById('changeUsername').style.display = 'none';
+            document.getElementById('username').style.display = 'grid';
+        ">Cancel</button>
+    </form>
 
     <!-- email -->
     <div id="viewEmail" class="userInformation">

@@ -1113,7 +1113,8 @@ def profile():
 
     if request.method == "POST":
         # get forms
-        action = request.form.get('action')
+        actionUsername = request.form.get('actionUsername')
+        actionEmail = request.form.get('actionEmail')
         Delete = request.form.get('DeleteAccount')
         Reset = request.form.get('ResetAccount')
 
@@ -1128,7 +1129,7 @@ def profile():
             return redirect(url_for('profile'))
 
         # remove email if form is remove
-        if action == "remove":
+        if actionEmail == "remove":
             removeEmail = """
                 UPDATE Users
                 SET email = NULL
@@ -1136,11 +1137,11 @@ def profile():
             """
             get_db().execute(removeEmail, (userID(),))
             get_db().commit()
-            flash("Recovery email removed.", "success")
+            flash("✔ Recovery email removed.", "success")
             return redirect(url_for('profile'))
 
         # change email if form is change
-        elif action == "change":
+        elif actionEmail == "changeEmail":
             newEmail = request.form['newEmail']
 
             update_email = """
@@ -1150,8 +1151,45 @@ def profile():
             """
             get_db().execute(update_email, (newEmail, userID(),))
             get_db().commit()
-            flash("Email updated.", "success")
+            flash("✔ Email updated.", "success")
 
+            return redirect(url_for('profile'))
+
+        # change username if form is change
+        elif actionUsername == "changeUsername":
+            newUsername = request.form['newUsername']
+
+            usernameList = """
+                    SELECT user_name
+                    FROM Users
+                    WHERE user_name = ?;
+                """
+            username_list = query_db(usernameList, (newUsername,))
+
+            # check if the username and password are not empty
+            if not newUsername:
+                flash("⚠ You must enter a username.", "error")
+                return redirect(url_for('profile'))
+
+            # check if the username already exists in the database
+            elif username_list:
+                flash("⚠ Username Already Exists.", "error")
+                return redirect(url_for('profile'))
+
+            else:
+                update_username = """
+                    UPDATE Users
+                    SET user_name = ?
+                    WHERE user_ID = ?;
+                """
+                get_db().execute(update_username, (newUsername, userID(),))
+                get_db().commit()
+                flash("✔ Username updated.", "success")
+
+                return redirect(url_for('profile'))
+
+        else:
+            flash("⚠ Invalid Action.", "error")
             return redirect(url_for('profile'))
 
     else:

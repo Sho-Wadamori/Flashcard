@@ -52,6 +52,11 @@
     grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 40px;
 }
+.changeUsernameForm {
+    display: none;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 40px;
+}
 .changeEmailForm {
     display: none;
     grid-template-columns: 1fr 1fr 1fr 1fr;
