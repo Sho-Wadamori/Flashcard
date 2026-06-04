@@ -1071,6 +1071,7 @@ def signup():
             get_db().execute(usersql, (username, hashed_password))
             get_db().commit()
 
+            # create settings for the new user
             settingssql = """
                     INSERT INTO Settings (
                         settings_userID
@@ -1115,6 +1116,7 @@ def profile():
         # get forms
         actionUsername = request.form.get('actionUsername')
         actionEmail = request.form.get('actionEmail')
+        actionPassword = request.form.get('actionPassword')
         Delete = request.form.get('DeleteAccount')
         Reset = request.form.get('ResetAccount')
 
@@ -1187,6 +1189,24 @@ def profile():
                 flash("✔ Username updated.", "success")
 
                 return redirect(url_for('profile'))
+
+        # change password if form is change
+        elif actionPassword == "changePassword":
+            newPassword = request.form['newPassword']
+
+            # hash passwords
+            hashed_password = generate_password_hash(newPassword)
+
+            update_password = """
+                UPDATE Users
+                SET user_password = ?
+                WHERE user_ID = ?;
+            """
+            get_db().execute(update_password, (hashed_password, userID(),))
+            get_db().commit()
+            flash("✔ Password updated.", "success")
+
+            return redirect(url_for('profile'))
 
         else:
             flash("⚠ Invalid Action.", "error")
@@ -1339,9 +1359,9 @@ def stats():
     # calculate correct %
     correctPercent = round(
         (100 * answer_stats[0][0]) / (
-                answer_stats[0][0] + answer_stats[0][1]
-            ), 2
-        )
+            answer_stats[0][0] + answer_stats[0][1]
+        ), 2
+    )
 
     # get all study history data
     studyHistory = """

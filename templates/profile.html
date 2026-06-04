@@ -66,8 +66,9 @@
             document.getElementById('viewEmail').style.display = 'none';
             document.getElementById('changeEmail').style.display = 'grid';
         ">Change</button>
+        <!-- remove button -->
         <form action="{{ url_for('profile') }}" method="POST" id="removeEmail">
-            <input type="hidden" name="action" value="remove">
+            <input type="hidden" name="actionEmail" value="remove">
             <button type="submit" style="width: 100%; height: 100%;">Remove</button>
         </form>
     </div>
@@ -75,7 +76,7 @@
     <!-- hidden email form -->
     <form action="{{ url_for('profile') }}" method="POST" id="changeEmail" class="changeEmailForm">
         <label><h3>Recovery Email: </h3></label>
-        <input type="hidden" name="action" value="change">
+        <input type="hidden" name="actionEmail" value="changeEmail">
         <input type="email" name="newEmail" value="{{ email }}">
         <button type="submit">Save</button>
         <button type="button" onclick="
@@ -85,12 +86,27 @@
     </form>
     
     <!-- password -->
-    <div class="userInformation">
+    <div id="viewPassword" class="userInformation">
         <h3>Password: </h3>
-        <button style="width: 100%; margin: 0 0;">Reveal</button>
-        <button>Change</button>
+        <h3 id="password">**************</h3>
+        <button onclick="
+            document.getElementById('viewPassword').style.display = 'none';
+            document.getElementById('changePassword').style.display = 'grid';
+        ">Change</button>
         <div></div>
     </div>
+
+    <!-- hidden password form -->
+    <form action="{{ url_for('profile') }}" method="POST" id="changePassword" class="changePasswordForm">
+        <label><h3>Password: </h3></label>
+        <input type="hidden" name="actionPassword" value="changePassword">
+        <input type="text" name="newPassword" placeholder="New Password">
+        <button type="submit">Save</button>
+        <button type="button" onclick="
+            document.getElementById('changePassword').style.display = 'none';
+            document.getElementById('viewPassword').style.display = 'grid';
+        ">Cancel</button>
+    </form>
 </div>
 
 <br>

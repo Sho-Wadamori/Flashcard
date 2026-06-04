@@ -47,6 +47,15 @@
     margin: 30px 170px;
     gap: 20px;
 }
+.userInformationContainer input[type="text"],
+.userInformationContainer input[type="email"] {
+    padding: 10px;
+    font-size: 1.2em;
+    color: var(--text-color);
+    background-color: var(--secondary-bg-color);
+    border: none;
+    border-radius: 5px;
+}
 .userInformation {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -58,6 +67,11 @@
     gap: 40px;
 }
 .changeEmailForm {
+    display: none;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 40px;
+}
+.changePasswordForm {
     display: none;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 40px;
