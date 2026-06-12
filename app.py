@@ -206,7 +206,7 @@ def home():
     if not userID():
         flash("""
             🛈 You have limited Access.
-            Please Login or Sign Up to create your own decks!
+            Please Login to create your own decks!
         """, "info")
 
     # get info of the unfishished study session
@@ -231,7 +231,16 @@ def home():
     publicDecks = query_db(public_sql)
 
     # get stats if user is logged in
-    if userID:
+    if userID():
+        # get total study time
+        studyTime = """
+            SELECT SUM(study_duration), SUM(study_cardCount)
+            FROM StudyHistory
+            WHERE study_userID = ?;
+        """
+        totalDuration = query_db(studyTime, (userID(),))[0]
+
+        # get answer stats
         userAnswerStats = """
             SELECT SUM(stats_correct), SUM(stats_incorrect)
             FROM UserCardStats
@@ -239,7 +248,39 @@ def home():
         """
         answer_stats = query_db(userAnswerStats, (userID(),))[0]
 
+        if totalDuration[0] is not None:
+            if totalDuration[0] >= 3600:
+                hours = totalDuration[0] // 3600
+                minutes = (totalDuration[0] % 3600) // 60
+                seconds = totalDuration[0] % 60
+                totalDuration = f"{hours}h {minutes}m {seconds}s"
+
+            elif totalDuration[0] >= 60:
+                minutes = totalDuration[0] // 60
+                seconds = totalDuration[0] % 60
+                totalDuration = f"{minutes}m {seconds}s"
+
+            else:
+                totalDuration = f"{totalDuration[0]}s"
+        else:
+            totalDuration = "0s"
+
+        # get all study history data
+        studyHistory = """
+            SELECT *
+            FROM StudyHistory
+            WHERE study_userID = ?
+        """
+        totalSessions = len(query_db(studyHistory, (userID(),)))
+
         currentStreak = updateStreak()
+
+    # if not logged in
+    else:
+        totalDuration = "0s"
+        totalSessions = 0
+        answer_stats = 0
+        currentStreak = ""
 
     return render_template(
         "homepage.html", username=session.get(
@@ -252,6 +293,8 @@ def home():
         deck_name=deck_name,
         total=total,
         percent=percent,
+        totalDuration=totalDuration,
+        totalSessions=totalSessions,
         publicDecks=publicDecks,
         answer_stats=answer_stats,
         currentStreak=currentStreak
@@ -669,11 +712,14 @@ def Study(id, index):
                 """
                 streaks = query_db(get_streak, (userID(),))
 
+                # check difference between last studied and now
                 diff = is_streak_eligible(streaks[0][0])
 
+                # if same day, pass
                 if diff == 0:
                     pass
 
+                # if the day after, update streak
                 elif diff == 1:
                     update_streak = """
                         UPDATE Users
@@ -684,6 +730,26 @@ def Study(id, index):
                     get_db().execute(update_streak, (userID(),))
                     get_db().commit()
 
+                    getLogest = """
+                        SELECT user_longestStreak, user_streak
+                        FROM Users
+                        WHERE user_ID = ?;
+                    """
+                    streaks = query_db(getLogest, (userID(),))[0]
+
+                    print(streaks[1] > streaks[0])
+
+                    # update longest streak
+                    if streaks[1] > streaks[0]:
+                        update_streak = """
+                            UPDATE Users
+                            SET user_longestStreak = user_streak
+                            WHERE user_ID = ?;
+                        """
+                        get_db().execute(update_streak, (userID(),))
+                        get_db().commit()
+
+                # if more than 1 day after, reset streak
                 else:
                     update_streak = """
                         UPDATE Users
@@ -1072,6 +1138,14 @@ def signup():
             get_db().execute(usersql, (username, hashed_password))
             get_db().commit()
 
+            getuserID = """
+                SELECT user_ID
+                FROM Users
+                ORDER BY user_ID DESC
+                LIMIT 1;
+            """
+            userid = query_db(getuserID)[0]
+
             # create settings for the new user
             settingssql = """
                     INSERT INTO Settings (
@@ -1079,7 +1153,7 @@ def signup():
                     )
                     VALUES (?);
                 """
-            get_db().execute(settingssql, (userID()))
+            get_db().execute(settingssql, (userid))
             get_db().commit()
 
             flash("✔ Account Created Successfully! Please Log In.", "success")
@@ -1341,29 +1415,30 @@ def stats():
             FROM UserCardStats
             WHERE stats_userID = ?;
         """
-    answer_stats = query_db(userAnswerStats, (userID(),))
+    answer_stats = query_db(userAnswerStats, (userID(),))[0]
 
     # get total number of decks
     userDeckStats = """
-            SELECT COUNT(deck_ID)
-            FROM Decks
-            WHERE deck_userID = ?;
+        SELECT COUNT(deck_ID)
+        FROM Decks
+        WHERE deck_userID = ?;
     """
     deck_stats = query_db(userDeckStats, (userID(),))
 
     # get total number of cards
     userCardStats = """
-            SELECT COUNT(Flashcards.card_ID)
-            FROM Flashcards, Decks
-            WHERE card_deckID = deck_ID AND deck_userID = ?;
+        SELECT COUNT(Flashcards.card_ID)
+        FROM Flashcards, Decks
+        WHERE card_deckID = deck_ID AND deck_userID = ?;
     """
     card_stats = query_db(userCardStats, (userID(),))
 
     # get user stats
     userStats = """
-            SELECT user_name, user_creation, user_streak
-            FROM Users
-            WHERE user_ID = ?;
+        SELECT user_name, user_creation,
+        user_streak, user_longestStreak
+        FROM Users
+        WHERE user_ID = ?;
     """
     user_stats = query_db(userStats, (userID(),))
 
@@ -1399,32 +1474,39 @@ def stats():
 
     # get total study time
     studyTime = """
-    SELECT SUM(study_duration)
-    FROM StudyHistory
-    WHERE study_userID = ?;
-    """
+        SELECT SUM(study_duration)
+        FROM StudyHistory
+        WHERE study_userID = ?;
+        """
     totalDuration = query_db(studyTime, (userID(),))[0][0]
+    if totalDuration is not None:
+        if totalDuration >= 3600:
+            hours = totalDuration // 3600
+            minutes = (totalDuration % 3600) // 60
+            seconds = totalDuration % 60
+            totalDuration = f"{hours}h {minutes}m {seconds}s"
 
-    if totalDuration >= 3600:
-        hours = totalDuration // 3600
-        minutes = (totalDuration % 3600) // 60
-        seconds = totalDuration % 60
-        totalDuration = f"{hours}h {minutes}m {seconds}s"
+        elif totalDuration >= 60:
+            minutes = totalDuration // 60
+            seconds = totalDuration % 60
+            totalDuration = f"{minutes}m {seconds}s"
 
-    elif totalDuration >= 60:
-        minutes = totalDuration // 60
-        seconds = totalDuration % 60
-        totalDuration = f"{minutes}m {seconds}s"
-
+        else:
+            totalDuration = f"{totalDuration}s"
     else:
-        totalDuration = f"{totalDuration}s"
+        totalDuration = "0s"
 
     # calculate correct %
-    correctPercent = round(
-        (100 * answer_stats[0][0]) / (
-            answer_stats[0][0] + answer_stats[0][1]
-        ), 2
-    )
+    if answer_stats[0] is None:
+        correctPercent = 0
+    elif answer_stats[1] is None:
+        correctPercent = 100
+    else:
+        correctPercent = round(
+            (100 * answer_stats[0]) / (
+                answer_stats[0] + answer_stats[1]
+            ), 2
+        )
 
     # get all study history data
     studyHistory = """
@@ -1439,10 +1521,36 @@ def stats():
     study_history = query_db(studyHistory, (userID(),))
     totalSessions = len(study_history)
 
+    studyTotals = """
+        SELECT SUM(study_cardCount)
+        FROM StudyHistory
+        WHERE study_userID = ?;
+    """
+    studytotals = query_db(studyTotals, (userID(),))
+
+    # calculate skipped ensuring not errors
+    if studytotals[0][0] is None:
+        skipped = 0
+        totalStudied = 0
+
+    else:
+        totalStudied = studytotals[0][0]
+        if not answer_stats[0]:
+            correct = 0
+        else:
+            correct = answer_stats[0]
+
+        if not answer_stats[1]:
+            incorrect = 0
+        else:
+            incorrect = answer_stats[1]
+
+        skipped = studytotals[0][0] - correct - incorrect
+
     # return the results
     return render_template(
         "stats.html",
-        answer_stats=answer_stats[0],
+        answer_stats=answer_stats,
         deck_stats=deck_stats[0],
         card_stats=card_stats[0],
         user_stats=user_stats[0],
@@ -1454,6 +1562,9 @@ def stats():
         correctPercent=correctPercent,
         totalDuration=totalDuration,
         totalSessions=totalSessions,
+        totalStudied=totalStudied,
+        skipped=skipped,
+        studytotals=studytotals,
         userID=userID()
     )
 

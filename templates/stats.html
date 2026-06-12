@@ -44,62 +44,61 @@
 
     <div>
         <h2>Longest Streak</h2>
-        <h3>0 Days</h3>
+        <h3>{{ user_stats[3] }} Days</h3>
     </div>
 
 </div>
 
 <!-- response stats -->
 <div class="responseStatsContainer">
-    <!-- today's responses -->
-    <div class="responseStats">
-
-        <div>
-            <h3>Correct Today</h3>
-            <h4>0</h4>
-        </div>
-
-        <div>
-            <h3>Incorrect Today</h3>
-            <h4>0</h4>
-        </div>
-
-        <div>
-            <h3>Skipped Today</h3>
-            <h4>0</h4>
-        </div>
-
-    </div>
-
     <!-- total responses -->
     <div class="responseStats">
         
         <div>
             <h3>Total Correct</h3>
             {% if answer_stats[0] %}
-                <h4>{{ answer_stats[0] }}</h4>
+            <h4>{{ answer_stats[0] }}</h4>
             {% else %}
-                <h4>0</h4>
+            <h4>0</h4>
             {% endif %}
         </div>
-
+        
         <div>
             <h3>Total Incorrect</h3>
-
+            
             {% if answer_stats[1] %}
-                <h4>{{ answer_stats[1] }}</h4>
+            <h4>{{ answer_stats[1] }}</h4>
             {% else %}
-                <h4>0</h4>
+            <h4>0</h4>
             {% endif %}
+        </div>
+        
+        <div>
+            <h3>Total Skipped</h3>
+            <h4>{{ skipped }}</h4>
+        </div>
+        
+    </div>
+    
+    <!-- study stats -->
+    <div class="responseStats">
+
+        <div>
+            <h3>Total Study Duration</h3>
+            <h4>{{ totalDuration }}</h4>
         </div>
 
         <div>
-            <h3>Total Skipped</h3>
-            <h4>0</h4>
+            <h3>Total Times Studied</h3>
+            <h4>{{ totalSessions }}</h4>
+        </div>
+
+        <div>
+            <h3>Total Cards Studied</h3>
+            <h4>{{ totalStudied }}</h4>
         </div>
 
     </div>
-
 </div>
 
 <!-- stats grid -->
@@ -136,16 +135,6 @@
         <h1 class="statsNumber">{{ public_stats }}</h1>
     </div>
 
-    <div class="statsGrid">
-        <h6 class="statsTitle">total time studied</h6>
-        <h1 class="statsNumber">{{ totalDuration }}</h1>
-    </div>
-
-    <div class="statsGrid">
-        <h6 class="statsTitle">number of study sessions</h6>
-        <h1 class="statsNumber">{{ totalSessions }}</h1>
-    </div>
-
 </div>
 
 <br>
@@ -156,7 +145,7 @@
     <h1>Study History</h1>
 </div>
 
-<table class="historyTable">
+<table class="historyTable" style="width: stretch;">
     <tr>
         <th style="width: 40%;">deck name</th>
         <th>correct</th>
@@ -175,7 +164,7 @@
         <td>{{ history[3] }}</td>
         <td>{{ history[1] - history[2] - history[3] }}</td>
         <td>{{ history[1] }}</td>
-        <td>{{ history[4] }}</td>
+        <td>{{ history[4] }}s</td>
         <td>
             {% if history[6] == userID %}
                 Owned by me
@@ -192,6 +181,6 @@
 
 </table>
 
-<button onclick="location.href='{{ url_for('home') }}'">Back</button>
+<br>
 
 {% endblock %}
