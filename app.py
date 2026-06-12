@@ -68,6 +68,7 @@ def get_db():
     db = getattr(g, '_database', None)
     if db is None:
         db = g._database = sqlite3.connect(DATABASE)
+        db.execute("PRAGMA foreign_keys = ON")  # enable on delete cascade
     return db
 
 
@@ -1123,8 +1124,18 @@ def profile():
         print(f"Delete: {Delete} | Reset: {Reset}")
 
         if Delete == 'True':
-            print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA DELDEL")
-            return redirect(url_for('profile'))
+            delete_user = """
+                DELETE FROM Users
+                WHERE user_ID = ?;
+            """
+            get_db().execute(delete_user, (userID(),))
+            get_db().commit()
+
+            # remove all sessions
+            session.clear()
+
+            flash("✔ Account deleted successfully.", "success")
+            return redirect(url_for('home'))
 
         if Reset == 'True':
             print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA REST")
