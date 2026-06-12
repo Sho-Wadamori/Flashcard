@@ -1138,7 +1138,59 @@ def profile():
             return redirect(url_for('home'))
 
         if Reset == 'True':
-            print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA REST")
+            currentDetails = """
+                SELECT user_name, user_password, user_creation
+                FROM Users
+                WHERE user_ID = ?
+            """
+            details = query_db(currentDetails, (userID(),))[0]
+
+            print(details)
+
+            delete_user = """
+                DELETE FROM Users
+                WHERE user_ID = ?;
+            """
+            get_db().execute(delete_user, (userID(),))
+            get_db().commit()
+
+            # remove all sessions
+            session.clear()
+
+            usersql = """
+                    INSERT INTO Users (
+                        user_name, user_password, user_creation
+                    )
+                    VALUES (?, ?, ?);
+                """
+            get_db().execute(usersql, (details[0], details[1], details[2]))
+            get_db().commit()
+
+            getuserID = """
+                SELECT user_ID
+                FROM Users
+                WHERE user_name = ?
+                LIMIT 1;
+            """
+            userid = query_db(getuserID, (details[0],))[0]
+
+            # create settings for the new user
+            settingssql = """
+                    INSERT INTO Settings (
+                        settings_userID
+                    )
+                    VALUES (?);
+                """
+            get_db().execute(settingssql, (userid))
+            get_db().commit()
+
+            session['username'] = details[0]
+            session['userID'] = query_db(
+                "SELECT user_ID FROM Users WHERE user_name = ?",
+                (details[0],), one=True
+            )[0]
+
+            flash("✔ Account reset successfully.", "success")
             return redirect(url_for('profile'))
 
         # remove email if form is remove
