@@ -78,7 +78,8 @@
 /* sort and ordering buttons */
 #filter,
 #sort_by,
-#order {
+#order,
+#mode {
   padding: 6px 12px;
   border-radius: 6px;
   border: none;

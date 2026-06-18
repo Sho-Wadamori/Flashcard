@@ -5,14 +5,26 @@ const characterOverlay = document.getElementById('characterPopup-overlay');
 
 const toast = document.getElementById('toast');
 
+const quizContainer = document.getElementById("QUIZ")
+const tfContainer = document.getElementById("TF")
+
+
 function togglePanel() {
     panel.classList.toggle('open'); // add open class
     characterOverlay.classList.toggle('open'); // add open class
+    if (quizContainer) {
+        quizContainer.classList.toggle('open'); // add open class
+        tfContainer.classList.toggle('open'); // add open class
+    }
 }
 
 function closeDropdownPanel() {
     panel.classList.remove('open'); // remove open class
     characterOverlay.classList.remove('open'); // remove open class
+    if (quizContainer) {
+        quizContainer.classList.remove('open'); // add open class
+        tfContainer.classList.remove('open'); // add open class
+    }
 }
 
 function insertChar(char) {

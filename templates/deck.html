@@ -23,26 +23,55 @@
   <a href="{{ url_for('Decks') }}"><button>Back</button></a>
 
   <br><br><form action="{{ url_for('Deck', id=deck_info[1]) }}" method="GET" class='sort-form'>
+    <label for="filter">Filter:</label>
+    <select name="filter" id="filter">
+      <option value="none" {% if filter == 'none' %}selected{% endif %}>None</option>
+      <option value="flashcard" {% if filter == 'flashcard' %}selected{% endif %}>Flashcards</option>
+      <option value="quiz" {% if filter == 'quiz' %}selected{% endif %}>Quiz</option>
+      <option value="TF" {% if filter == 'TF' %}selected{% endif %}>True/False</option>
+    </select>
+
     <label for="sort_by">Sort by:</label>
     <select name="sort_by" id="sort_by">
       <option value="card_creation" {% if sort_by == 'card_creation' %}selected{% endif %}>Creation Date</option>
       <option value="card_question" {% if sort_by == 'card_question' %}selected{% endif %}>Question</option>
       <option value="card_answer" {% if sort_by == 'card_answer' %}selected{% endif %}>Answer</option>
-    </select><br><br>
+      <option value="card_mode" {% if sort_by == 'card_mode' %}selected{% endif %}>Mode</option>
+    </select>
     
     <label for="order">Order:</label>
     <select name="order" id="order">
       <option value="DESC" {% if order == 'DESC' %}selected{% endif %}>Descending</option>
       <option value="ASC" {% if order == 'ASC' %}selected{% endif %}>Ascending</option>
-    </select><br><br>
+    </select>
     
     <button type="submit">Apply</button>
   </form>
 
+  {% if filter != 'none' %}
+    <h6>Some cards may be hidden. <a href="{{ url_for('Deck', id=deck_info[1]) }}" class="blue-text">Clear filters</a></h6><br>
+  {% endif %}
+
   <!-- Empty deck message -->
   {% else %}
-    <h6>This deck has no flashcards yet.</h6>
+    {% if filter != 'none' %}
+      <h6>Some cards may be hidden. <a href="{{ url_for('Deck', id=deck_info[1]) }}" class="blue-text">Clear filters</a></h6>
+    {% else %}
+      <h6>This deck has no flashcards yet.</h6>
+    {% endif %}
     <a href="{{ url_for('Decks') }}"><button>Back</button></a><br><br>
+
+    <br><br><form action="{{ url_for('Deck', id=deck_info[1]) }}" method="GET" class='sort-form'>
+      <label for="filter">Filter:</label>
+      <select name="filter" id="filter">
+        <option value="none" {% if filter == 'none' %}selected{% endif %}>None</option>
+        <option value="flashcard" {% if filter == 'flashcard' %}selected{% endif %}>Flashcards</option>
+        <option value="quiz" {% if filter == 'quiz' %}selected{% endif %}>Quiz</option>
+        <option value="TF" {% if filter == 'TF' %}selected{% endif %}>True/False</option>
+      </select>
+      
+      <button type="submit">Apply</button>
+    </form>
 
     {% if is_owner %}
       <a href="{{ url_for('createCard', id=deck_info[1]) }}">
@@ -97,7 +126,7 @@
             <!-- delete card -->
             <form action="{{ url_for('deleteCard', id=deck_info[1], card_id=card[0]) }}" method="POST">
               <input type="hidden" name="deck_id" value="{{ deck_info[1] }}">
-              <a href="" onclick="event.preventDefault(); event.stopPropagation(); showConfirm(this.form)">
+              <a onclick="event.preventDefault(); event.stopPropagation(); showConfirm(this.closest('form'));">
                 {% include "icons/bin.html" %} Delete
               </a>
             </form>
@@ -112,9 +141,9 @@
         </div>
         {% endif %}
         <!-- the question then the answer -->
-        <h1 class="scientific ellipse-multi">{{ card[1] }}</h1>
+        <h1 class="scientific ellipse-multi">{{ card[3] }}</h1>
         <p>---------------</p>
-        <p class="scientific ellipse-multi">{{ card[2] }}</p>
+        <p class="scientific ellipse-multi">{{ card[4] }}</p>
       </div>
     <!-- </a> -->
     {% endfor %}

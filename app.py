@@ -442,25 +442,7 @@ def Decks():
 # ---------- list all flashcards for a single deck ----------
 @app.route('/decks/<int:id>/')
 def Deck(id):
-    sort_by = request.args.get('sort_by')
-    order = request.args.get('order')
-    allowed_sort = {'card_creation', 'card_question', 'card_answer'}
-    allowed_order = {'ASC', 'DESC'}
-
-    if sort_by not in allowed_sort:
-        sort_by = 'card_creation'  # default sort by creation date
-    if order not in allowed_order:
-        order = 'DESC'  # default order descending
-
-    # get all the card id, Q, A, and creation date for inputted deck id
-    sql = f"""
-            SELECT card_ID, card_question, card_answer, card_creation
-            FROM Flashcards
-            WHERE card_deckID = ?
-            ORDER BY {sort_by} {order};
-        """
-    # get the deck name of the inputted deck id
-    # only show the deck if it belongs to the user or if it is public/unlisted
+    # get the deck info if deck belongs to user or if it is public/unlisted
     sql_deck = """
                 SELECT deck_name, deck_ID, deck_creation, deck_userID
                 FROM Decks
@@ -474,11 +456,147 @@ def Deck(id):
             """
 
     deck_info = query_db(sql_deck, (id, userID()), True)
-    results = query_db(sql, (id,))
 
+    # kick out user if they dont meet these conditions
     if not deck_info:
         flash("⚠ Invalid Deck...", "error")
         return redirect(url_for("Decks"))
+
+    filter = request.args.get('filter')
+    sort_by = request.args.get('sort_by')
+    order = request.args.get('order')
+    allowed_filter = {'none', 'flashcard', 'quiz', 'TF'}
+    allowed_sort = {
+        'card_creation',
+        'card_question',
+        'card_answer',
+        'card_mode'
+    }
+    allowed_order = {'ASC', 'DESC'}
+
+    # fallback for invalid sort/order (not really necessary)
+    if filter not in allowed_filter:
+        filter = 'none'  # default filter none
+    if sort_by not in allowed_sort:
+        sort_by = 'card_creation'  # default sort by creation date
+    if order not in allowed_order:
+        order = 'DESC'  # default order descending
+
+    # create filter query that we will inject
+    if filter != 'none':
+        filterSQL = f"AND (Flashcards.card_mode != '{filter}') "
+    else:
+        filterSQL = ""
+
+    # get all card info for inputted deck id
+    # use LEFT JOIN to get all info even if they are invalid for the card mode
+    card_sql = f"""
+        SELECT Flashcards.card_ID,
+        Flashcards.card_creation,
+        Flashcards.card_mode,
+        FlashcardContent.flashcard_question,
+        FlashcardContent.flashcard_answer,
+        QuizContent.quiz_question,
+        QuizContent.quiz_answer1,
+        QuizContent.quiz_answer2,
+        QuizContent.quiz_answer3,
+        QuizContent.quiz_answer4,
+        QuizContent.quiz_correct,
+        TrueFalseContent.tf_question,
+        TrueFalseContent.tf_correct
+        FROM Flashcards
+        LEFT JOIN FlashcardContent ON Flashcards.card_ID = FlashcardContent.card_ID
+        LEFT JOIN QuizContent ON Flashcards.card_ID = QuizContent.card_ID
+        LEFT JOIN TrueFalseContent ON Flashcards.card_ID = TrueFalseContent.card_ID
+        WHERE Flashcards.card_deckID = ?
+        {filterSQL};
+    """
+    cards = query_db(card_sql, (id,))
+
+    results = []
+    for card in cards:
+        if card[2] == 'flashcard':
+            question = card[3]
+            answer = card[4]
+
+        elif card[2] == 'quiz':
+            question = card[5]
+            if card[10] == 1:
+                answer = card[6]
+            elif card[10] == 2:
+                answer = card[7]
+            elif card[10] == 3:
+                answer = card[8]
+            elif card[10] == 4:
+                answer = card[9]
+            else:
+                answer = "ERROR"
+
+        elif card[2] == 'TF':
+            question = card[11]
+            if card[12] == 1:
+                answer = "True"
+            elif card[12] == 2:
+                answer = "False"
+            else:
+                answer = "ERROR"
+
+        else:
+            flash("""
+                ⚠ Some of Your Cards Are Invalid. 
+                Please contact the owner of the site.
+            """, "error")
+
+        results.append((card[0], card[1], card[2], question, answer))
+
+    # card = f"""
+    #     SELECT card_ID, card_creation, card_mode
+    #     FROM Flashcards
+    #     WHERE card_deckID = ?
+    #     ORDER BY {sort_by} {order};
+    # """
+    # results = query_db(card, (id,))
+
+    # cards = []
+    # for row in results:
+    #     mode = row[2]
+    #     if mode == 'flashcard':
+    #         content = query_db("""
+    #             SELECT flashcard_question, flashcard_answer
+    #             FROM Flashcards
+    #             WHERE card_ID = ?
+    #         """, (row[0],))
+
+    #     elif mode == 'quiz':
+    #         content = query_db("""
+    #             SELECT quiz_question, quiz_answer
+    #             FROM Flashcards
+    #             WHERE card_ID = ?
+    #         """, (row[0],))
+
+    #     elif mode == 'TF':
+    #         content = query_db("""
+    #             SELECT tf_question, tf_answer
+    #             FROM Flashcards
+    #             WHERE card_ID = ?
+    #         """, (row[0],))
+
+
+
+    # handeling sorting and ordering
+    ordering = order == "DESC"
+
+    if sort_by == "card_answer":
+        results.sort(key=lambda x: x[4], reverse=ordering)
+
+    elif sort_by == "card_question":
+        results.sort(key=lambda x: x[3], reverse=ordering)
+
+    elif sort_by == "mode":
+        results.sort(key=lambda x: x[2], reverse=ordering)
+
+    else:
+        results.sort(key=lambda x: x[1], reverse=ordering)
 
     # chek if the user is the owner of the deck
     is_owner = deck_info[3] == userID()
@@ -497,6 +615,7 @@ def Deck(id):
         deck_info=deck_info,
         time_ago=time_ago,
         format_date=format_date,
+        filter=filter,
         sort_by=sort_by,
         order=order,
         is_owner=is_owner,
@@ -870,38 +989,186 @@ def createCard(id):
 
     # if request method is POST, get the form data and insert into database
     if request.method == "POST":
-        card_question = request.form['cardQuestion']
-        card_answer = request.form['cardAnswer']
-        card_hint = request.form['cardHint']
+        card_type = request.form.get("cardType")
 
-        # check if the form data is not empty
-        if not card_question or not card_answer:
-            # reload the page with the error message
-            flash("⚠ Both Fields Are Required.", "error")
-            return render_template(
-                "cardCreate.html",
-                deck_info=deck_info[0]
-            )
+        if card_type == "flashcard":
+            flashcard_question = request.form['cardQuestion']
+            flashcard_answer = request.form['cardAnswer']
+            flashcard_hint = request.form['cardHint']
 
-        else:
-            sql = """
+            # check if the form data is not empty
+            if not flashcard_question or not flashcard_answer:
+                # reload the page with the error message
+                flash("⚠ Question and Answer Fields Are Required.", "error")
+                return render_template(
+                    "cardCreate.html",
+                    deck_info=deck_info[0]
+                )
+
+            else:
+                sql = """
                     INSERT INTO Flashcards (
-                        card_question, card_answer, card_deckID,
-                        card_creation, card_hint
+                        card_deckID, card_creation,
+                        card_hint, card_mode
                     )
-                    VALUES (?, ?, ?, datetime('now'), ?);
+                    VALUES (?, datetime('now'), ?, ?);
+                """
+                cursor = get_db().execute(sql, (
+                    id,
+                    flashcard_hint,
+                    "flashcard"
+                ))
+                cardid = cursor.lastrowid
+
+                flashcardContent = """
+                    INSERT INTO FlashcardContent (
+                        card_ID, flashcard_question, flashcard_answer
+                    )
+                    VALUES (?, ?, ?);
                 """
 
-            get_db().execute(sql, (
-                card_question,
-                card_answer,
-                id,
-                card_hint
-            ))
-            get_db().commit()
-            # redirect to the deck page
-            flash("✔ Card Created Successfully!", "success")
-            return redirect(url_for('Deck', id=id))
+                get_db().execute(flashcardContent, (
+                    cardid,
+                    flashcard_question,
+                    flashcard_answer
+                ))
+                get_db().commit()
+                # redirect to the deck page
+                flash("✔ Card Created Successfully!", "success")
+                return redirect(url_for('Deck', id=id))
+
+        if card_type == "quiz":
+            quizCorrect = request.form.get('quizAnswer')
+
+            quiz_question = request.form['quizQuestion']
+            quiz_answer1 = request.form['quizAnswer1']
+            quiz_answer2 = request.form['quizAnswer2']
+            quiz_answer3 = request.form['quizAnswer3']
+            quiz_answer4 = request.form['quizAnswer4']
+            quiz_hint = request.form['quizHint']
+
+            print(f"""
+                quizCorrect: {quizCorrect}
+                quiz_question: {quiz_question}
+                quiz_answer1: {quiz_answer1}
+                quiz_answer2: {quiz_answer2}
+                quiz_answer3: {quiz_answer3}
+                quiz_answer4: {quiz_answer4}
+                quiz_hint: {quiz_hint}
+            """)
+
+            if not quizCorrect:
+                flash("⚠ Please Select the Correct Answer.", "error")
+                return render_template(
+                    "cardCreate.html",
+                    deck_info=deck_info[0]
+                )
+
+            elif not quiz_question or not quiz_answer1 or not quiz_answer2 or not quiz_answer3 or not quiz_answer4:
+                flash("⚠ Question and Answer Fields Are Required.", "error")
+                return render_template(
+                    "cardCreate.html",
+                    deck_info=deck_info[0]
+                )
+
+            else:
+                sql = """
+                    INSERT INTO Flashcards (
+                        card_deckID, card_creation,
+                        card_hint, card_mode
+                    )
+                    VALUES (?, datetime('now'), ?, ?);
+                """
+
+                cursor = get_db().execute(sql, (
+                    id,
+                    quiz_hint,
+                    "quiz"
+                ))
+                cardid = cursor.lastrowid
+
+                quizContent = """
+                    INSERT INTO QuizContent (
+                    card_ID, quiz_question, quiz_answer1,
+                    quiz_answer2, quiz_answer3,
+                    quiz_answer4, quiz_correct
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?, ?);
+                """
+
+                get_db().execute(quizContent, (
+                    cardid,
+                    quiz_question,
+                    quiz_answer1,
+                    quiz_answer2,
+                    quiz_answer3,
+                    quiz_answer4,
+                    quizCorrect
+                ))
+
+                get_db().commit()
+                # redirect to the deck page
+                flash("✔ Card Created Successfully!", "success")
+                return redirect(url_for('Deck', id=id))
+
+        if card_type == "TF":
+            tfCorrect = request.form.get('tfAnswer')
+            tf_question = request.form['tfQuestion']
+            tf_hint = request.form['tfHint']
+
+            print(f"""
+                tfCorrect: {tfCorrect}
+                tf_question: {tf_question}
+                tf_hint: {tf_hint}
+            """)
+
+            if not tfCorrect:
+                flash("⚠ Please Select the Correct Answer.", "error")
+                return render_template(
+                    "cardCreate.html",
+                    deck_info=deck_info[0]
+                )
+
+            elif not tf_question:
+                flash("⚠ Question Field Is Required.", "error")
+                return render_template(
+                    "cardCreate.html",
+                    deck_info=deck_info[0]
+                )
+
+            else:
+                sql = """
+                    INSERT INTO Flashcards (
+                        card_deckID, card_creation,
+                        card_hint, card_mode
+                    )
+                    VALUES (?, datetime('now'), ?, ?);
+                """
+
+                cursor = get_db().execute(sql, (
+                    id,
+                    tf_hint,
+                    "TF"
+                ))
+                cardid = cursor.lastrowid
+
+                tfContent = """
+                    INSERT INTO TrueFalseContent (
+                        card_ID, tf_question, tf_correct
+                    )
+                    VALUES (?, ?, ?);
+                """
+
+                get_db().execute(tfContent, (
+                    cardid,
+                    tf_question,
+                    tfCorrect
+                ))
+
+                get_db().commit()
+                # redirect to the deck page
+                flash("✔ Card Created Successfully!", "success")
+                return redirect(url_for('Deck', id=id))
 
     # if request method is GET, return the sql results
     else:
@@ -1135,16 +1402,8 @@ def signup():
                     )
                     VALUES (?, ?, datetime('now'));
                 """
-            get_db().execute(usersql, (username, hashed_password))
-            get_db().commit()
-
-            getuserID = """
-                SELECT user_ID
-                FROM Users
-                ORDER BY user_ID DESC
-                LIMIT 1;
-            """
-            userid = query_db(getuserID)[0]
+            cursor = get_db().execute(usersql, (username, hashed_password))
+            userid = cursor.lastrowid
 
             # create settings for the new user
             settingssql = """
@@ -1153,7 +1412,7 @@ def signup():
                     )
                     VALUES (?);
                 """
-            get_db().execute(settingssql, (userid))
+            get_db().execute(settingssql, (userid,))
             get_db().commit()
 
             flash("✔ Account Created Successfully! Please Log In.", "success")
