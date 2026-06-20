@@ -135,7 +135,7 @@ fields.forEach(({ editable, input, placeholder }) => {
 ["cardForm", "quizForm", "tfForm"].forEach(formId => {
     const form = document.getElementById(formId);
     if (form) {
-        form.addEventListener("reset", function() { // on reset button pressed            
+        form.addEventListener("reset", function() { // on reset button pressed
             fields.forEach(({ input, original, editable }) => {
                 // manually set inputs to original values cos reset button does not reset hidden inputs
                 input.value = original;

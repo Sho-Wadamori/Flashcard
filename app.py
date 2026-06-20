@@ -1388,6 +1388,7 @@ def editCard(id, card_id):
             SELECT Flashcards.card_ID,
             Flashcards.card_creation,
             Flashcards.card_mode,
+            Flashcards.card_hint,
             FlashcardContent.flashcard_question,
             FlashcardContent.flashcard_answer,
             QuizContent.quiz_question,
@@ -1404,54 +1405,30 @@ def editCard(id, card_id):
             LEFT JOIN TrueFalseContent ON Flashcards.card_ID = TrueFalseContent.card_ID
             WHERE Flashcards.card_ID = ?;
         """
-        card = query_db(card_sql, (card_id,))[0]
+        card = query_db(card_sql, (card_id,))
 
-        results = []
-        if card[2] == 'flashcard':
-            question = card[3]
-            answer = card[4]
-
-        elif card[2] == 'quiz':
-            question = card[5]
-            if card[10] == 1:
-                answer = card[6]
-            elif card[10] == 2:
-                answer = card[7]
-            elif card[10] == 3:
-                answer = card[8]
-            elif card[10] == 4:
-                answer = card[9]
-            else:
-                answer = "ERROR"
-
-        elif card[2] == 'TF':
-            question = card[11]
-            if card[12] == 1:
-                answer = "True"
-            elif card[12] == 2:
-                answer = "False"
-            else:
-                answer = "ERROR"
-
-        else:
-            flash("""
-                ⚠ Some of Your Cards Are Invalid. 
-                Please contact the owner of the site.
-            """, "error")
-
-        results.append((card[0], card[1], card[2], question, answer))
+        print(card)
 
         # check if card is not empty
         if not card:
             flash("⚠ Invalid Card...", "error")
             return redirect(url_for('Deck', id=id))
 
-        print(results)
+        card = list(card[0])
+
+        # set None values to empty str
+        index = 0
+        for i in card:
+            if i is None:
+                card[index] = ""
+            index += 1
+
+        print(card)
 
         return render_template(
             "cardEdit.html",
             deck_info=deck_info[0],
-            cards=results[0]
+            cards=card
         )
 
 
