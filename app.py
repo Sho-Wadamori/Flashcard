@@ -708,14 +708,34 @@ def Study(id, index):
         flash("⚠ You Do Not Have Permission to Study This Deck...", "error")
         return redirect(url_for("Decks"))
 
-    # get all the card id, Q, A, and creation date for inputted deck id
-    sql = """
-        SELECT card_ID, card_question,
-        card_answer, card_creation, card_hint
+    # get card info
+    card_sql = """
+        SELECT Flashcards.card_ID,
+        Flashcards.card_creation,
+        Flashcards.card_mode,
+        Flashcards.card_hint,
+        FlashcardContent.flashcard_question,
+        FlashcardContent.flashcard_answer,
+        QuizContent.quiz_question,
+        QuizContent.quiz_answer1,
+        QuizContent.quiz_answer2,
+        QuizContent.quiz_answer3,
+        QuizContent.quiz_answer4,
+        QuizContent.quiz_correct,
+        TrueFalseContent.tf_question,
+        TrueFalseContent.tf_correct
         FROM Flashcards
-        WHERE card_deckID = ?;
+        LEFT JOIN FlashcardContent ON Flashcards.card_ID = FlashcardContent.card_ID
+        LEFT JOIN QuizContent ON Flashcards.card_ID = QuizContent.card_ID
+        LEFT JOIN TrueFalseContent ON Flashcards.card_ID = TrueFalseContent.card_ID
+        WHERE Flashcards.card_deckID = ?;
     """
-    results = query_db(sql, (id,))
+    results = query_db(card_sql, (id,))
+
+    # check if card is not empty
+    if not results:
+        flash("⚠ Invalid Deck...", "error")
+        return redirect(url_for('Deck', id=id))
 
     # get session data
     currentSession = session.get('shuffled_cards', None)
