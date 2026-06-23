@@ -154,12 +154,12 @@
 
 /* new radio button selected */
 .radio-buttons input[type="radio"]:checked + label {
-  background-color: color-mix(in hsl, var(--accent-color), rgb(26, 26, 26) 40%);
+  background-color: color-mix(in hsl, var(--accent-color), var(--text-color) 30%);
 }
 
 /* new radio button on hover */
 .radio-buttons label:hover {
-  background-color: color-mix(in hsl, var(--accent-color), rgb(255, 255, 255) 30%);
+  background-color: color-mix(in hsl, var(--accent-color), var(--text-color) 10%);
 }
 
 

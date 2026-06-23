@@ -1372,18 +1372,36 @@ def editCard(id, card_id):
 
             else:
                 sql = """
-                    INSERT INTO Flashcards (
-                        card_deckID, card_creation,
-                        card_hint, card_mode
-                    )
-                    VALUES (?, datetime('now'), ?, ?);
+                    UPDATE Flashcards
+                    SET card_hint = ?, card_mode = ?
+                    WHERE card_ID = ?;
                 """
-                cursor = get_db().execute(sql, (
-                    id,
+                get_db().execute(sql, (
                     flashcard_hint,
-                    "flashcard"
+                    "flashcard",
+                    card_id
                 ))
-                cardid = cursor.lastrowid
+                get_db().commit()
+
+                quizContent = """
+                    INSERT INTO FlashcardContent (
+                        flashcard_question, flashcard_answer, card_ID
+                    )
+                    VALUES (?, ?, ?)
+                    ON CONFLICT(card_ID) DO UPDATE SET
+                    flashcard_question = EXCLUDED.flashcard_question,
+                    flashcard_answer = EXCLUDED.flashcard_answer
+                """
+                get_db().execute(quizContent, (
+                    flashcard_question,
+                    flashcard_answer,
+                    card_id
+                ))
+                get_db().commit()
+
+                # redirect to the deck page
+                flash("✔ Card Updated Successfully!", "success")
+                return redirect(url_for('Deck', id=id))
 
         if card_type == "quiz":
             quizCorrect = request.form.get('quizAnswer')
@@ -1405,42 +1423,44 @@ def editCard(id, card_id):
 
             else:
                 sql = """
-                    INSERT INTO Flashcards (
-                        card_deckID, card_creation,
-                        card_hint, card_mode
-                    )
-                    VALUES (?, datetime('now'), ?, ?);
+                    UPDATE Flashcards
+                    SET card_hint = ?, card_mode = ?
+                    WHERE card_ID = ?;
                 """
-
-                cursor = get_db().execute(sql, (
-                    id,
+                get_db().execute(sql, (
                     quiz_hint,
-                    "quiz"
+                    "quiz",
+                    card_id
                 ))
-                cardid = cursor.lastrowid
+                get_db().commit()
 
                 quizContent = """
                     INSERT INTO QuizContent (
-                    card_ID, quiz_question, quiz_answer1,
-                    quiz_answer2, quiz_answer3,
-                    quiz_answer4, quiz_correct
+                        quiz_question, quiz_answer1, quiz_answer2,
+                        quiz_answer3, quiz_answer4, quiz_correct,
+                        card_ID
                     )
-                    VALUES (?, ?, ?, ?, ?, ?, ?);
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                    ON CONFLICT (card_ID) DO UPDATE SET
+                    quiz_question = EXCLUDED.quiz_question,
+                    quiz_answer1 = EXCLUDED.quiz_answer1,
+                    quiz_answer2 = EXCLUDED.quiz_answer2,
+                    quiz_answer3 = EXCLUDED.quiz_answer3,
+                    quiz_answer4 = EXCLUDED.quiz_answer4,
+                    quiz_correct = EXCLUDED.quiz_correct
                 """
-
                 get_db().execute(quizContent, (
-                    cardid,
                     quiz_question,
                     quiz_answer1,
                     quiz_answer2,
                     quiz_answer3,
                     quiz_answer4,
-                    quizCorrect
+                    quizCorrect,
+                    card_id
                 ))
-
                 get_db().commit()
                 # redirect to the deck page
-                flash("✔ Card Created Successfully!", "success")
+                flash("✔ Card Updated Successfully!", "success")
                 return redirect(url_for('Deck', id=id))
 
         if card_type == "TF":
@@ -1458,36 +1478,34 @@ def editCard(id, card_id):
 
             else:
                 sql = """
-                    INSERT INTO Flashcards (
-                        card_deckID, card_creation,
-                        card_hint, card_mode
-                    )
-                    VALUES (?, datetime('now'), ?, ?);
+                    UPDATE Flashcards
+                    SET card_hint = ?, card_mode = ?
+                    WHERE card_id = ?;
                 """
-
-                cursor = get_db().execute(sql, (
-                    id,
+                get_db().execute(sql, (
                     tf_hint,
-                    "TF"
+                    "TF",
+                    card_id
                 ))
-                cardid = cursor.lastrowid
+                get_db().commit()
 
                 tfContent = """
                     INSERT INTO TrueFalseContent (
-                        card_ID, tf_question, tf_correct
+                        tf_question, tf_correct, card_ID
                     )
-                    VALUES (?, ?, ?);
+                    VALUES (?, ?, ?)
+                    ON CONFLICT (card_ID) DO UPDATE SET
+                    tf_question = EXCLUDED.tf_question,
+                    tf_correct = EXCLUDED.tf_correct
                 """
-
                 get_db().execute(tfContent, (
-                    cardid,
                     tf_question,
-                    tfCorrect
+                    tfCorrect,
+                    card_id
                 ))
-
                 get_db().commit()
                 # redirect to the deck page
-                flash("✔ Card Created Successfully!", "success")
+                flash("✔ Card Updated Successfully!", "success")
                 return redirect(url_for('Deck', id=id))
 
     # if request method is GET, return the sql results

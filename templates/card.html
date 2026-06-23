@@ -148,31 +148,32 @@
 
 <!----------------------------------- Javascript ----------------------------------->
 <script>
+  const flashcard = document.getElementById("card_click");
+  const quiz = document.getElementById("QUIZ")
+  const tf = document.getElementById("TF")
 
   // ----- Card Flipper -----
-  function clickAction() {
-    if (!showingAnswer) {
-      // Show answer
-      card.textContent = answerText;
-      showingAnswer = true;
-    } 
-    
-    else {
-      // Show question
-      card.textContent = questionText;
-      showingAnswer = false;
-    }
-    MathJax.typesetPromise([card]);
-  }
-
-  const cardButton = document.getElementById("card_click");
-  if (cardButton) {
-    let showingAnswer = false;
+  let showingAnswer = false;
+  
+  if (flashcard) {
     const card = document.getElementById("card");
+    const questionText = flashcard.dataset.question;
+    const answerText = flashcard.dataset.answer;
 
-    const questionText = cardButton.dataset.question;
-    const answerText = cardButton.dataset.answer;
-
+    function clickAction() {
+      if (!showingAnswer) {
+        // Show answer
+        card.textContent = answerText;
+        showingAnswer = true;
+      } 
+      
+      else {
+        // Show question
+        card.textContent = questionText;
+        showingAnswer = false;
+      }
+      MathJax.typesetPromise([card]);
+    }
   }
 
 
@@ -181,13 +182,53 @@
   // ----- Keybinds -----
   document.addEventListener('keydown', (event) => {
     if (event.key === '1') {
-      document.getElementById("correct").checked = true;
+      if (flashcard) {
+        document.getElementById("correct").checked = true;
+      }
+
+      if (quiz) {
+        document.getElementById("quizAnswer1Radio").checked = true;
+      }
+
+      if (tf) {
+        document.getElementById("tfAnswer1Radio").checked = true;
+      }
     }
     if (event.key === '2') {
-      document.getElementById("incorrect").checked = true;
+      if (flashcard) {
+        document.getElementById("incorrect").checked = true;
+      }
+
+      if (quiz) {
+        document.getElementById("quizAnswer2Radio").checked = true;
+      }
+
+      if (tf) {
+        document.getElementById("tfAnswer2Radio").checked = true;
+      }
     }
     if (event.key === '3') {
-      document.getElementById("skip").checked = true;
+      if (flashcard) {
+        document.getElementById("skip").checked = true;
+      }
+
+      if (quiz) {
+        document.getElementById("quizAnswer3Radio").checked = true;
+      }
+
+      if (tf) {
+      }
+    }
+    if (event.key === '4') {
+      if (flashcard) {
+      }
+
+      if (quiz) {
+        document.getElementById("quizAnswer4Radio").checked = true;
+      }
+
+      if (tf) {
+      }
     }
 
     if (event.key === ' ') {
@@ -198,11 +239,19 @@
     const exit = document.getElementById("exit_button");
     const prev = document.getElementById("prev_button");
     if (event.key === 'ArrowRight') {
-        next.click();
+      console.log("right")
+      if (exit) {
         exit.click();
+      }
+      if (next) {
+        next.click();
+      }
     }
     if (event.key === 'ArrowLeft') {
+      console.log("left")
+      if (prev) {
         prev.click();
+      }
     }
   });
 
