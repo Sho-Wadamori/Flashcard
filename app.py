@@ -1565,7 +1565,8 @@ def stats():
         totalStudied=totalStudied,
         skipped=skipped,
         studytotals=studytotals,
-        userID=userID()
+        userID=userID(),
+        username=session.get('username', "USERNAME")
     )
 
 
@@ -1642,6 +1643,15 @@ def theme():
         warning = request.form.get('warning')
         shadowFull = request.form.get('shadowFull')
         fontSize = request.form.get('fontSize')
+        anim = request.form.get('animToggle')
+
+        # check if animation is enabled
+        if anim is None:
+            enable = 0
+        else:
+            enable = 1
+
+        print(shadowFull)
 
         # update themes
         update_settings = """
@@ -1649,7 +1659,7 @@ def theme():
             SET settings_bg1 = ?, settings_bg2 = ?, settings_text = ?,
             settings_accentBG = ?, settings_accentTXT = ?, settings_cardBG = ?,
             settings_cardTXT = ?, settings_warning = ?, settings_shadow = ?,
-            settings_fontSize = ?
+            settings_fontSize = ?, settings_animation = ?
             WHERE settings_userID = ?;
         """
         get_db().execute(update_settings, (
@@ -1663,6 +1673,7 @@ def theme():
             warning,
             shadowFull,
             fontSize,
+            enable,
             userID()
         ),)
         get_db().commit()

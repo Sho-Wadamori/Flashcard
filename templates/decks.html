@@ -39,15 +39,16 @@
         <button type="submit">Apply</button>
     </form>
 
+    {% if filter != 'none' %}
+        <h6>Some decks may be hidden. <a href="{{ url_for('Decks') }}" class="blue-text">Clear filters</a></h6>
+    {% endif %}
+
     <!-- No deck message -->
     {% else %}
-    
         {% if filter != 'none' %}
-        <h6>Some decks may be hidden. <a href="{{ url_for('Decks') }}" class="blue-text">Clear filters</a></h6>
-        </form>
+            <h6>Some decks may be hidden. <a href="{{ url_for('Decks') }}" class="blue-text">Clear filters</a></h6>
         {% else %}
             <h6>You have no decks yet.</h6>
-
         {% endif %}
 
         <form action="{{ url_for('Decks') }}" method="GET" class='sort-form' style="top: 18px;">

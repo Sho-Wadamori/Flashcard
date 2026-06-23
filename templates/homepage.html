@@ -34,11 +34,10 @@
     {% if username != 'Guest' %}
     <div class="categoryHeaders">
         {% include "icons/statistics.html" %}
-        <h2>Your Progress</h2> <a href="{{ url_for('stats') }}"><h6 style="color: color-mix(in hsl, var(--accent-color), rgb(255, 255, 255) 40%) !important;">View more ></h6></a>
+        <h2>Your Progress</h2> <a href="{{ url_for('stats') }}"><h6 style="color: color-mix(in hsl, var(--accent-color), rgb(130, 130, 130) 40%) !important;">View more ></h6></a>
     </div>
     <div class="statsContainer">
         <div class="statsDaily">
-            <!-- <h1 style="font-size: 2rem;">CURRENT STREAK</h1> -->
             <div class="statsInner">
                 {% if currentStreak == 0 %}
                 <h2>You do not have a streak yet...</h2>
@@ -52,21 +51,25 @@
         </div>
 
         <div class="statsWeekly">
-            <h3>All Time Stats</h3>
-            <div class="statsInner">
-                <div style="display: flex; flex-direction: column;">
-                    <h5 style="margin-bottom: 0;">Time Studied This Week</h5>
-                    <h6>0 mins</h6>
+            <h3 style="text-align: center;">All Time Stats</h3>
+            <div class="statsInner" style="display: grid; grid-auto-flow: row; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <h5 style="margin-bottom: 0;">Time Studied</h5>
+                    <h4>{{ totalDuration }}</h4>
                 </div>
-                <div style="display: flex; flex-direction: column;">
-                    <h5 style="margin-bottom: 0;">Cards Studied This Week</h5>
-                    <h6>0 cards</h6>
+                <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <h5 style="margin-bottom: 0;">Cards Studied</h5>
+                    <h4>{{ totalSessions }} cards</h4>
+                </div>
+                <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <h5 style="margin-bottom: 0;">Correct:</h5>
+                    <h4>{{ answer_stats[0] }}</h4>
+                </div>
+                <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <h5 style="margin-bottom: 0;">Incorrect:</h5>
+                    <h4>{{ answer_stats[1] }}</h4>
                 </div>
             </div><br>
-
-            <p>Correct: {{ answer_stats[0] }}</p>
-            <p>Incorrect: {{ answer_stats[1] }}</p>
-            <p>Skip</p>
         </div>
     </div>
 <!-- 
@@ -102,7 +105,7 @@
     
     <div class="categoryHeaders">
         {% include "icons/world.html" %}
-        <h2>Public Decks</h2> <a href="{{ url_for('public') }}"><h6 style="color: color-mix(in hsl, var(--accent-color), rgb(255, 255, 255) 40%) !important;">View all ></h6></a>
+        <h2>Public Decks</h2> <a href="{{ url_for('public') }}"><h6 style="color: color-mix(in hsl, var(--accent-color), rgb(130, 130, 130) 40%) !important;">View all ></h6></a>
     </div>
     <div class="three-column">
         {% for deck in publicDecks %}
@@ -169,6 +172,9 @@
     </div>
 </div>
 
+<br>
+<br>
+
 <!-- scroll to top button -->
 <div class="fixed-button">
     <a onclick="window.scrollTo({top: 0, behavior: 'smooth'});">
@@ -180,7 +186,6 @@
 {% include "components/share.html" %}
 
 <script>
-
 // define button
 const scrollBtn = document.querySelector(".fixed-button");
 

@@ -21,7 +21,7 @@
         <div style="display: flex; gap: 30px;">
             <img src="{{ url_for('static', filename='assets/profile.png') }}" alt="profile pic" height="120px">
             <div class="userNameStats">
-                <h1>USERNAME</h1>
+                <h1 style="width: 450px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">{{ username }}</h1>
                 <p>Joined {{ joinDate }}</p>
             </div>
         </div>
