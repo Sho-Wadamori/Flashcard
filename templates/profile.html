@@ -17,18 +17,15 @@
 </div>
 
 <!-- User Info with pfp and textbox -->
-<div class="userInfoContainerContainer">
-    <div class="userInfoContainer">
-        <div class="userInfo">
-            <img src="{{ url_for('static', filename='assets/profile.png') }}" height="170px" width="170px" alt="profile picture">
-            <h2>@{{ results[0] }}</h2>
-        </div>
-        <div class="pfpButtons">
-            <button>Change</button>
-            <button>Remove</button>
-        </div>
+<div class="userInfoContainer">
+    <div class="userInfo">
+        <img src="{{ url_for('static', filename='assets/profile.png') }}" height="170px" width="170px" alt="profile picture">
+        <h2>@{{ results[0] }}</h2>
     </div>
-    <textarea name="textArea" id="textArea" class="textBox"></textarea>
+    <!-- <div class="pfpButtons">
+        <button>Change</button>
+        <button>Remove</button>
+    </div> -->
 </div>
 
 <br><br>
