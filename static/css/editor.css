@@ -98,18 +98,48 @@
   pointer-events: none;
 }
 
-.preview.question:empty::before {
+.preview.cardQuestion:empty::before {
   content: "{ Flashcard Question }*";
   pointer-events: none;
 }
 
-.preview.answer:empty::before {
+.preview.cardAnswer:empty::before {
   content: "{ Flashcard Answer }*";
   pointer-events: none;
 }
 
 .preview.hint:empty::before {
   content: "{ Hint Text }";
+  pointer-events: none;
+}
+
+.preview.quizQuestion:empty::before {
+  content: "{ Question }*";
+  pointer-events: none;
+}
+
+.preview.quizAnswer1:empty::before {
+  content: "{ Answer 1 }*";
+  pointer-events: none;
+}
+
+.preview.quizAnswer2:empty::before {
+  content: "{ Answer 2 }*";
+  pointer-events: none;
+}
+
+.preview.quizAnswer3:empty::before {
+  content: "{ Answer 3 }*";
+  pointer-events: none;
+}
+
+.preview.quizAnswer4:empty::before {
+  content: "{ Answer 4 }*";
+  pointer-events: none;
+}
+
+.preview.tfQuestion:empty::before {
+  content: "{ Question }*";
   pointer-events: none;
 }
 
@@ -155,11 +185,21 @@
   transition: width 0.3s ease-in-out; /* animate width and delay visibility change */
   transition-delay: 0.1s; /* delay the transition to make it smoother */
 }
+.quizContainer,
+.tfContainer {
+  width: 60%;
+  transition: width 0.3s ease-in-out; /* animate width and delay visibility change */
+  transition-delay: 0.1s; /* delay the transition to make it smoother */
+}
 /* when open */
 .left-layout.open {
   width: 320px; /* give it a width */
   pointer-events: auto;
   transition-delay: 0s;
+}
+.quizContainer.open,
+.tfContainer.open {
+  width: 60% !important;
 }
 
 /* animate inner content (use > * so we can reuse open class) */

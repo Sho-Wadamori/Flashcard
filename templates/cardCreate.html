@@ -9,24 +9,66 @@
 
 <div id="characterPopup-overlay" class="characterPopup-overlay" onclick="closeDropdownPanel()"></div>
 
-<!-- Card creation form -->
-<form id="cardForm" action="{{ url_for('createCard', id=deck_info[1]) }}" method="POST" autocomplete="off">
-    <p style="color: var(--warning-color);">* Indicates required question</p>
+<div class="deck-header" style="margin-bottom: 0 !important;">
+    <!-- Flashcard form -->
+    <form id="cardForm" action="{{ url_for('createCard', id=deck_info[1]) }}" method="POST" autocomplete="off">
+        <p style="color: var(--warning-color);">* Indicates required question</p>
 
-    <input id="questionInput" name="cardQuestion" type="hidden" required>
-    <input id="answerInput" name="cardAnswer" type="hidden" required>
-    <input id="hintInput" name="cardHint" type="hidden">
+        <input type="hidden" name="cardType" value="flashcard">
+        <input id="cardQuestionInput" name="cardQuestion" type="hidden" required>
+        <input id="cardAnswerInput" name="cardAnswer" type="hidden" required>
+        <input id="cardHintInput" name="cardHint" type="hidden">
 
-    <button type="submit">Submit</button>
-    <button type="reset">Reset</button><br><br>
-</form>
+        <button type="submit">Submit</button>
+        <button type="reset">Reset</button><br><br>
+    </form>
+
+    <!-- Quiz form -->
+    <form id="quizForm" action="{{ url_for('createCard', id=deck_info[1]) }}" method="POST" autocomplete="off" style="display: none;">
+        <p style="color: var(--warning-color);">* Indicates required question</p>
+
+        <input type="hidden" name="cardType" value="quiz">
+        <input id="quizQuestionInput" name="quizQuestion" type="hidden" required>
+        <input id="quizAnswer1Input" name="quizAnswer1" type="hidden" required>
+        <input id="quizAnswer2Input" name="quizAnswer2" type="hidden" required>
+        <input id="quizAnswer3Input" name="quizAnswer3" type="hidden" required>
+        <input id="quizAnswer4Input" name="quizAnswer4" type="hidden" required>
+        <input id="quizHintInput" name="quizHint" type="hidden">
+
+        <button type="submit">Submit</button>
+        <button type="reset">Reset</button><br><br>
+    </form>
+
+    <!-- TF form -->
+    <form id="tfForm" action="{{ url_for('createCard', id=deck_info[1]) }}" method="POST" autocomplete="off" style="display: none;">
+        <p style="color: var(--warning-color);">* Indicates required question</p>
+
+        <input type="hidden" name="cardType" value="TF">
+        <input id="tfQuestionInput" name="tfQuestion" type="hidden" required>
+        <input id="tfHintInput" name="tfHint" type="hidden">
+
+        <button type="submit">Submit</button>
+        <button type="reset">Reset</button><br><br>
+    </form>
+
+    <!-- mode changer -->
+    <div class="sort-form">
+        <label for="mode">Mode: </label>
+        <select name="mode" id="mode">
+            <option value="flashcard" selected>Flashcard</option>
+            <option value="quiz">Quiz</option>
+            <option value="TF">True/False</option>
+        </select>
+    </div>
+</div>
 
 <div style="text-align:center; margin-bottom: 20px;">
   <button type="button" onclick="togglePanel()">⌨ Special Characters</button>
   <button type="button" onclick="openPopupTab('mathjax')">🛈 MathJax Help</button>
 </div>
 
-<div class="editor-layout">
+
+<div style="display: flex;">
     <!-- left side -->
     <div class="left-layout" id="characterPanel">
         <!-- Character Panel -->
@@ -34,11 +76,57 @@
     </div>
 
     <!-- Card preview (right side) -->
-    <div class="card-editor">
+    <div id="FLASHCARD" class="card-editor">
         <!-- the question then the answer -->
-        <h1 id="question" contenteditable="plaintext-only" class="preview question">{ Flashcard Question }</h1>
+        <h1 id="cardQuestion" contenteditable="plaintext-only" class="preview cardQuestion">{ Flashcard Question }*</h1>
         <p>---------------</p>
-        <h4 id="answer" contenteditable="plaintext-only" class="preview answer">{ Flashcard Answer }</h4>
+        <h4 id="cardAnswer" contenteditable="plaintext-only" class="preview cardAnswer">{ Flashcard Answer }*</h4>
+    </div>
+
+    <div id="QUIZ" style="display: none; width: 80%; margin: auto;" class="quizContainer">
+        <div style="width: 100%; background-color: var(--card-bg-color); border-radius: 10px; text-align: center; padding: 20px;">
+            <h1 id="quizQuestion" contenteditable="plaintext-only" class="preview quizQuestion">{ Question }*</h1>
+        </div>
+        <div class="options" style="display: grid; grid-template-columns: 1fr 1fr; grid-auto-flow: row; gap: 30px; width: 100%; margin-top: 30px;">
+            <div style="background-color: var(--card-bg-color); border-radius: 10px; padding: 20px 30px; display: flex; justify-content: space-between;">
+                <h2 id="quizAnswer1" contenteditable="plaintext-only" class="preview quizAnswer1">{ Answer 1 }*</h2>
+                <input type="radio" name="quizAnswer" id="quizAnswer1Radio" value="1" form="quizForm" style="height: 20px; width: 20px; margin: auto 0; cursor: pointer;">
+            </div>
+        
+            <div style="background-color: var(--card-bg-color); border-radius: 10px; padding: 20px 30px; display: flex; justify-content: space-between;">
+                <h2 id="quizAnswer2" contenteditable="plaintext-only" class="preview quizAnswer2">{ Answer 2 }*</h2>
+                <input type="radio" name="quizAnswer" id="quizAnswer2Radio" value="2" form="quizForm" style="height: 20px; width: 20px; margin: auto 0; cursor: pointer;">
+            </div>
+        
+            <div style="background-color: var(--card-bg-color); border-radius: 10px; padding: 20px 30px; display: flex; justify-content: space-between;">
+                <h2 id="quizAnswer3" contenteditable="plaintext-only" class="preview quizAnswer3">{ Answer 3 }*</h2>
+                <input type="radio" name="quizAnswer" id="quizAnswer3Radio" value="3" form="quizForm" style="height: 20px; width: 20px; margin: auto 0; cursor: pointer;">
+            </div>
+        
+            <div style="background-color: var(--card-bg-color); border-radius: 10px; padding: 20px 30px; display: flex; justify-content: space-between;">
+                <h2 id="quizAnswer4" contenteditable="plaintext-only" class="preview quizAnswer4">{ Answer 4 }*</h2>
+                <input type="radio" name="quizAnswer" id="quizAnswer4Radio" value="4" form="quizForm" style="height: 20px; width: 20px; margin: auto 0; cursor: pointer;">
+            </div>
+        </div>
+    </div>
+
+    <div id="TF" style="display: none; width: 80%; margin: auto;" class="quizContainer">
+        <div style="width: 100%; background-color: var(--card-bg-color); border-radius: 10px; text-align: center; padding: 20px;">
+            <h1 id="tfQuestion" contenteditable="plaintext-only" class="preview tfQuestion">{ Question }*</h1>
+        </div>
+
+        <div class="TFOptions" style="display: grid; grid-template-columns: 1fr 1fr; grid-auto-flow: row; gap: 30px; width: 100%; margin-top: 30px;">
+            <div id="tfOption1" style="background-color: var(--card-bg-color); border-radius: 10px; padding: 20px 30px; display: flex; justify-content: space-between; cursor: pointer;" onclick="document.getElementById('tfAnswer1Radio').checked = true;">
+                <h2>TRUE</h2>
+                <input type="radio" name="tfAnswer" id="tfAnswer1Radio" value="1" form="tfForm" style="height: 20px; width: 20px; margin: auto 0;">
+            </div>
+        
+            <div id="tfOption2" style="background-color: var(--card-bg-color); border-radius: 10px; padding: 20px 30px; display: flex; justify-content: space-between; cursor: pointer;" onclick="document.getElementById('tfAnswer2Radio').checked = true;">
+                <h2>FALSE</h2>
+                <input type="radio" name="tfAnswer" id="tfAnswer2Radio" value="2" form="tfForm" style="height: 20px; width: 20px; margin: auto 0;">
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -59,12 +147,23 @@
 
 <script>
 
-    const question = document.getElementById("question")
-    const answer = document.getElementById("answer")
+    const cardQuestion = document.getElementById("cardQuestion")
+    const cardAnswer = document.getElementById("cardAnswer")
     const hint = document.getElementById("hint")
 
+    const quizQuestion = document.getElementById("quizQuestion")
+    const quizAnswer1 = document.getElementById("quizAnswer1")
+    const quizAnswer2 = document.getElementById("quizAnswer2")
+    const quizAnswer3 = document.getElementById("quizAnswer3")
+    const quizAnswer4 = document.getElementById("quizAnswer4")
 
-    question.addEventListener('beforeinput', (element) => {
+    const tfQuestion = document.getElementById("tfQuestion")
+    const tfAnswer1 = document.getElementById("tfAnswer1")
+    const tfAnswer2 = document.getElementById("tfAnswer2")
+
+
+    // flashcard
+    cardQuestion.addEventListener('beforeinput', (element) => {
         const currentLength = element.target.innerText.length
 
         // target insert inputs and pastes when > 700 chars
@@ -74,7 +173,7 @@
         }
     })
 
-    answer.addEventListener('beforeinput', (element) => {
+    cardAnswer.addEventListener('beforeinput', (element) => {
         const currentLength = element.target.innerText.length
 
         // target insert inputs and pastes when > 700 chars
@@ -92,6 +191,108 @@
             element.preventDefault()
 
         }
+    })
+
+    // quiz
+    quizQuestion.addEventListener('beforeinput', (element) => {
+        const currentLength = element.target.innerText.length
+
+        // target insert inputs and pastes when > 700 chars
+        if (currentLength >= 700 && element.inputType.startsWith('insert')) {
+            element.preventDefault()
+
+        }
+    })
+    quizAnswer1.addEventListener('beforeinput', (element) => {
+        const currentLength = element.target.innerText.length
+
+        // target insert inputs and pastes when > 150 chars
+        if (currentLength >= 150 && element.inputType.startsWith('insert')) {
+            element.preventDefault()
+
+        }
+    })
+
+    quizAnswer2.addEventListener('beforeinput', (element) => {
+        const currentLength = element.target.innerText.length
+
+        // target insert inputs and pastes when > 150 chars
+        if (currentLength >= 150 && element.inputType.startsWith('insert')) {
+            element.preventDefault()
+
+        }
+    })
+
+    quizAnswer3.addEventListener('beforeinput', (element) => {
+        const currentLength = element.target.innerText.length
+
+        // target insert inputs and pastes when > 150 chars
+        if (currentLength >= 150 && element.inputType.startsWith('insert')) {
+            element.preventDefault()
+
+        }
+    })
+
+    quizAnswer4.addEventListener('beforeinput', (element) => {
+        const currentLength = element.target.innerText.length
+
+        // target insert inputs and pastes when > 150 chars
+        if (currentLength >= 150 && element.inputType.startsWith('insert')) {
+            element.preventDefault()
+
+        }
+    })
+
+    // true/false
+    tfQuestion.addEventListener('beforeinput', (element) => {
+        const currentLength = element.target.innerText.length
+
+        // target insert inputs and pastes when > 700 chars
+        if (currentLength >= 700 && element.inputType.startsWith('insert')) {
+            element.preventDefault()
+
+        }
+    })
+
+
+
+
+    modeSelect = document.getElementById("mode")
+    modeSelect.value = "flashcard";
+
+    modeSelect.addEventListener('change', (element) => {
+        console.log("CHANGED")
+        if (modeSelect.value == "flashcard") {
+            document.getElementById("FLASHCARD").style.display = "block";
+            document.getElementById("QUIZ").style.display = "none";
+            document.getElementById("TF").style.display = "none";
+
+            document.getElementById("cardForm").style.display = "block";
+            document.getElementById("quizForm").style.display = "none";
+            document.getElementById("tfForm").style.display = "none";
+        }
+        if (modeSelect.value == "quiz") {
+            document.getElementById("FLASHCARD").style.display = "none";
+            document.getElementById("QUIZ").style.display = "block";
+            document.getElementById("TF").style.display = "none";
+
+            document.getElementById("cardForm").style.display = "none";
+            document.getElementById("quizForm").style.display = "block";
+            document.getElementById("tfForm").style.display = "none";
+        }
+        if (modeSelect.value == "TF") {
+            document.getElementById("FLASHCARD").style.display = "none";
+            document.getElementById("QUIZ").style.display = "none";
+            document.getElementById("TF").style.display = "block";
+
+            document.getElementById("cardForm").style.display = "none";
+            document.getElementById("quizForm").style.display = "none";
+            document.getElementById("tfForm").style.display = "block";
+        }
+
+        document.getElementById("cardForm").reset();
+        document.getElementById("quizForm").reset();
+        document.getElementById("tfForm").reset();
     })
 
 </script>

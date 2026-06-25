@@ -442,43 +442,161 @@ def Decks():
 # ---------- list all flashcards for a single deck ----------
 @app.route('/decks/<int:id>/')
 def Deck(id):
+    # get the deck info if deck belongs to user or if it is public/unlisted
+    sql_deck = """
+        SELECT deck_name, deck_ID, deck_creation, deck_userID
+        FROM Decks
+        WHERE deck_ID = ?
+        AND (
+            deck_userID = ? OR (
+                deck_visibility = 'public'
+                OR deck_visibility = 'unlisted'
+            )
+        );
+    """
+
+    deck_info = query_db(sql_deck, (id, userID()), True)
+
+    # kick out user if they dont meet these conditions
+    if not deck_info:
+        flash("⚠ Invalid Deck...", "error")
+        return redirect(url_for("Decks"))
+
+    filter = request.args.get('filter')
     sort_by = request.args.get('sort_by')
     order = request.args.get('order')
-    allowed_sort = {'card_creation', 'card_question', 'card_answer'}
+    allowed_filter = {'none', 'flashcard', 'quiz', 'TF'}
+    allowed_sort = {
+        'card_creation',
+        'card_question',
+        'card_answer',
+        'card_mode'
+    }
     allowed_order = {'ASC', 'DESC'}
 
+    # fallback for invalid sort/order (not really necessary)
+    if filter not in allowed_filter:
+        filter = 'none'  # default filter none
     if sort_by not in allowed_sort:
         sort_by = 'card_creation'  # default sort by creation date
     if order not in allowed_order:
         order = 'DESC'  # default order descending
 
-    # get all the card id, Q, A, and creation date for inputted deck id
-    sql = f"""
-            SELECT card_ID, card_question, card_answer, card_creation
-            FROM Flashcards
-            WHERE card_deckID = ?
-            ORDER BY {sort_by} {order};
-        """
-    # get the deck name of the inputted deck id
-    # only show the deck if it belongs to the user or if it is public/unlisted
-    sql_deck = """
-                SELECT deck_name, deck_ID, deck_creation, deck_userID
-                FROM Decks
-                WHERE deck_ID = ?
-                AND (
-                    deck_userID = ? OR (
-                        deck_visibility = 'public'
-                        OR deck_visibility = 'unlisted'
-                    )
-                );
-            """
+    # create filter query that we will inject
+    if filter != 'none':
+        filterSQL = f"AND (Flashcards.card_mode != '{filter}') "
+    else:
+        filterSQL = ""
 
-    deck_info = query_db(sql_deck, (id, userID()), True)
-    results = query_db(sql, (id,))
+    # get all card info for inputted deck id
+    # use LEFT JOIN to get all info even if they are invalid for the card mode
+    card_sql = f"""
+        SELECT Flashcards.card_ID,
+        Flashcards.card_creation,
+        Flashcards.card_mode,
+        FlashcardContent.flashcard_question,
+        FlashcardContent.flashcard_answer,
+        QuizContent.quiz_question,
+        QuizContent.quiz_answer1,
+        QuizContent.quiz_answer2,
+        QuizContent.quiz_answer3,
+        QuizContent.quiz_answer4,
+        QuizContent.quiz_correct,
+        TrueFalseContent.tf_question,
+        TrueFalseContent.tf_correct
+        FROM Flashcards
+        LEFT JOIN FlashcardContent ON Flashcards.card_ID = FlashcardContent.card_ID
+        LEFT JOIN QuizContent ON Flashcards.card_ID = QuizContent.card_ID
+        LEFT JOIN TrueFalseContent ON Flashcards.card_ID = TrueFalseContent.card_ID
+        WHERE Flashcards.card_deckID = ?
+        {filterSQL};
+    """
+    cards = query_db(card_sql, (id,))
 
-    if not deck_info:
-        flash("⚠ Invalid Deck...", "error")
-        return redirect(url_for("Decks"))
+    results = []
+    for card in cards:
+        if card[2] == 'flashcard':
+            question = card[3]
+            answer = card[4]
+
+        elif card[2] == 'quiz':
+            question = card[5]
+            if card[10] == 1:
+                answer = card[6]
+            elif card[10] == 2:
+                answer = card[7]
+            elif card[10] == 3:
+                answer = card[8]
+            elif card[10] == 4:
+                answer = card[9]
+            else:
+                answer = "ERROR"
+
+        elif card[2] == 'TF':
+            question = card[11]
+            if card[12] == 1:
+                answer = "True"
+            elif card[12] == 2:
+                answer = "False"
+            else:
+                answer = "ERROR"
+
+        else:
+            flash("""
+                ⚠ Some of Your Cards Are Invalid. 
+                Please contact the owner of the site.
+            """, "error")
+
+        results.append((card[0], card[1], card[2], question, answer))
+
+    # card = f"""
+    #     SELECT card_ID, card_creation, card_mode
+    #     FROM Flashcards
+    #     WHERE card_deckID = ?
+    #     ORDER BY {sort_by} {order};
+    # """
+    # results = query_db(card, (id,))
+
+    # cards = []
+    # for row in results:
+    #     mode = row[2]
+    #     if mode == 'flashcard':
+    #         content = query_db("""
+    #             SELECT flashcard_question, flashcard_answer
+    #             FROM Flashcards
+    #             WHERE card_ID = ?
+    #         """, (row[0],))
+
+    #     elif mode == 'quiz':
+    #         content = query_db("""
+    #             SELECT quiz_question, quiz_answer
+    #             FROM Flashcards
+    #             WHERE card_ID = ?
+    #         """, (row[0],))
+
+    #     elif mode == 'TF':
+    #         content = query_db("""
+    #             SELECT tf_question, tf_answer
+    #             FROM Flashcards
+    #             WHERE card_ID = ?
+    #         """, (row[0],))
+
+
+
+    # handeling sorting and ordering
+    ordering = order == "DESC"
+
+    if sort_by == "card_answer":
+        results.sort(key=lambda x: x[4], reverse=ordering)
+
+    elif sort_by == "card_question":
+        results.sort(key=lambda x: x[3], reverse=ordering)
+
+    elif sort_by == "mode":
+        results.sort(key=lambda x: x[2], reverse=ordering)
+
+    else:
+        results.sort(key=lambda x: x[1], reverse=ordering)
 
     # chek if the user is the owner of the deck
     is_owner = deck_info[3] == userID()
@@ -497,6 +615,7 @@ def Deck(id):
         deck_info=deck_info,
         time_ago=time_ago,
         format_date=format_date,
+        filter=filter,
         sort_by=sort_by,
         order=order,
         is_owner=is_owner,
@@ -570,6 +689,71 @@ def resume_study(id):
     return redirect(url_for('Study', id=id, index=saved_index))
 
 
+def updateCardStats(result, id):
+    # get the user's stats for the current card
+    get_stats = """
+        SELECT *
+        FROM UserCardStats
+        WHERE stats_cardID = ?
+        AND stats_userID = ?;
+    """
+    stats = query_db(get_stats, (id, userID()))
+
+    # if the user got the card correct
+    if result:
+        # if the user has no stats for card, create new entry
+        if not stats:
+            add_stats = """
+                INSERT INTO UserCardStats (
+                    stats_correct, stats_userID, stats_cardID
+                )
+                Values (?, ?, ?)
+            """
+            # add 1 correct
+            get_db().execute(add_stats, (1, userID(), id))
+            get_db().commit()
+
+        # if the user has stats for the card, add 1 to correct
+        else:
+            update_stats = """
+                UPDATE UserCardStats
+                SET stats_correct = stats_correct + 1
+                WHERE stats_cardID = ?
+                AND stats_userID = ?
+            """
+            get_db().execute(update_stats, (id, userID()))
+            get_db().commit()
+
+        session['correct'] = session.get('correct', 0) + 1
+
+    # if the user got the card incorrect
+    elif not result:
+        # if the user has no stats for card, create new entry
+        if not stats:
+            add_stats = """
+                INSERT INTO UserCardStats (
+                    stats_incorrect, stats_userID, stats_cardID
+                )
+                Values (?, ?, ?)
+            """
+            # add 1 incorrect
+            get_db().execute(add_stats, (1, userID(), id))
+            get_db().commit()
+
+        # if the user has stats for card, add 1 to incorrect
+        else:
+            update_stats = """
+                UPDATE UserCardStats
+                SET stats_incorrect = stats_incorrect + 1
+                WHERE stats_cardID = ?
+                AND stats_userID = ?
+            """
+            get_db().execute(update_stats, (id, userID()))
+            get_db().commit()
+
+        session['incorrect'] = session.get('incorrect', 0) + 1
+
+
 # ---------- study a single card based on the index ----------
 @app.route('/decks/<int:id>/study/<int:index>/', methods=['GET', 'POST'])
 def Study(id, index):
@@ -580,6 +764,7 @@ def Study(id, index):
         WHERE deck_ID = ?;
     """
     deck_info = query_db(sql_deck, (id,), one=True)
+
     if not deck_info:
         flash("⚠ Invalid Deck...", "error")
         return redirect(url_for("Decks"))
@@ -589,20 +774,40 @@ def Study(id, index):
         flash("⚠ You Do Not Have Permission to Study This Deck...", "error")
         return redirect(url_for("Decks"))
 
-    # get all the card id, Q, A, and creation date for inputted deck id
-    sql = """
-        SELECT card_ID, card_question,
-        card_answer, card_creation, card_hint
+    # get card info
+    card_sql = """
+        SELECT Flashcards.card_ID,
+        Flashcards.card_creation,
+        Flashcards.card_mode,
+        Flashcards.card_hint,
+        FlashcardContent.flashcard_question,
+        FlashcardContent.flashcard_answer,
+        QuizContent.quiz_question,
+        QuizContent.quiz_answer1,
+        QuizContent.quiz_answer2,
+        QuizContent.quiz_answer3,
+        QuizContent.quiz_answer4,
+        QuizContent.quiz_correct,
+        TrueFalseContent.tf_question,
+        TrueFalseContent.tf_correct
         FROM Flashcards
-        WHERE card_deckID = ?;
+        LEFT JOIN FlashcardContent ON Flashcards.card_ID = FlashcardContent.card_ID
+        LEFT JOIN QuizContent ON Flashcards.card_ID = QuizContent.card_ID
+        LEFT JOIN TrueFalseContent ON Flashcards.card_ID = TrueFalseContent.card_ID
+        WHERE Flashcards.card_deckID = ?;
     """
-    results = query_db(sql, (id,))
+    results = query_db(card_sql, (id,))
+
+    # check if card is not empty
+    if not results:
+        flash("⚠ Invalid Deck...", "error")
+        return redirect(url_for('Deck', id=id))
 
     # get session data
     currentSession = session.get('shuffled_cards', None)
     currentSessionDeck = session.get('study_deckID', None)
 
-    # check if session exists or matches deck ID
+    # reset all values and shuffle cards if no unfinished sessions
     if currentSessionDeck != id or not currentSession:
         temp_list = [list(item) for item in results]
         random.shuffle(temp_list)
@@ -613,100 +818,127 @@ def Study(id, index):
         session['incorrect'] = 0
         session['study_startTime'] = time.time()
 
-    # set session index to current index
+    # set session index to current index if unfinished sessions exist
     else:
         session['current_index'] = index
 
     # set card_list to the session list
     card_list = session['shuffled_cards']
 
-    # get total number of cards in the deck
-    total = len(card_list)
-
-    card = card_list[index]  # get the current card info based on the index
-    card_id = card[0]
+    total = len(card_list)  # total num of cards
+    card = card_list[index]  # current card onfo
+    card_id = card[0]  # cardID
 
     # request is POST, get the form data and add to database
     if request.method == 'POST':
+        # process responses if user is logged in
         if userID():
-            # get response
-            response = request.form.get('response')
-            # get the user's stats for the current card
-            get_stats = """
-                SELECT *
-                FROM UserCardStats
-                WHERE stats_cardID = ?
-                AND stats_userID = ?;
-            """
-            stats = query_db(get_stats, (card_id, userID()))
+            # get card mode
+            response_type = card_list[index][2]
+            # get already answered or not
+            answered = request.form.get('answered') == 'true'
 
-            # if the user got the card correct
-            if response == "correct":
+            # if mode is flashcard
+            if response_type == 'flashcard':
+                print("FLASHCARD")
+                response = request.form.get('response')  # get response
 
-                # if the user has no stats for card, create new entry
-                if not stats:
-                    add_stats = """
-                        INSERT INTO UserCardStats (
-                            stats_correct, stats_userID, stats_cardID
-                        )
-                        Values (?, ?, ?)
-                    """
-                    # add 1 correct
-                    get_db().execute(add_stats, (1, userID(), card_id))
-                    get_db().commit()
+                # update stats
+                if response == "correct":
+                    result = True
 
-                # if the user has stats for the card, add 1 to correct
+                elif response == "incorrect":
+                    result = False
+
                 else:
-                    update_stats = """
-                        UPDATE UserCardStats
-                        SET stats_correct = stats_correct + 1
-                        WHERE stats_cardID = ?
-                        AND stats_userID = ?
-                    """
-                    get_db().execute(update_stats, (card_id, userID()))
-                    get_db().commit()
+                    result = None
 
-                session['correct'] = session.get('correct', 0) + 1
+                if result is not None:
+                    updateCardStats(result, card_id)
 
-            # if the user got the card incorrect
-            elif response == "incorrect":
-                # if the user has no stats for card, create new entry
-                if not stats:
-                    add_stats = """
-                        INSERT INTO UserCardStats (
-                            stats_incorrect, stats_userID, stats_cardID
-                        )
-                        Values (?, ?, ?)
-                    """
-                    # add 1 incorrect
-                    get_db().execute(add_stats, (1, userID(), card_id))
-                    get_db().commit()
+            # if mode is quiz and not alr answered
+            elif response_type == 'quiz' and not answered:
+                print("QUIZ")
+                selected = request.form.get('quizAnswer')  # get response
+                correct = card[11]  # get correct
+                is_correct = str(selected) == str(correct)  # check if correct
+                skipped = selected is None  # check if skipped
 
-                # if the user has stats for card, add 1 to incorrect
-                else:
-                    update_stats = """
-                        UPDATE UserCardStats
-                        SET stats_incorrect = stats_incorrect + 1
-                        WHERE stats_cardID = ?
-                        AND stats_userID = ?
-                    """
-                    get_db().execute(update_stats, (card_id, userID()))
-                    get_db().commit()
+                print(selected)
+                print(correct)
 
-                session['incorrect'] = session.get('incorrect', 0) + 1
+                result = is_correct
 
-        # go to next page
+                # skip showing answer if skip
+                if skipped:
+                    result = None
+
+                print(result)
+
+                # update stats
+                if result is not None:
+                    updateCardStats(result, card_id)
+
+                    # return to same card but w/ correct ans info & answed = True
+                    return render_template(
+                        "card.html",
+                        cards=card,
+                        deck_id=id,
+                        total=total,
+                        index=index,
+                        answered=True,
+                        selected=selected,
+                        correct=correct,
+                        is_correct=is_correct
+                    )
+
+            # if mode is true/false and not alr answered
+            elif response_type == 'TF' and not answered:
+                print("TF")
+                selected = request.form.get('tfAnswer')  # get response
+                correct = card[13]  # get correct ans
+                is_correct = str(selected) == str(correct)  # check if correct
+                skipped = selected is None  # check if skipped
+
+                print(selected)
+                print(correct)
+
+                result = is_correct
+
+                # skip showing answer if skip
+                if skipped:
+                    result = None
+
+                # update stats
+                if result is not None:
+                    updateCardStats(result, card_id)
+
+                    # return to same card but w/ correct ans info & answed = True
+                    return render_template(
+                        "card.html",
+                        cards=card,
+                        deck_id=id,
+                        total=total,
+                        index=index,
+                        answered=True,
+                        selected=selected,
+                        correct=correct,
+                        is_correct=is_correct
+                    )
+
+        # go to next page if next card exists
         if index + 1 < total:
             session['current_index'] = index + 1
             return redirect(url_for('Study', id=id, index=index + 1))
 
         # exit to deck page if there are no more cards
         else:
-            endTime = time.time()
+            endTime = time.time()  # get endtime
             if userID():
-                # STREAKS SYSTEM
+                # ----- STREAKS SYSTEM -----
                 get_streak = """
-                    SELECT user_lastStudied, user_streak
+                    SELECT user_lastStudied, user_streak,
+                    user_longestStreak
                     FROM Users
                     WHERE user_ID = ?;
                 """
@@ -721,6 +953,7 @@ def Study(id, index):
 
                 # if the day after, update streak
                 elif diff == 1:
+                    # update user lastStudied & current streak
                     update_streak = """
                         UPDATE Users
                         SET user_lastStudied = datetime('now'),
@@ -730,17 +963,8 @@ def Study(id, index):
                     get_db().execute(update_streak, (userID(),))
                     get_db().commit()
 
-                    getLogest = """
-                        SELECT user_longestStreak, user_streak
-                        FROM Users
-                        WHERE user_ID = ?;
-                    """
-                    streaks = query_db(getLogest, (userID(),))[0]
-
-                    print(streaks[1] > streaks[0])
-
-                    # update longest streak
-                    if streaks[1] > streaks[0]:
+                    # update longest streak if current larger than longest
+                    if streaks[1] > streaks[2]:
                         update_streak = """
                             UPDATE Users
                             SET user_longestStreak = user_streak
@@ -760,13 +984,15 @@ def Study(id, index):
                     get_db().execute(update_streak, (userID(),))
                     get_db().commit()
 
-                # HISTORY SYSTEM
+                # ----- HISTORY SYSTEM -----
                 card_correct = session.get('correct', 0)
                 card_incorrect = session.get('incorrect', 0)
+                # calc study time
                 study_duration = round(endTime - session.get(
                     'study_startTime', endTime
                 ))
 
+                # add info to stats DB
                 update_history = """
                     INSERT INTO StudyHistory (
                         study_date, study_cardCount, study_correct,
@@ -794,14 +1020,16 @@ def Study(id, index):
             flash("✔ You Have Finished Studying This Deck!", "success")
             return redirect(url_for('Deck', id=id))
 
-    # return the results in method is GET
+    # return the results for GET
     else:
         return render_template(
             "card.html",
             cards=card,
             deck_id=id,
             total=total,
-            index=index
+            index=index,
+            answered=False,
+            correct=None
         )
 
 
@@ -870,38 +1098,176 @@ def createCard(id):
 
     # if request method is POST, get the form data and insert into database
     if request.method == "POST":
-        card_question = request.form['cardQuestion']
-        card_answer = request.form['cardAnswer']
-        card_hint = request.form['cardHint']
+        card_type = request.form.get("cardType")
 
-        # check if the form data is not empty
-        if not card_question or not card_answer:
-            # reload the page with the error message
-            flash("⚠ Both Fields Are Required.", "error")
-            return render_template(
-                "cardCreate.html",
-                deck_info=deck_info[0]
-            )
+        if card_type == "flashcard":
+            flashcard_question = request.form['cardQuestion']
+            flashcard_answer = request.form['cardAnswer']
+            flashcard_hint = request.form['cardHint']
 
-        else:
-            sql = """
+            # check if the form data is not empty
+            if not flashcard_question or not flashcard_answer:
+                # reload the page with the error message
+                flash("⚠ Question and Answer Fields Are Required.", "error")
+                return render_template(
+                    "cardCreate.html",
+                    deck_info=deck_info[0]
+                )
+
+            else:
+                sql = """
                     INSERT INTO Flashcards (
-                        card_question, card_answer, card_deckID,
-                        card_creation, card_hint
+                        card_deckID, card_creation,
+                        card_hint, card_mode
                     )
-                    VALUES (?, ?, ?, datetime('now'), ?);
+                    VALUES (?, datetime('now'), ?, ?);
+                """
+                cursor = get_db().execute(sql, (
+                    id,
+                    flashcard_hint,
+                    "flashcard"
+                ))
+                cardid = cursor.lastrowid
+
+                flashcardContent = """
+                    INSERT INTO FlashcardContent (
+                        card_ID, flashcard_question, flashcard_answer
+                    )
+                    VALUES (?, ?, ?);
                 """
 
-            get_db().execute(sql, (
-                card_question,
-                card_answer,
-                id,
-                card_hint
-            ))
-            get_db().commit()
-            # redirect to the deck page
-            flash("✔ Card Created Successfully!", "success")
-            return redirect(url_for('Deck', id=id))
+                get_db().execute(flashcardContent, (
+                    cardid,
+                    flashcard_question,
+                    flashcard_answer
+                ))
+                get_db().commit()
+                # redirect to the deck page
+                flash("✔ Card Created Successfully!", "success")
+                return redirect(url_for('Deck', id=id))
+
+        if card_type == "quiz":
+            quizCorrect = request.form.get('quizAnswer')
+
+            quiz_question = request.form['quizQuestion']
+            quiz_answer1 = request.form['quizAnswer1']
+            quiz_answer2 = request.form['quizAnswer2']
+            quiz_answer3 = request.form['quizAnswer3']
+            quiz_answer4 = request.form['quizAnswer4']
+            quiz_hint = request.form['quizHint']
+
+            if not quizCorrect:
+                flash("⚠ Please Select the Correct Answer.", "error")
+                return render_template(
+                    "cardCreate.html",
+                    deck_info=deck_info[0]
+                )
+
+            elif not quiz_question or not quiz_answer1 or not quiz_answer2 or not quiz_answer3 or not quiz_answer4:
+                flash("⚠ Question and Answer Fields Are Required.", "error")
+                return render_template(
+                    "cardCreate.html",
+                    deck_info=deck_info[0]
+                )
+
+            else:
+                sql = """
+                    INSERT INTO Flashcards (
+                        card_deckID, card_creation,
+                        card_hint, card_mode
+                    )
+                    VALUES (?, datetime('now'), ?, ?);
+                """
+
+                cursor = get_db().execute(sql, (
+                    id,
+                    quiz_hint,
+                    "quiz"
+                ))
+                cardid = cursor.lastrowid
+
+                quizContent = """
+                    INSERT INTO QuizContent (
+                    card_ID, quiz_question, quiz_answer1,
+                    quiz_answer2, quiz_answer3,
+                    quiz_answer4, quiz_correct
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?, ?);
+                """
+
+                get_db().execute(quizContent, (
+                    cardid,
+                    quiz_question,
+                    quiz_answer1,
+                    quiz_answer2,
+                    quiz_answer3,
+                    quiz_answer4,
+                    quizCorrect
+                ))
+
+                get_db().commit()
+                # redirect to the deck page
+                flash("✔ Card Created Successfully!", "success")
+                return redirect(url_for('Deck', id=id))
+
+        if card_type == "TF":
+            tfCorrect = request.form.get('tfAnswer')
+            tf_question = request.form['tfQuestion']
+            tf_hint = request.form['tfHint']
+
+            print(f"""
+                tfCorrect: {tfCorrect}
+                tf_question: {tf_question}
+                tf_hint: {tf_hint}
+            """)
+
+            if not tfCorrect:
+                flash("⚠ Please Select the Correct Answer.", "error")
+                return render_template(
+                    "cardCreate.html",
+                    deck_info=deck_info[0]
+                )
+
+            elif not tf_question:
+                flash("⚠ Question Field Is Required.", "error")
+                return render_template(
+                    "cardCreate.html",
+                    deck_info=deck_info[0]
+                )
+
+            else:
+                sql = """
+                    INSERT INTO Flashcards (
+                        card_deckID, card_creation,
+                        card_hint, card_mode
+                    )
+                    VALUES (?, datetime('now'), ?, ?);
+                """
+
+                cursor = get_db().execute(sql, (
+                    id,
+                    tf_hint,
+                    "TF"
+                ))
+                cardid = cursor.lastrowid
+
+                tfContent = """
+                    INSERT INTO TrueFalseContent (
+                        card_ID, tf_question, tf_correct
+                    )
+                    VALUES (?, ?, ?);
+                """
+
+                get_db().execute(tfContent, (
+                    cardid,
+                    tf_question,
+                    tfCorrect
+                ))
+
+                get_db().commit()
+                # redirect to the deck page
+                flash("✔ Card Created Successfully!", "success")
+                return redirect(url_for('Deck', id=id))
 
     # if request method is GET, return the sql results
     else:
@@ -965,7 +1331,7 @@ def editDeck(id):
 def editCard(id, card_id):
     # get the deck name of the inputted deck id
     sql_deck = """
-            SELECT deck_name, deck_ID, deck_creation
+            SELECT deck_name, deck_ID, deck_creation, deck_userID
             FROM Decks
             WHERE deck_ID = ?
             AND deck_userID = ?;
@@ -977,66 +1343,214 @@ def editCard(id, card_id):
         flash("⚠ Invalid Deck...", "error")
         return redirect(url_for("Decks"))
 
+    if deck_info[0][3] != userID():
+        flash("⚠ You Do Not Own This Deck. You Cannot Create a Card.", "error")
+        return redirect(url_for("Decks"))
+
     # if request method is POST, get the form data and insert into database
     if request.method == "POST":
-        card_question = request.form['cardQuestion']
-        card_answer = request.form['cardAnswer']
-        card_hint = request.form['cardHint']
+        card_type = request.form.get("cardType")
 
-        # check if the form data is not empty
-        if not card_question or not card_answer:
-            # reload the page with the error message
-            flash("⚠ Both Fields Are Required.", "error")
-            sql_card = """
-                SELECT card_ID, card_question,
-                card_answer, card_creation, card_hint
-                FROM Flashcards
-                WHERE card_ID = ?
-                AND card_deckID = ?;
-            """
-            card = query_db(sql_card, (card_id, id), one=True)
-            return render_template(
-                "cardEdit.html",
-                deck_info=deck_info[0],
-                cards=card
-            )
+        if card_type == "flashcard":
+            flashcard_question = request.form['cardQuestion']
+            flashcard_answer = request.form['cardAnswer']
+            flashcard_hint = request.form['cardHint']
 
-        # if form data is present in both
-        else:
-            sql = """
-                    UPDATE Flashcards
-                    SET card_question = ?, card_answer = ?, card_hint = ?
-                    WHERE card_ID = ? AND card_deckID = ?;
+            # check if the form data is not empty
+            if not flashcard_question or not flashcard_answer:
+                # reload the page with the error message
+                flash("⚠ Question and Answer Fields Are Required.", "error")
+                sql_card = """
+                    SELECT card_ID, card_question,
+                    card_answer, card_creation, card_hint
+                    FROM Flashcards
+                    WHERE card_ID = ?
+                    AND card_deckID = ?;
                 """
+                card = query_db(sql_card, (card_id, id), one=True)
+                return redirect(url_for('editCard', id=id, card_id=card_id))
 
-            get_db().execute(sql, (
-                card_question,
-                card_answer,
-                card_hint,
-                card_id,
-                id
-            ))
-            get_db().commit()
-            # redirect to the deck page
-            return redirect(url_for('Deck', id=id))
+            else:
+                sql = """
+                    UPDATE Flashcards
+                    SET card_hint = ?, card_mode = ?
+                    WHERE card_ID = ?;
+                """
+                get_db().execute(sql, (
+                    flashcard_hint,
+                    "flashcard",
+                    card_id
+                ))
+                get_db().commit()
+
+                quizContent = """
+                    INSERT INTO FlashcardContent (
+                        flashcard_question, flashcard_answer, card_ID
+                    )
+                    VALUES (?, ?, ?)
+                    ON CONFLICT(card_ID) DO UPDATE SET
+                    flashcard_question = EXCLUDED.flashcard_question,
+                    flashcard_answer = EXCLUDED.flashcard_answer
+                """
+                get_db().execute(quizContent, (
+                    flashcard_question,
+                    flashcard_answer,
+                    card_id
+                ))
+                get_db().commit()
+
+                # redirect to the deck page
+                flash("✔ Card Updated Successfully!", "success")
+                return redirect(url_for('Deck', id=id))
+
+        if card_type == "quiz":
+            quizCorrect = request.form.get('quizAnswer')
+
+            quiz_question = request.form['quizQuestion']
+            quiz_answer1 = request.form['quizAnswer1']
+            quiz_answer2 = request.form['quizAnswer2']
+            quiz_answer3 = request.form['quizAnswer3']
+            quiz_answer4 = request.form['quizAnswer4']
+            quiz_hint = request.form['quizHint']
+
+            if not quizCorrect:
+                flash("⚠ Please Select the Correct Answer.", "error")
+                return redirect(url_for('editCard', id=id, card_id=card_id))
+
+            elif not quiz_question or not quiz_answer1 or not quiz_answer2 or not quiz_answer3 or not quiz_answer4:
+                flash("⚠ Question and Answer Fields Are Required.", "error")
+                return redirect(url_for('editCard', id=id, card_id=card_id))
+
+            else:
+                sql = """
+                    UPDATE Flashcards
+                    SET card_hint = ?, card_mode = ?
+                    WHERE card_ID = ?;
+                """
+                get_db().execute(sql, (
+                    quiz_hint,
+                    "quiz",
+                    card_id
+                ))
+                get_db().commit()
+
+                quizContent = """
+                    INSERT INTO QuizContent (
+                        quiz_question, quiz_answer1, quiz_answer2,
+                        quiz_answer3, quiz_answer4, quiz_correct,
+                        card_ID
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                    ON CONFLICT (card_ID) DO UPDATE SET
+                    quiz_question = EXCLUDED.quiz_question,
+                    quiz_answer1 = EXCLUDED.quiz_answer1,
+                    quiz_answer2 = EXCLUDED.quiz_answer2,
+                    quiz_answer3 = EXCLUDED.quiz_answer3,
+                    quiz_answer4 = EXCLUDED.quiz_answer4,
+                    quiz_correct = EXCLUDED.quiz_correct
+                """
+                get_db().execute(quizContent, (
+                    quiz_question,
+                    quiz_answer1,
+                    quiz_answer2,
+                    quiz_answer3,
+                    quiz_answer4,
+                    quizCorrect,
+                    card_id
+                ))
+                get_db().commit()
+                # redirect to the deck page
+                flash("✔ Card Updated Successfully!", "success")
+                return redirect(url_for('Deck', id=id))
+
+        if card_type == "TF":
+            tfCorrect = request.form.get('tfAnswer')
+            tf_question = request.form['tfQuestion']
+            tf_hint = request.form['tfHint']
+
+            if not tfCorrect:
+                flash("⚠ Please Select the Correct Answer.", "error")
+                return redirect(url_for('editCard', id=id, card_id=card_id))
+
+            elif not tf_question:
+                flash("⚠ Question Field Is Required.", "error")
+                return redirect(url_for('editCard', id=id, card_id=card_id))
+
+            else:
+                sql = """
+                    UPDATE Flashcards
+                    SET card_hint = ?, card_mode = ?
+                    WHERE card_id = ?;
+                """
+                get_db().execute(sql, (
+                    tf_hint,
+                    "TF",
+                    card_id
+                ))
+                get_db().commit()
+
+                tfContent = """
+                    INSERT INTO TrueFalseContent (
+                        tf_question, tf_correct, card_ID
+                    )
+                    VALUES (?, ?, ?)
+                    ON CONFLICT (card_ID) DO UPDATE SET
+                    tf_question = EXCLUDED.tf_question,
+                    tf_correct = EXCLUDED.tf_correct
+                """
+                get_db().execute(tfContent, (
+                    tf_question,
+                    tfCorrect,
+                    card_id
+                ))
+                get_db().commit()
+                # redirect to the deck page
+                flash("✔ Card Updated Successfully!", "success")
+                return redirect(url_for('Deck', id=id))
 
     # if request method is GET, return the sql results
     else:
-
-        # return cardinfo
-        sql_card = """
-            SELECT card_ID, card_question,
-            card_answer, card_creation, card_hint
+        # get card info
+        card_sql = """
+            SELECT Flashcards.card_ID,
+            Flashcards.card_creation,
+            Flashcards.card_mode,
+            Flashcards.card_hint,
+            FlashcardContent.flashcard_question,
+            FlashcardContent.flashcard_answer,
+            QuizContent.quiz_question,
+            QuizContent.quiz_answer1,
+            QuizContent.quiz_answer2,
+            QuizContent.quiz_answer3,
+            QuizContent.quiz_answer4,
+            QuizContent.quiz_correct,
+            TrueFalseContent.tf_question,
+            TrueFalseContent.tf_correct
             FROM Flashcards
-            WHERE card_ID = ?
-            AND card_deckID = ?;
+            LEFT JOIN FlashcardContent ON Flashcards.card_ID = FlashcardContent.card_ID
+            LEFT JOIN QuizContent ON Flashcards.card_ID = QuizContent.card_ID
+            LEFT JOIN TrueFalseContent ON Flashcards.card_ID = TrueFalseContent.card_ID
+            WHERE Flashcards.card_ID = ?;
         """
-        card = query_db(sql_card, (card_id, id), one=True)
+        card = query_db(card_sql, (card_id,))
+
+        print(card)
 
         # check if card is not empty
         if not card:
             flash("⚠ Invalid Card...", "error")
             return redirect(url_for('Deck', id=id))
+
+        card = list(card[0])
+
+        # set None values to empty str
+        index = 0
+        for i in card:
+            if i is None:
+                card[index] = ""
+            index += 1
+
+        print(card)
 
         return render_template(
             "cardEdit.html",
@@ -1135,16 +1649,8 @@ def signup():
                     )
                     VALUES (?, ?, datetime('now'));
                 """
-            get_db().execute(usersql, (username, hashed_password))
-            get_db().commit()
-
-            getuserID = """
-                SELECT user_ID
-                FROM Users
-                ORDER BY user_ID DESC
-                LIMIT 1;
-            """
-            userid = query_db(getuserID)[0]
+            cursor = get_db().execute(usersql, (username, hashed_password))
+            userid = cursor.lastrowid
 
             # create settings for the new user
             settingssql = """
@@ -1153,7 +1659,7 @@ def signup():
                     )
                     VALUES (?);
                 """
-            get_db().execute(settingssql, (userid))
+            get_db().execute(settingssql, (userid,))
             get_db().commit()
 
             flash("✔ Account Created Successfully! Please Log In.", "success")
@@ -1429,9 +1935,39 @@ def stats():
     userCardStats = """
         SELECT COUNT(Flashcards.card_ID)
         FROM Flashcards, Decks
-        WHERE card_deckID = deck_ID AND deck_userID = ?;
+        WHERE Flashcards.card_deckID = Decks.deck_ID AND Decks.deck_userID = ?;
     """
     card_stats = query_db(userCardStats, (userID(),))
+
+    # get num of flashcards
+    flashcardStats = """
+        SELECT COUNT(Flashcards.card_ID)
+        FROM Flashcards, Decks
+        WHERE Flashcards.card_deckID = Decks.deck_ID
+        AND Decks.deck_userID = ?
+        AND Flashcards.card_mode = 'flashcard';
+    """
+    flashcard_stats = query_db(flashcardStats, (userID(),))
+
+    # get num of quizes cards
+    quizStats = """
+        SELECT COUNT(Flashcards.card_ID)
+        FROM Flashcards, Decks
+        WHERE Flashcards.card_deckID = Decks.deck_ID
+        AND Decks.deck_userID = ?
+        AND Flashcards.card_mode = 'quiz';
+    """
+    quiz_stats = query_db(quizStats, (userID(),))
+
+    # get num of true/false cards
+    tfStats = """
+        SELECT COUNT(Flashcards.card_ID)
+        FROM Flashcards, Decks
+        WHERE Flashcards.card_deckID = Decks.deck_ID
+        AND Decks.deck_userID = ?
+        AND Flashcards.card_mode = 'TF';
+    """
+    tf_stats = query_db(tfStats, (userID(),))
 
     # get user stats
     userStats = """
@@ -1553,6 +2089,9 @@ def stats():
         answer_stats=answer_stats,
         deck_stats=deck_stats[0],
         card_stats=card_stats[0],
+        flashcard_stats=flashcard_stats[0],
+        quiz_stats=quiz_stats[0],
+        tf_stats=tf_stats[0],
         user_stats=user_stats[0],
         joinDate=joinDate,
         private_stats=private_stats[0][0],

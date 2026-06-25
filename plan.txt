@@ -146,3 +146,20 @@ animations
  - goal reached
  - streak
 fancier buttons
+
+
+
+new modes changes:
+need to change:
+ - study
+ - card edit
+ - public
+ - homepage
+ - stats (history, mode stats)
+
+Dont need to change:
+ - deck create, edit, View, delete
+ - delete card
+ - layout
+ - login/signup
+ - settings/profile
