@@ -40,12 +40,12 @@
     <!-- Show answer -->
     {% if cards %}
     <button class="card button-ignore" id="card_click" onclick="clickAction()" data-question="{{ cards[4] }}" data-answer="{{ cards[5] }}">
-        <h2 class="scientific" id="card">{{ cards[4] }}</h2>
-      </button>
+      <h2 class="scientific" id="card">{{ cards[4] }}</h2>
+    </button>
     {% endif %}
 
   {% elif cards[2] == 'quiz' %}
-  <div id="QUIZ" style="width: 60%; margin: auto;" class="quizContainer">
+  <div id="QUIZ" style="width: 60%; margin: auto;" class="quizContainer" data-quizQuestion="{{ cards[6] }}" data-quizAnswer1="{{ cards[7] }}" data-quizAnswer2="{{ cards[8] }}" data-quizAnswer3="{{ cards[9] }}" data-quizAnswer4="{{ cards[10] }}">
     <div style="width: 100%; background-color: var(--card-bg-color); border-radius: 10px; text-align: center; padding: 20px;">
       <h1 id="quizQuestion" class="preview quizQuestion">{{ cards[6] }}</h1>
     </div>
@@ -82,7 +82,7 @@
 
 
   {% elif cards[2] == 'TF' %}
-  <div id="TF" style="width: 60%; margin: auto;" class="quizContainer">
+  <div id="TF" style="width: 60%; margin: auto;" class="quizContainer" data-tfQuestion="{{ cards[12] }}">
     <div style="width: 100%; background-color: var(--card-bg-color); border-radius: 10px; text-align: center; padding: 20px;">
       <h1 id="tfQuestion" contenteditable="plaintext-only" class="preview tfQuestion">{{ cards[12] }}</h1>
     </div>
@@ -139,18 +139,63 @@
   {% endif %}
 </form>
 
-<!-- Keybinds Help -->
-<button onclick="openPopupTab('studykeys');">Keybinds</button>
+<br>
 
+<div style="position: relative;">
+  <!-- Keybinds Help -->
+  <button onclick="openPopupTab('studykeys');" style="position: absolute; bottom: 0px; left: 20px;">Keybinds</button>
+  
+  <div style="display: flex; justify-content: center; gap: 60px; align-items: center;">
+    <div style="display: flex; gap: 5px;">
+      <button onclick="speak()" title="play/resume (enter)">▶</button>
+      <button onclick="pause()" title="pause (p)">⏸</button>
+      <button onclick="cancel()" title="stop (s)">⏹</button>
+    </div>
+    
+    <div style="display: flex; gap: 10px;">
+      <label for="VOLUME">Speed: </label>
+      <input id="RANGE" type="range" min="0.1" max="5.0" step="0.1" value="1.0" style="display: flex; align-items: center;" oninput="document.getElementById('rangeValue').innerText = this.value;" title="change talk speed (up/down arrow)">
+      <label id="rangeValue">1.0</label>
+    </div>
+    
+    <div style="display: flex; gap: 10px;">
+      <label for="VOLUME">Volume: </label>
+      <input id="VOLUME" type="range" min="0.1" max="1.0" step="0.1" value="1.0" style="display: flex; align-items: center;" oninput="document.getElementById('volValue').innerText = this.value;" title="change volume (-/=)">
+      <label id="volValue">1.0</label>
+    </div>
+    
+    <div style="display: flex; gap: 10px;">
+      <label for="lang" title="*Language support depends on your browser">Language: </label>
+      <select name="lang" id="lang" title="*Language support depends on your browser" style="padding: 6px 12px; border-radius: 6px; border: none; outline: none; background-color: var(--accent-color); color: var(--accent-text-color);">
+        <option value="en-US">English</option>
+        <option value="es-MX">Español</option>
+        <option value="ar-EG">العربية</option>
+        <option value="zh-CN">中文</option>
+        <option value="fr-FR">Français</option>
+        <option value="ja-JP">日本語</option>
+        <option value="ko-KR">한국어</option>
+        <option value="ru-RU">Русский</option>
+        <option value="de-DE">Deutsch</option>
+        <option value="hi-IN">हिंदी</option>
+        <option value="it-IT">Italiano</option>
+        <option value="pt-BR">Português</option>
+        <option value="nl-NL">Nederlands</option>
+        <option value="pl-PL">Polski</option>
+        <option value="id-ID">Bahasa Indonesia</option>
+      </select>
+    </div>
+  </div>
+</div>
 
-
-
+<br>
 
 <!----------------------------------- Javascript ----------------------------------->
 <script>
   const flashcard = document.getElementById("card_click");
   const quiz = document.getElementById("QUIZ")
   const tf = document.getElementById("TF")
+
+  var speakText = ""
 
   // ----- Card Flipper -----
   let showingAnswer = false;
@@ -159,24 +204,65 @@
     const card = document.getElementById("card");
     const questionText = flashcard.dataset.question;
     const answerText = flashcard.dataset.answer;
+    speakText = questionText;
 
     function clickAction() {
       if (!showingAnswer) {
         // Show answer
         card.textContent = answerText;
         showingAnswer = true;
+        speakText = answerText;
       } 
       
       else {
         // Show question
         card.textContent = questionText;
         showingAnswer = false;
+        speakText = questionText;
       }
       MathJax.typesetPromise([card]);
     }
   }
 
+  if (quiz) {
+    const quizQuestion = quiz.dataset.quizquestion;
+    const quizA1 = quiz.dataset.quizanswer1;
+    const quizA2 = quiz.dataset.quizanswer2;
+    const quizA3 = quiz.dataset.quizanswer3;
+    const quizA4 = quiz.dataset.quizanswer4;
+    
+    speakText = "Quiz Question. " + quizQuestion + "... Answer 1. " + quizA1 + "... Answer 2. " + quizA2 + "... Answer 3. " + quizA3 + "... Answer 4. " + quizA4;
+  }
 
+  if (tf) {
+    const tfQuestion = tf.dataset.tfquestion;
+
+    console.log(tfQuestion)
+    
+    speakText = "True/False Question. " + tfQuestion + "... True or False?";
+  }
+
+  function speak() {
+    if (window.speechSynthesis.speaking) {
+      speechSynthesis.resume();
+    }
+    else {
+      let utterance = new SpeechSynthesisUtterance(speakText);
+      utterance.rate = document.getElementById('RANGE').value;
+      utterance.volume = document.getElementById('VOLUME').value;
+      utterance.lang = document.getElementById("lang").value;
+  
+      speechSynthesis.speak(utterance);
+    }
+  }
+
+  function pause() {
+    speechSynthesis.pause();
+  }
+
+  function cancel() {
+    speechSynthesis.cancel();
+  }
 
 
   // ----- Keybinds -----
