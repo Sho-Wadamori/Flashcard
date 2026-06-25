@@ -1935,9 +1935,39 @@ def stats():
     userCardStats = """
         SELECT COUNT(Flashcards.card_ID)
         FROM Flashcards, Decks
-        WHERE card_deckID = deck_ID AND deck_userID = ?;
+        WHERE Flashcards.card_deckID = Decks.deck_ID AND Decks.deck_userID = ?;
     """
     card_stats = query_db(userCardStats, (userID(),))
+
+    # get num of flashcards
+    flashcardStats = """
+        SELECT COUNT(Flashcards.card_ID)
+        FROM Flashcards, Decks
+        WHERE Flashcards.card_deckID = Decks.deck_ID
+        AND Decks.deck_userID = ?
+        AND Flashcards.card_mode = 'flashcard';
+    """
+    flashcard_stats = query_db(flashcardStats, (userID(),))
+
+    # get num of quizes cards
+    quizStats = """
+        SELECT COUNT(Flashcards.card_ID)
+        FROM Flashcards, Decks
+        WHERE Flashcards.card_deckID = Decks.deck_ID
+        AND Decks.deck_userID = ?
+        AND Flashcards.card_mode = 'quiz';
+    """
+    quiz_stats = query_db(quizStats, (userID(),))
+
+    # get num of true/false cards
+    tfStats = """
+        SELECT COUNT(Flashcards.card_ID)
+        FROM Flashcards, Decks
+        WHERE Flashcards.card_deckID = Decks.deck_ID
+        AND Decks.deck_userID = ?
+        AND Flashcards.card_mode = 'TF';
+    """
+    tf_stats = query_db(tfStats, (userID(),))
 
     # get user stats
     userStats = """
@@ -2059,6 +2089,9 @@ def stats():
         answer_stats=answer_stats,
         deck_stats=deck_stats[0],
         card_stats=card_stats[0],
+        flashcard_stats=flashcard_stats[0],
+        quiz_stats=quiz_stats[0],
+        tf_stats=tf_stats[0],
         user_stats=user_stats[0],
         joinDate=joinDate,
         private_stats=private_stats[0][0],
