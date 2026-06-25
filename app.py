@@ -2117,54 +2117,6 @@ def settings():
         session.pop('username', None)
         session.pop('userID', None)
         flash("""
-            ⚠ You Are Not Logged In. Please Log In to Change Settings.
-        """, "error")
-        return redirect(url_for('home'))
-
-    if request.method == "POST":
-        # get animation setting
-        anim = request.form.get('animToggle')
-
-        # check if animation is enabled
-        if anim is None:
-            enable = 0
-        else:
-            enable = 1
-
-        # update database with setting
-        update_settings = """
-            UPDATE Settings
-            SET settings_animation = ?
-            WHERE settings_userID = ?;
-        """
-        get_db().execute(update_settings, (enable, userID()),)
-        get_db().commit()
-
-        flash("✔ Changes Saved!", "success")
-
-    settings_sql = """
-        SELECT settings_animation, settings_fontSize
-        FROM Settings
-        WHERE settings_userID = ?;
-    """
-    settings = query_db(settings_sql, (userID(),))[0]
-
-    return render_template(
-        "settings.html",
-        userID=userID(),
-        animation=settings[0],
-        fontSize=settings[1]
-    )
-
-
-# ---------- Theme Changer ----------
-@app.route('/settings/theme', methods=['POST', 'GET'])
-def theme():
-    # check if user is logged in
-    if not userID():
-        session.pop('username', None)
-        session.pop('userID', None)
-        flash("""
             ⚠ You Are Not Logged In. Please Log In to Change Themes.
         """, "error")
         return redirect(url_for('home'))
@@ -2236,7 +2188,7 @@ def theme():
     shadow_alpha = round(int(shadow_hex[7:], 16) / 255, 2)
 
     return render_template(
-        "theme.html",
+        "settings.html",
         settings=settings,
         shadow_color=shadow_color,
         shadow_alpha=shadow_alpha
@@ -2321,8 +2273,8 @@ def test():
     else:
         # get the deck name of the inputted deck id
         sql1 = """
-                SELECT Flashcards.card_question,
-                Flashcards.card_answer, Decks.deck_name
+                SELECT Flashcards.card_hint,
+                Flashcards.card_mode, Decks.deck_name
                 FROM Flashcards, Decks;
             """
         card_list = query_db(sql1)
