@@ -1,19 +1,65 @@
-{% extends "layout.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='assets/icon.png') }}">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Righteous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/keybind.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cardList.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/editor.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/study.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <!-- load \cancel and \html because edit pages break otherwise -->
+    <script>
+        window.MathJax = {
+            loader: { load: ['[tex]/cancel', '[tex]/html'] },
+            tex: {
+                packages: { '[+]': ['cancel', 'html'] }
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <title>Study | Flashcard Maker</title>
+    <!-- change css root colours -->
+    <script>
+        document.documentElement.style.setProperty('--primary-bg-color', '{{ settings[0] }}');
+        document.documentElement.style.setProperty('--secondary-bg-color', '{{ settings[1] }}');
+        document.documentElement.style.setProperty('--text-color', '{{ settings[2] }}');
+        document.documentElement.style.setProperty('--accent-color', '{{ settings[3] }}');
+        document.documentElement.style.setProperty('--accent-text-color', '{{ settings[4] }}');
+        document.documentElement.style.setProperty('--card-bg-color', '{{ settings[5] }}');
+        document.documentElement.style.setProperty('--card-text-color', '{{ settings[6] }}');
+        document.documentElement.style.setProperty('--warning-color', '{{ settings[7] }}');
+        document.documentElement.style.setProperty('--shadow-color', '{{ settings[8] }}');
+        document.addEventListener("DOMContentLoaded", () => {
+            document.body.style.fontSize = {{ settings[9] }} + "px"
+        });
+    </script>
+</head>
 
-{% block title %}Study{% endblock %}
 
-{% block body %}
+<body class="w3-container" style="min-height: 100vh; margin: 0; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+<div style="width: 100%;">
 
-<h2 style="text-align: center;">Study</h2>
+{% if index + 1 < total %}
+<div style="position: relative;;">
+  <button onclick="window.location='{{ url_for('Deck', id=deck_info[0]) }}'" style="position: absolute; top: 50px; left: 20px;">Home</button>
+</div>
+{% endif %}
 
 <h3 style="text-align: center;">Card {{ index + 1 }} of {{ total }}</h3>
 {% if index + 1 >= total  %}
 <div class="w3-round-xlarge studyProgressOuter progressFull"></div>
 {% else %}
 <div class="w3-round-xlarge studyProgressOuter">
-  {% if index > 0 %}
   <div class="w3-container w3-blue w3-round-xlarge studyProgressInner" style="width: calc({{ index + 1 }}% / {{ total }} * 100);"></div>
-  {% endif %}
 </div>
 {% endif %}
 
@@ -21,12 +67,16 @@
 
 
 {% if index + 1 >= total %}
+<div style="position: absolute; top: 80px; left: 40px;">
   <button id="exit_button" form="responseForm" type="submit">Exit</button>
   <p>You've completed the deck!</p>
+</div>
+
+
 {% endif %}
 
 
-<div class="card-container">
+<div class="card-container" style="width: 100%;">
   <!-- Previous card button -->
   {% if index > 0 %}
     <a href="{{ url_for('Study', id=deck_id, index=index - 1) }}">
@@ -339,6 +389,40 @@
         prev.click();
       }
     }
+
+    // range input value is dumb and returns as str
+    if (event.key === 'ArrowUp') {
+      document.getElementById("RANGE").value = (Number(document.getElementById("RANGE").value) + 0.2)
+      document.getElementById("RANGE").dispatchEvent(new Event("input"));
+    }
+
+    if (event.key === 'ArrowDown') {
+      document.getElementById("RANGE").value = (Number(document.getElementById("RANGE").value) - 0.2)
+      document.getElementById("RANGE").dispatchEvent(new Event("input"));
+    }
+
+    if (event.key === 'Enter') {
+      speak()
+    }
+
+    if (event.key === 'p') {
+      pause()
+    }
+
+    if (event.key === 's') {
+      cancel()
+    }
+
+    if (event.key === '=') {
+      document.getElementById("VOLUME").value = (Number(document.getElementById("VOLUME").value) + 0.1)
+      document.getElementById("VOLUME").dispatchEvent(new Event("input"));
+    }
+
+    if (event.key === '-') {
+      document.getElementById("VOLUME").value = (Number(document.getElementById("VOLUME").value) - 0.1)
+      document.getElementById("VOLUME").dispatchEvent(new Event("input"));
+    }
+
   });
 
 
@@ -363,5 +447,5 @@
   // ----- Scientific Text Renderer -----
 
 </script>
-
-{% endblock %}
+</div>
+</body>

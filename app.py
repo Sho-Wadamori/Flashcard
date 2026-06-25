@@ -1029,7 +1029,8 @@ def Study(id, index):
             total=total,
             index=index,
             answered=False,
-            correct=None
+            correct=None,
+            deck_info=deck_info
         )
 
 
