@@ -50,7 +50,7 @@
 
 {% if index + 1 < total %}
 <div style="position: relative;;">
-  <button onclick="window.location='{{ url_for('Deck', id=deck_info[0]) }}'" style="position: absolute; top: 50px; left: 20px;">Home</button>
+  <button onclick="window.location='{{ url_for('Deck', id=deck_id) }}'" style="position: absolute; top: 50px; left: 20px;">Home</button>
 </div>
 {% endif %}
 
@@ -95,36 +95,36 @@
     {% endif %}
 
   {% elif cards[2] == 'quiz' %}
-  <div id="QUIZ" style="width: 60%; margin: auto;" class="quizContainer" data-quizQuestion="{{ cards[6] }}" data-quizAnswer1="{{ cards[7] }}" data-quizAnswer2="{{ cards[8] }}" data-quizAnswer3="{{ cards[9] }}" data-quizAnswer4="{{ cards[10] }}">
-    <div style="width: 100%; background-color: var(--card-bg-color); border-radius: 10px; text-align: center; padding: 20px;">
+  <div id="QUIZ" class="quizContainer" data-quizQuestion="{{ cards[6] }}" data-quizAnswer1="{{ cards[7] }}" data-quizAnswer2="{{ cards[8] }}" data-quizAnswer3="{{ cards[9] }}" data-quizAnswer4="{{ cards[10] }}">
+    <div class="quizQuestionContainer">
       <h1 id="quizQuestion" class="preview quizQuestion">{{ cards[6] }}</h1>
     </div>
-    <div class="options" style="display: grid; grid-template-columns: 1fr 1fr; grid-auto-flow: row; gap: 30px; width: 100%; margin-top: 30px;">
-      <div style="background-color: {% if correct == 1 %}green{% else %}var(--card-bg-color){% endif %}; border-radius: 10px; padding: 20px 30px; display: flex; justify-content: space-between; cursor: pointer;" onclick="document.getElementById('quizAnswer1Radio').checked = true; document.getElementById('responseForm').submit();">
+    <div class="quizOptions">
+      <div class="quizAnswerContainer" style="background-color: {% if correct == 1 %}green{% else %}var(--card-bg-color){% endif %};{% if correct is none %} cursor: pointer;{% endif %}" onclick="document.getElementById('quizAnswer1Radio').checked = true; document.getElementById('responseForm').submit();">
         <h2 id="quizAnswer1" class="preview quizAnswer1">{{ cards[7] }}</h2>
         {% if correct is none %}
-        <input type="radio" name="quizAnswer" id="quizAnswer1Radio" value="1" form="responseForm" style="height: 20px; width: 20px; margin: auto 0;{% if correct is none %} cursor: pointer;{% endif %}" onchange="document.getElementById('responseForm').submit()">
+        <input class="quizAnswers" type="radio" name="quizAnswer" id="quizAnswer1Radio" value="1" form="responseForm" onchange="document.getElementById('responseForm').submit()">
         {% endif %}
       </div>
 
-      <div style="background-color: {% if correct == 2 %}green{% else %}var(--card-bg-color){% endif %}; border-radius: 10px; padding: 20px 30px; display: flex; justify-content: space-between; cursor: pointer;" onclick="document.getElementById('quizAnswer2Radio').checked = true; document.getElementById('responseForm').submit();">
+      <div class="quizAnswerContainer" style="background-color: {% if correct == 2 %}green{% else %}var(--card-bg-color){% endif %};{% if correct is none %} cursor: pointer;{% endif %}" onclick="document.getElementById('quizAnswer2Radio').checked = true; document.getElementById('responseForm').submit();">
         <h2 id="quizAnswer2" class="preview quizAnswer2">{{ cards[8] }}</h2>
         {% if correct is none %}
-        <input type="radio" name="quizAnswer" id="quizAnswer2Radio" value="2" form="responseForm" style="height: 20px; width: 20px; margin: auto 0;{% if correct is none %} cursor: pointer;{% endif %}" onchange="document.getElementById('responseForm').submit()">
+        <input class="quizAnswers" type="radio" name="quizAnswer" id="quizAnswer2Radio" value="2" form="responseForm" onchange="document.getElementById('responseForm').submit()">
         {% endif %}
       </div>
 
-      <div style="background-color: {% if correct == 3 %}green{% else %}var(--card-bg-color){% endif %}; border-radius: 10px; padding: 20px 30px; display: flex; justify-content: space-between; cursor: pointer;" onclick="document.getElementById('quizAnswer3Radio').checked = true; document.getElementById('responseForm').submit();">
+      <div class="quizAnswerContainer" style="background-color: {% if correct == 3 %}green{% else %}var(--card-bg-color){% endif %};{% if correct is none %} cursor: pointer;{% endif %}" onclick="document.getElementById('quizAnswer3Radio').checked = true; document.getElementById('responseForm').submit();">
         <h2 id="quizAnswer3" class="preview quizAnswer3">{{ cards[9] }}</h2>
         {% if correct is none %}
-        <input type="radio" name="quizAnswer" id="quizAnswer3Radio" value="3" form="responseForm" style="height: 20px; width: 20px; margin: auto 0;{% if correct is none %} cursor: pointer;{% endif %}" onchange="document.getElementById('responseForm').submit()">
+        <input class="quizAnswers" type="radio" name="quizAnswer" id="quizAnswer3Radio" value="3" form="responseForm" onchange="document.getElementById('responseForm').submit()">
         {% endif %}
       </div>
 
-      <div style="background-color: {% if correct == 4 %}green{% else %}var(--card-bg-color){% endif %}; border-radius: 10px; padding: 20px 30px; display: flex; justify-content: space-between;{% if correct is none %} cursor: pointer;{% endif %}" onclick="document.getElementById('quizAnswer4Radio').checked = true; document.getElementById('responseForm').submit();">
+      <div class="quizAnswerContainer" style="background-color: {% if correct == 4 %}green{% else %}var(--card-bg-color){% endif %};{% if correct is none %} cursor: pointer;{% endif %}" onclick="document.getElementById('quizAnswer4Radio').checked = true; document.getElementById('responseForm').submit();">
         <h2 id="quizAnswer4" class="preview quizAnswer4">{{ cards[10] }}</h2>
         {% if correct is none %}
-        <input type="radio" name="quizAnswer" id="quizAnswer4Radio" value="4" form="responseForm" style="height: 20px; width: 20px; margin: auto 0; cursor: pointer;" onchange="document.getElementById('responseForm').submit()">
+        <input class="quizAnswers" type="radio" name="quizAnswer" id="quizAnswer4Radio" value="4" form="responseForm" onchange="document.getElementById('responseForm').submit()">
         {% endif %}
       </div>
     </div>
@@ -132,23 +132,23 @@
 
 
   {% elif cards[2] == 'TF' %}
-  <div id="TF" style="width: 60%; margin: auto;" class="quizContainer" data-tfQuestion="{{ cards[12] }}">
-    <div style="width: 100%; background-color: var(--card-bg-color); border-radius: 10px; text-align: center; padding: 20px;">
+  <div id="TF" class="quizContainer" data-tfQuestion="{{ cards[12] }}">
+    <div class="quizQuestionContainer">
       <h1 id="tfQuestion" contenteditable="plaintext-only" class="preview tfQuestion">{{ cards[12] }}</h1>
     </div>
 
-    <div class="TFOptions" style="display: grid; grid-template-columns: 1fr 1fr; grid-auto-flow: row; gap: 30px; width: 100%; margin-top: 30px;">
-      <div id="tfOption1" style="background-color: {% if correct == 1 %}green{% else %}var(--card-bg-color){% endif %}; border-radius: 10px; padding: 20px 30px; display: flex; justify-content: space-between;{% if correct is none %} cursor: pointer;{% endif %}" onclick="document.getElementById('tfAnswer1Radio').checked = true; document.getElementById('responseForm').submit();">
+    <div class="quizOptions">
+      <div class="quizAnswerContainer" id="tfOption1" style="background-color: {% if correct == 1 %}green{% else %}var(--card-bg-color){% endif %};{% if correct is none %} cursor: pointer;{% endif %}" onclick="document.getElementById('tfAnswer1Radio').checked = true; document.getElementById('responseForm').submit();">
         <h2>TRUE</h2>
         {% if correct is none %}
-        <input type="radio" name="tfAnswer" id="tfAnswer1Radio" value="1" form="responseForm" style="height: 20px; width: 20px; margin: auto 0;">
+        <input class="quizAnswers" type="radio" name="tfAnswer" id="tfAnswer1Radio" value="1" form="responseForm">
         {% endif %}
       </div>
     
-      <div id="tfOption2" style="background-color: {% if correct == 2 %}green{% else %}var(--card-bg-color){% endif %}; border-radius: 10px; padding: 20px 30px; display: flex; justify-content: space-between;{% if correct is none %} cursor: pointer;{% endif %}" onclick="document.getElementById('tfAnswer2Radio').checked = true; document.getElementById('responseForm').submit();">
+      <div class="quizAnswerContainer" id="tfOption2" style="background-color: {% if correct == 2 %}green{% else %}var(--card-bg-color){% endif %};{% if correct is none %} cursor: pointer;{% endif %}" onclick="document.getElementById('tfAnswer2Radio').checked = true; document.getElementById('responseForm').submit();">
         <h2>FALSE</h2>
         {% if correct is none %}
-        <input type="radio" name="tfAnswer" id="tfAnswer2Radio" value="2" form="responseForm" style="height: 20px; width: 20px; margin: auto 0;">
+        <input class="quizAnswers" type="radio" name="tfAnswer" id="tfAnswer2Radio" value="2" form="responseForm">
         {% endif %}
       </div>
     </div>
@@ -193,30 +193,30 @@
 
 <div style="position: relative;">
   <!-- Keybinds Help -->
-  <button onclick="openPopupTab('studykeys');" style="position: absolute; bottom: 0px; left: 20px;">Keybinds</button>
+  <button onclick="openPopupTab('studykeys');" class="keybindBtn">Keybinds</button>
   
-  <div style="display: flex; justify-content: center; gap: 60px; align-items: center;">
-    <div style="display: flex; gap: 5px;">
+  <div class="ttsContainer">
+    <div class="ttsControls">
       <button onclick="speak()" title="play/resume (enter)">▶</button>
       <button onclick="pause()" title="pause (p)">⏸</button>
       <button onclick="cancel()" title="stop (s)">⏹</button>
     </div>
     
-    <div style="display: flex; gap: 10px;">
+    <div class="ttsSettings">
       <label for="VOLUME">Speed: </label>
-      <input id="RANGE" type="range" min="0.1" max="5.0" step="0.1" value="1.0" style="display: flex; align-items: center;" oninput="document.getElementById('rangeValue').innerText = this.value;" title="change talk speed (up/down arrow)">
+      <input id="RANGE" type="range" min="0.1" max="5.0" step="0.1" value="1.0" class="ttsSliders" oninput="document.getElementById('rangeValue').innerText = this.value;" title="change talk speed (up/down arrow)">
       <label id="rangeValue">1.0</label>
     </div>
     
-    <div style="display: flex; gap: 10px;">
+    <div class="ttsSettings">
       <label for="VOLUME">Volume: </label>
-      <input id="VOLUME" type="range" min="0.1" max="1.0" step="0.1" value="1.0" style="display: flex; align-items: center;" oninput="document.getElementById('volValue').innerText = this.value;" title="change volume (-/=)">
+      <input id="VOLUME" type="range" min="0.1" max="1.0" step="0.1" value="1.0" class="ttsSliders" oninput="document.getElementById('volValue').innerText = this.value;" title="change volume (-/=)">
       <label id="volValue">1.0</label>
     </div>
     
-    <div style="display: flex; gap: 10px;">
-      <label for="lang" title="*Language support depends on your browser">Language: </label>
-      <select name="lang" id="lang" title="*Language support depends on your browser" style="padding: 6px 12px; border-radius: 6px; border: none; outline: none; background-color: var(--accent-color); color: var(--accent-text-color);">
+    <div class="ttsSettings">
+      <label for="lang" title="*Language support depends on your browser" class="ttsLangTXT">Language: </label>
+      <select name="lang" id="lang" title="*Language support depends on your browser" class="ttsLangInp">
         <option value="en-US">English</option>
         <option value="es-MX">Español</option>
         <option value="ar-EG">العربية</option>
