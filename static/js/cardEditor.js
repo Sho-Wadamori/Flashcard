@@ -81,6 +81,12 @@ const formFields = [
     {editable: cardAnswerEditable, input: cardAnswerInput},
 ];
 
+// const images = [
+//     {input: ImageEditable, hiddenInput: cardImageInput, original: originalImage, form: "cardForm"},
+//     {input: ImageEditable, hiddenInput: quizImageInput, original: originalImage, form: "quizForm"},
+//     {input: ImageEditable, hiddenInput: tfImageInput, original: originalImage, form: "tfForm"}
+// ];
+
 // last focused variable for inputter
 let lastFocused = null;
 

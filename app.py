@@ -46,13 +46,6 @@ from werkzeug.utils import (
 import sqlite3
 
 DATABASE = 'database.db'  # relative path to the database file
-UPLOAD_FOLDER = 'static\\uploads'  # folder to store uploaded files
-ALLOWED_IMAGES = {
-    '.png', '.jpg', '.jpeg', '.gif', '.webp', '.avif', '.apng', '.svg'
-}
-ALLOWED_AUDIO = {
-    '.mp3'
-}
 
 # initialise app
 app = Flask(__name__)
@@ -548,40 +541,6 @@ def Deck(id):
             """, "error")
 
         results.append((card[0], card[1], card[2], question, answer))
-
-    # card = f"""
-    #     SELECT card_ID, card_creation, card_mode
-    #     FROM Flashcards
-    #     WHERE card_deckID = ?
-    #     ORDER BY {sort_by} {order};
-    # """
-    # results = query_db(card, (id,))
-
-    # cards = []
-    # for row in results:
-    #     mode = row[2]
-    #     if mode == 'flashcard':
-    #         content = query_db("""
-    #             SELECT flashcard_question, flashcard_answer
-    #             FROM Flashcards
-    #             WHERE card_ID = ?
-    #         """, (row[0],))
-
-    #     elif mode == 'quiz':
-    #         content = query_db("""
-    #             SELECT quiz_question, quiz_answer
-    #             FROM Flashcards
-    #             WHERE card_ID = ?
-    #         """, (row[0],))
-
-    #     elif mode == 'TF':
-    #         content = query_db("""
-    #             SELECT tf_question, tf_answer
-    #             FROM Flashcards
-    #             WHERE card_ID = ?
-    #         """, (row[0],))
-
-
 
     # handeling sorting and ordering
     ordering = order == "DESC"
@@ -2227,68 +2186,6 @@ def public():
         sort_by=sort_by,
         order=order
     )
-
-
-# ---------- test ----------
-@app.route('/test/', methods=['GET', 'POST'])
-def test():
-    if request.method == 'POST':
-        # get the form data from the request object like this
-        # item = request.form['file_name']
-        # now get the filename from the form
-        file = request.files['file']
-
-        if file.filename == '':
-            return "No selected file", 400
-
-        # should check the file is valid but for simplicity......
-        # save the file in the UPLOAD_FOLDER
-        print(f"Uploading file: {file.filename} to {UPLOAD_FOLDER}")
-        original_name = secure_filename(file.filename)
-
-        extension = os.path.splitext(original_name)[1].lower()
-
-        if extension not in ALLOWED_IMAGES:
-            return "Invalid file type", 400
-
-        sql = """
-                INSERT INTO Files (
-                    file_name, file_cardID, file_userID
-                )
-                VALUES (?, ?, ?);
-            """
-        get_db().execute(sql, (original_name, 2, userID()))
-        get_db().commit()
-
-        get_ID = "SELECT last_insert_rowid();"
-        file_ID = query_db(get_ID, (), one=True)[0]  # get the ID of the file
-        print(f"ROW ID: {file_ID}")
-
-        extension = os.path.splitext(original_name)[1]
-        new_filename = f"{file_ID}{extension}"
-
-        file.save(os.path.join(UPLOAD_FOLDER, new_filename))
-        # now insert into the database
-
-        return redirect(url_for('home'))
-    else:
-        # get the deck name of the inputted deck id
-        sql1 = """
-                SELECT Flashcards.card_hint,
-                Flashcards.card_mode, Decks.deck_name
-                FROM Flashcards, Decks;
-            """
-        card_list = query_db(sql1)
-
-        a = """
-            SELECT file_ID, file_type
-            FROM Files
-            WHERE file_userID = 0
-            ORDER BY file_ID DESC;
-        """
-        b = query_db(a)
-
-        return render_template("test.html", card_list=card_list, b=b)
 
 
 # only run the app if app.py is executed directly
