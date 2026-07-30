@@ -9,7 +9,7 @@
 
 <div id="characterPopup-overlay" class="characterPopup-overlay" onclick="closeDropdownPanel()"></div>
 
-<div class="deck-header" style="margin-bottom: 0 !important;">
+<div class="deck-header" style="margin-bottom: 0 !important; position: relative;">
     <!-- Flashcard form -->
     <form id="cardForm" action="{{ url_for('createCard', id=deck_info[1]) }}" method="POST" autocomplete="off">
         <p style="color: var(--warning-color);">* Indicates required question</p>
@@ -21,6 +21,7 @@
 
         <button type="submit">Submit</button>
         <button type="reset">Reset</button><br><br>
+        <p style="color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%); text-align: center; position: absolute; inset: 0; margin: 0;">* Card content is not encrypted. Please do not input any sensitive information.</p>
     </form>
 
     <!-- Quiz form -->

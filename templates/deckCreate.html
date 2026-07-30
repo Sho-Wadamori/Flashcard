@@ -10,7 +10,7 @@
 <div id="characterPopup-overlay" class="characterPopup-overlay" onclick="closeDropdownPanel()"></div>
 
 <!-- Deck creation form -->
-<form id="deckForm" action="{{ url_for('createDeck') }}" method="POST" autocomplete="off">
+<form id="deckForm" action="{{ url_for('createDeck') }}" method="POST" autocomplete="off" style="position: relative;">
     <p style="color: var(--warning-color);">* Indicates required question</p>
     <input id="deckInput" name="deckName" type="hidden" required>
     <input id="descriptionInput" name="deckDescription" type="hidden">
@@ -22,6 +22,7 @@
         <option value="unlisted" {% if visibility == 'unlisted' %}selected{% endif %}>Unlisted</option>
         <option value="public" {% if visibility == 'public' %}selected{% endif %}>Public</option>
     </select>
+    <p style="color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%); text-align: center; position: absolute; inset: 0; margin: 0;">* Making decks with illegal, harmful, or sensitive information is not allowed.</p>
 </form>
 
 <div style="text-align:center; margin-bottom: 20px;">
