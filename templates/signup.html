@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Righteous">
     <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
     <title>Sign Up | Flashcard Maker</title>
 </head>
 <body class="login-body">
@@ -16,6 +15,7 @@
         <h2>Welcome To Flashcard Maker!</h2><br>
         <h1>-- Sign up --</h1>
 
+        <!-- error message -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages%}
                 {% for category, message in messages%}
@@ -25,19 +25,23 @@
         {%endwith%}
 
         <form action="{{ url_for('signup') }}" method="POST" class="login">
+            <!-- username -->
             <div class="inputContainer">
                 <div class="inputIcon">{% include "icons/username.html" %}</div>
                 <input type="text" name="username" maxlength="25" id="username" placeholder="Username (max 25 characters)">
             </div>
+            <!-- password -->
             <div class="inputContainer">
                 <div class="inputIcon">{% include "icons/password.html" %}</div>
                 <input type="password" name="password" minlength="8" maxlength="128" id="password" placeholder="Password (min 8 characters)">
             </div>
+            <!-- password confirmation -->
             <div class="inputContainer">
                 <div class="inputIcon">{% include "icons/password.html" %}</div>
                 <input type="password" name="confirm_password" minlength="8" maxlength="128" id="confirm_password" placeholder="Confirm Password">
             </div>
             <br>
+            <!-- show passwords -->
             <div class="showPasswordContainer">
                 <input type="checkbox" onclick="passwordReveal()" id="showPasswords" class="showPasswords">
                 <label for="showPasswords" class="showPasswords">Show Passwords</label>

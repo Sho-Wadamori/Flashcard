@@ -71,7 +71,7 @@
         {% include 'components/charInputter.html' %}
     </div>
 
-    <!-- Card preview (right side) -->
+    <!-- Flashcard -->
     <div id="FLASHCARD" class="card-editor" style="display: none;">
         <!-- the question then the answer -->
         <h1 id="cardQuestion" contenteditable="plaintext-only" class="preview cardQuestion">{{ cards[4] }}</h1>
@@ -79,6 +79,7 @@
         <h4 id="cardAnswer" contenteditable="plaintext-only" class="preview cardAnswer">{{ cards[5] }}</h4>
     </div>
 
+    <!-- quiz -->
     <div id="QUIZ" style="display: none; width: 80%; margin: auto;" class="quizContainer">
         <div style="width: 100%; background-color: var(--card-bg-color); border-radius: 10px; text-align: center; padding: 20px;">
             <h1 id="quizQuestion" contenteditable="plaintext-only" class="preview quizQuestion">{{ cards[6] }}</h1>
@@ -106,6 +107,7 @@
         </div>
     </div>
 
+    <!-- true/false -->
     <div id="TF" style="display: none; width: 80%; margin: auto;" class="quizContainer">
         <div style="width: 100%; background-color: var(--card-bg-color); border-radius: 10px; text-align: center; padding: 20px;">
             <h1 id="tfQuestion" contenteditable="plaintext-only" class="preview tfQuestion">{{ cards[12] }}</h1>

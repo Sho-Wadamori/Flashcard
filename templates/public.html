@@ -15,6 +15,7 @@
     <h6 style="margin-bottom: 20px;">Select a deck to view its cards.</h6>
 
     <form action="{{ url_for('public') }}" method="GET" class='sort-form' style="top: 18px;">
+        <!-- sorting and ordering -->
         <label for="sort_by">Sort by:</label>
         <select name="sort_by" id="sort_by">
             <option value="deck_creation" {% if sort_by == 'deck_creation' %}selected{% endif %}>Creation Date</option>

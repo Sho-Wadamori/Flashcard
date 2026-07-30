@@ -1,47 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{{ url_for('static', filename='assets/icon.png') }}">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Righteous">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/keybind.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/cardList.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/editor.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/study.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    <!-- load \cancel and \html because edit pages break otherwise -->
-    <script>
-        window.MathJax = {
-            loader: { load: ['[tex]/cancel', '[tex]/html'] },
-            tex: {
-                packages: { '[+]': ['cancel', 'html'] }
-            }
-        };
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
-    <title>Study | Flashcard Maker</title>
-    <!-- change css root colours -->
-    <script>
-        document.documentElement.style.setProperty('--primary-bg-color', '{{ settings[0] }}');
-        document.documentElement.style.setProperty('--secondary-bg-color', '{{ settings[1] }}');
-        document.documentElement.style.setProperty('--text-color', '{{ settings[2] }}');
-        document.documentElement.style.setProperty('--accent-color', '{{ settings[3] }}');
-        document.documentElement.style.setProperty('--accent-text-color', '{{ settings[4] }}');
-        document.documentElement.style.setProperty('--card-bg-color', '{{ settings[5] }}');
-        document.documentElement.style.setProperty('--card-text-color', '{{ settings[6] }}');
-        document.documentElement.style.setProperty('--warning-color', '{{ settings[7] }}');
-        document.documentElement.style.setProperty('--shadow-color', '{{ settings[8] }}');
-        document.addEventListener("DOMContentLoaded", () => {
-            document.body.style.fontSize = {{ settings[9] }} + "px"
-        });
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="{{ url_for('static', filename='assets/icon.png') }}">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Righteous">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/keybind.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/cardList.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/editor.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/study.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <!-- load \cancel and \html because edit pages break otherwise -->
+  <script>
+    window.MathJax = {
+      loader: { load: ['[tex]/cancel', '[tex]/html'] },
+      tex: {
+        packages: { '[+]': ['cancel', 'html'] }
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <title>Study | Flashcard Maker</title>
+  <!-- change css root colours -->
+  <script>
+    document.documentElement.style.setProperty('--primary-bg-color', '{{ settings[0] }}');
+    document.documentElement.style.setProperty('--secondary-bg-color', '{{ settings[1] }}');
+    document.documentElement.style.setProperty('--text-color', '{{ settings[2] }}');
+    document.documentElement.style.setProperty('--accent-color', '{{ settings[3] }}');
+    document.documentElement.style.setProperty('--accent-text-color', '{{ settings[4] }}');
+    document.documentElement.style.setProperty('--card-bg-color', '{{ settings[5] }}');
+    document.documentElement.style.setProperty('--card-text-color', '{{ settings[6] }}');
+    document.documentElement.style.setProperty('--warning-color', '{{ settings[7] }}');
+    document.documentElement.style.setProperty('--shadow-color', '{{ settings[8] }}');
+    document.addEventListener("DOMContentLoaded", () => {
+      document.body.style.fontSize = {{ settings[9] }} + "px"
+    });
+  </script>
 </head>
 
 
@@ -86,6 +85,7 @@
     <button class="btn-ignore-all" id="prev_button" disabled><</button>
   {% endif %}
   
+  <!-- if flashcard mode -->
   {% if cards[2] == 'flashcard' %}
     <!-- Show answer -->
     {% if cards %}
@@ -94,6 +94,7 @@
     </button>
     {% endif %}
 
+  <!-- if quiz mode -->
   {% elif cards[2] == 'quiz' %}
   <div id="QUIZ" class="quizContainer" data-quizQuestion="{{ cards[6] }}" data-quizAnswer1="{{ cards[7] }}" data-quizAnswer2="{{ cards[8] }}" data-quizAnswer3="{{ cards[9] }}" data-quizAnswer4="{{ cards[10] }}">
     <div class="quizQuestionContainer">
@@ -130,7 +131,7 @@
     </div>
   </div>
 
-
+  <!-- if true false mode -->
   {% elif cards[2] == 'TF' %}
   <div id="TF" class="quizContainer" data-tfQuestion="{{ cards[12] }}">
     <div class="quizQuestionContainer">
@@ -195,6 +196,7 @@
   <!-- Keybinds Help -->
   <button onclick="openPopupTab('studykeys');" class="keybindBtn">Keybinds</button>
   
+  <!-- tts controls -->
   <div class="ttsContainer">
     <div class="ttsControls">
       <button onclick="speak()" title="play/resume (enter)">▶</button>
@@ -202,18 +204,21 @@
       <button onclick="cancel()" title="stop (s)">⏹</button>
     </div>
     
+    <!-- tts speed -->
     <div class="ttsSettings">
       <label for="VOLUME">Speed: </label>
       <input id="RANGE" type="range" min="0.1" max="5.0" step="0.1" value="1.0" class="ttsSliders" oninput="document.getElementById('rangeValue').innerText = this.value;" title="change talk speed (up/down arrow)">
       <label id="rangeValue">1.0</label>
     </div>
     
+    <!-- tts volume -->
     <div class="ttsSettings">
       <label for="VOLUME">Volume: </label>
       <input id="VOLUME" type="range" min="0.1" max="1.0" step="0.1" value="1.0" class="ttsSliders" oninput="document.getElementById('volValue').innerText = this.value;" title="change volume (-/=)">
       <label id="volValue">1.0</label>
     </div>
     
+    <!-- tts languages -->
     <div class="ttsSettings">
       <label for="lang" title="*Language support depends on your browser" class="ttsLangTXT">Language: </label>
       <select name="lang" id="lang" title="*Language support depends on your browser" class="ttsLangInp">

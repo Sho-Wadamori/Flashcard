@@ -15,6 +15,7 @@
     <h6 style="margin-bottom: 20px;">Select a deck to view its cards.</h6>
 
     <form action="{{ url_for('Decks') }}" method="GET" class='sort-form' style="top: 18px;">
+        <!-- filtering and sorting -->
         <label for="filter">Filter:</label>
         <select name="filter" id="filter">
             <option value="none" {% if filter == 'none' %}selected{% endif %}>None</option>

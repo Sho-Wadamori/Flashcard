@@ -16,6 +16,7 @@
 
         <h1>-- Sign In --</h1>
 
+        <!-- error message -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages%}
                 {% for category, message in messages%}
@@ -25,16 +26,19 @@
         {%endwith%}
         
         <form action="{{ url_for('login') }}" method="POST" class="login">
+            <!-- username -->
             <div class="inputContainer">
                 <div class="inputIcon">{% include "icons/username.html" %}</div>
                 <input type="text" name="username" maxlength="25" id="username" placeholder="Username">
             </div>
             <br>
+            <!-- password -->
             <div class="inputContainer">
                 <div class="inputIcon">{% include "icons/password.html" %}</div>
                 <input type="password" name="password" minlength="8" maxlength="128" id="password" placeholder="Password">
             </div>
             <br>
+            <!-- show password button -->
             <div class="showPasswordContainer">
                 <input type="checkbox" onclick="passwordReveal()" id="showPasswords" class="showPasswords">
                 <label for="showPasswords" class="showPasswords">Show Password</label>

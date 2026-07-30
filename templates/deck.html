@@ -22,6 +22,7 @@
   
   <a href="{{ url_for('Decks') }}"><button>Back</button></a>
 
+  <!-- filter/sorting -->
   <br><br><form action="{{ url_for('Deck', id=deck_info[1]) }}" method="GET" class='sort-form'>
     <label for="filter">Filter:</label>
     <select name="filter" id="filter">
@@ -76,7 +77,7 @@
     {% if is_owner %}
       <a href="{{ url_for('createCard', id=deck_info[1]) }}">
         <div class="w3-card-4">
-            <h1 class="plus">+</h1>
+          <h1 class="plus">+</h1>
         </div>
       </a>
     {% endif %}
@@ -163,9 +164,9 @@
 
 <!-- scroll to top button -->
 <div class="fixed-button">
-    <a onclick="window.scrollTo({top: 0, behavior: 'smooth'});">
-      {% include "icons/scroll.html" %}
-    </a>
+  <a onclick="window.scrollTo({top: 0, behavior: 'smooth'});">
+    {% include "icons/scroll.html" %}
+  </a>
 </div>
 
 

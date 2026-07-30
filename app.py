@@ -530,7 +530,7 @@ def Deck(id):
 
         else:
             flash("""
-                ⚠ Some of Your Cards Are Invalid. 
+                ⚠ Some of Your Cards Are Invalid.
                 Please contact the owner of the site.
             """, "error")
 

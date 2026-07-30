@@ -9,7 +9,7 @@
 
 <div class="homepage-body">
     {% if username == 'Guest'  %}
-        <h1>Welcome to Flashcard maker!</h1>    
+        <h1>Welcome to Flashcard maker!</h1>
     {% else %}
         <h1>Welcome back {{ username }}!</h1>
     {% endif %}
@@ -37,6 +37,7 @@
         <h2>Your Progress</h2> <a href="{{ url_for('stats') }}"><h6 style="color: color-mix(in hsl, var(--accent-color), rgb(130, 130, 130) 40%) !important;">View more ></h6></a>
     </div>
     <div class="statsContainer">
+        <!-- streaks -->
         <div class="statsDaily">
             <div class="statsInner">
                 {% if currentStreak == 0 %}
@@ -50,6 +51,7 @@
             </div>
         </div>
 
+        <!-- all time stats (need to change class name) -->
         <div class="statsWeekly">
             <h3 style="text-align: center;">All Time Stats</h3>
             <div class="statsInner" style="display: grid; grid-auto-flow: row; grid-template-columns: 1fr 1fr; gap: 20px;">
