@@ -24,7 +24,6 @@ from flask import (
     flash  # used for error messages (NOT SETUP YET)
 )
 
-import os  # for file extension and name extraction
 import random  # for randomising card list
 import time  # for timer
 
@@ -39,10 +38,6 @@ from werkzeug.security import (
     check_password_hash
 )  # for user login password encryption
 
-from werkzeug.utils import (
-    secure_filename
-)  # for securing uploaded files
-
 import sqlite3
 
 DATABASE = 'database.db'  # relative path to the database file
@@ -52,7 +47,6 @@ app = Flask(__name__)
 
 # set a secret key for sessions
 app.config['SECRET_KEY'] = "8y9awhDWdhHfw8ghgrgdgGRgDEgwndaiundIUDNu1823892e8h"
-app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024  # 5 MB file size limit
 
 
 # ---------- FLASK SETUP ----------
@@ -799,7 +793,6 @@ def Study(id, index):
 
             # if mode is flashcard
             if response_type == 'flashcard':
-                print("FLASHCARD")
                 response = request.form.get('response')  # get response
 
                 # update stats
@@ -817,22 +810,16 @@ def Study(id, index):
 
             # if mode is quiz and not alr answered
             elif response_type == 'quiz' and not answered:
-                print("QUIZ")
                 selected = request.form.get('quizAnswer')  # get response
                 correct = card[11]  # get correct
                 is_correct = str(selected) == str(correct)  # check if correct
                 skipped = selected is None  # check if skipped
-
-                print(selected)
-                print(correct)
 
                 result = is_correct
 
                 # skip showing answer if skip
                 if skipped:
                     result = None
-
-                print(result)
 
                 # update stats
                 if result is not None:
@@ -853,14 +840,10 @@ def Study(id, index):
 
             # if mode is true/false and not alr answered
             elif response_type == 'TF' and not answered:
-                print("TF")
                 selected = request.form.get('tfAnswer')  # get response
                 correct = card[13]  # get correct ans
                 is_correct = str(selected) == str(correct)  # check if correct
                 skipped = selected is None  # check if skipped
-
-                print(selected)
-                print(correct)
 
                 result = is_correct
 
@@ -1175,12 +1158,6 @@ def createCard(id):
             tf_question = request.form['tfQuestion']
             tf_hint = request.form['tfHint']
 
-            print(f"""
-                tfCorrect: {tfCorrect}
-                tf_question: {tf_question}
-                tf_hint: {tf_hint}
-            """)
-
             if not tfCorrect:
                 flash("⚠ Please Select the Correct Answer.", "error")
                 return render_template(
@@ -1494,8 +1471,6 @@ def editCard(id, card_id):
         """
         card = query_db(card_sql, (card_id,))
 
-        print(card)
-
         # check if card is not empty
         if not card:
             flash("⚠ Invalid Card...", "error")
@@ -1509,8 +1484,6 @@ def editCard(id, card_id):
             if i is None:
                 card[index] = ""
             index += 1
-
-        print(card)
 
         return render_template(
             "cardEdit.html",
@@ -1661,8 +1634,6 @@ def profile():
         Delete = request.form.get('DeleteAccount')
         Reset = request.form.get('ResetAccount')
 
-        print(f"Delete: {Delete} | Reset: {Reset}")
-
         if Delete == 'True':
             delete_user = """
                 DELETE FROM Users
@@ -1684,8 +1655,6 @@ def profile():
                 WHERE user_ID = ?
             """
             details = query_db(currentDetails, (userID(),))[0]
-
-            print(details)
 
             delete_user = """
                 DELETE FROM Users
@@ -1976,12 +1945,13 @@ def stats():
         """
     totalDuration = query_db(studyTime, (userID(),))[0][0]
     if totalDuration is not None:
+        # if more than 1hr
         if totalDuration >= 3600:
             hours = totalDuration // 3600
             minutes = (totalDuration % 3600) // 60
             seconds = totalDuration % 60
             totalDuration = f"{hours}h {minutes}m {seconds}s"
-
+        # if more than 1 min
         elif totalDuration >= 60:
             minutes = totalDuration // 60
             seconds = totalDuration % 60
@@ -2101,8 +2071,6 @@ def settings():
             enable = 0
         else:
             enable = 1
-
-        print(shadowFull)
 
         # update themes
         update_settings = """

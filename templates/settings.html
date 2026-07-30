@@ -581,8 +581,6 @@
 
                     name.addEventListener('beforeinput', (element) => {
                         const currentLength = element.target.innerText.length
-                        console.log(currentLength)
-                        console.log(element.inputType)
                         if (currentLength >= 200 && element.inputType.startsWith('insert')) {
                             element.preventDefault()
 
@@ -591,8 +589,6 @@
 
                     description.addEventListener('beforeinput', (element) => {
                         const currentLength = element.target.innerText.length
-                        console.log(currentLength)
-                        console.log(element.inputType)
                         if (currentLength >= 400 && element.inputType.startsWith('insert')) {
                             element.preventDefault()
 

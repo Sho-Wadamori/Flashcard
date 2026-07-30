@@ -286,8 +286,6 @@
 
   if (tf) {
     const tfQuestion = tf.dataset.tfquestion;
-
-    console.log(tfQuestion)
     
     speakText = "True/False Question. " + tfQuestion + "... True or False?";
   }
@@ -375,7 +373,6 @@
     const exit = document.getElementById("exit_button");
     const prev = document.getElementById("prev_button");
     if (event.key === 'ArrowRight') {
-      console.log("right")
       if (exit) {
         exit.click();
       }
@@ -384,7 +381,6 @@
       }
     }
     if (event.key === 'ArrowLeft') {
-      console.log("left")
       if (prev) {
         prev.click();
       }
