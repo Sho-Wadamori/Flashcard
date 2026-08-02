@@ -325,6 +325,10 @@
   height: 60px;
 }
 
+.share-button {
+  color: var(--text-color);
+}
+
 /* share close button */
 .share-close {
   position: absolute;

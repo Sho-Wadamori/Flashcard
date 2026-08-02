@@ -43,13 +43,13 @@
   </script>
 </head>
 
-
-<body class="w3-container" style="min-height: 100vh; margin: 0; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-<div style="width: 100%;">
+<!-- make body take up whole page -->
+<body class="w3-container card-body">
+<div class="card-bodyDiv">
 
 {% if index + 1 < total %}
-<div style="position: relative;;">
-  <button onclick="window.location='{{ url_for('Deck', id=deck_id) }}'" style="position: absolute; top: 50px; left: 20px;">Home</button>
+<div class="studyHomeContainer">
+  <button onclick="window.location='{{ url_for('Deck', id=deck_id) }}'" class="study-homeBtn">Home</button>
 </div>
 {% endif %}
 
@@ -66,7 +66,7 @@
 
 
 {% if index + 1 >= total %}
-<div style="position: absolute; top: 80px; left: 40px;">
+<div class="study-exitBtn">
   <button id="exit_button" form="responseForm" type="submit">Exit</button>
   <p>You've completed the deck!</p>
 </div>
@@ -96,7 +96,7 @@
 
   <!-- if quiz mode -->
   {% elif cards[2] == 'quiz' %}
-  <div id="QUIZ" class="quizContainer" data-quizQuestion="{{ cards[6] }}" data-quizAnswer1="{{ cards[7] }}" data-quizAnswer2="{{ cards[8] }}" data-quizAnswer3="{{ cards[9] }}" data-quizAnswer4="{{ cards[10] }}">
+  <div id="QUIZ" class="quizContainerStudy" data-quizQuestion="{{ cards[6] }}" data-quizAnswer1="{{ cards[7] }}" data-quizAnswer2="{{ cards[8] }}" data-quizAnswer3="{{ cards[9] }}" data-quizAnswer4="{{ cards[10] }}">
     <div class="quizQuestionContainer">
       <h1 id="quizQuestion" class="preview quizQuestion">{{ cards[6] }}</h1>
     </div>
@@ -133,7 +133,7 @@
 
   <!-- if true false mode -->
   {% elif cards[2] == 'TF' %}
-  <div id="TF" class="quizContainer" data-tfQuestion="{{ cards[12] }}">
+  <div id="TF" class="quizContainerStudy" data-tfQuestion="{{ cards[12] }}">
     <div class="quizQuestionContainer">
       <h1 id="tfQuestion" contenteditable="plaintext-only" class="preview tfQuestion">{{ cards[12] }}</h1>
     </div>
@@ -186,7 +186,7 @@
     <input type="radio" id="skip" name="response" value="skip">
     <label for="skip">Skip [3]</label>
   </div>
-  <p id="keybindhint" style="text-align: center; color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%);">* press the corresponding number on your keyboard to change response</p>
+  <p id="keybindhint" class="grey-message">* press the corresponding number on your keyboard to change response</p>
   {% endif %}
 </form>
 

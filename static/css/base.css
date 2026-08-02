@@ -152,6 +152,11 @@ button:not(.button-ignore):not(.btn-ignore-all) {
   text-decoration: underline !important;
 }
 
+.grey-message {
+  text-align: center;
+  color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%);
+}
+
 /* card container used in login and card listing */
 .w3-card-4 {
   height: 100%;

@@ -21,11 +21,11 @@
 
         <button type="submit">Submit</button>
         <button type="reset">Reset</button><br><br>
-        <p style="color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%); text-align: center; position: absolute; inset: 0; margin: 0;">* Card content is not encrypted. Please do not input any sensitive information.</p>
+        <p class="grey-message" style="position: absolute; inset: 0; margin: 0;">* Card content is not encrypted. Please do not input any sensitive information.</p>
     </form>
 
     <!-- Quiz form -->
-    <form id="quizForm" action="{{ url_for('createCard', id=deck_info[1]) }}" method="POST" autocomplete="off" style="display: none;">
+    <form id="quizForm" action="{{ url_for('createCard', id=deck_info[1]) }}" method="POST" autocomplete="off" style="display: none; margin-bottom: 0 !important; position: relative;">
         <p style="color: var(--warning-color);">* Indicates required question</p>
 
         <input type="hidden" name="cardType" value="quiz">
@@ -38,10 +38,11 @@
 
         <button type="submit">Submit</button>
         <button type="reset">Reset</button><br><br>
+        <p class="grey-message" style="position: absolute; inset: 0; margin: 0;">* Card content is not encrypted. Please do not input any sensitive information.</p>
     </form>
 
     <!-- TF form -->
-    <form id="tfForm" action="{{ url_for('createCard', id=deck_info[1]) }}" method="POST" autocomplete="off" style="display: none;">
+    <form id="tfForm" action="{{ url_for('createCard', id=deck_info[1]) }}" method="POST" autocomplete="off" style="display: none; margin-bottom: 0 !important; position: relative;">
         <p style="color: var(--warning-color);">* Indicates required question</p>
 
         <input type="hidden" name="cardType" value="TF">
@@ -50,6 +51,7 @@
 
         <button type="submit">Submit</button>
         <button type="reset">Reset</button><br><br>
+        <p class="grey-message" style="position: absolute; inset: 0; margin: 0;">* Card content is not encrypted. Please do not input any sensitive information.</p>
     </form>
 
     <!-- mode changer -->
@@ -63,7 +65,7 @@
     </div>
 </div>
 
-<div style="text-align:center; margin-bottom: 20px;">
+<div class="editor-buttons">
   <button type="button" onclick="togglePanel()">⌨ Special Characters</button>
   <button type="button" onclick="openPopupTab('mathjax')">🛈 MathJax Help</button>
 </div>
@@ -85,48 +87,48 @@
     </div>
 
     <!-- quiz -->
-    <div id="QUIZ" style="display: none; width: 80%; margin: auto;" class="quizContainer">
-        <div style="width: 100%; background-color: var(--card-bg-color); border-radius: 10px; text-align: center; padding: 20px;">
+    <div id="QUIZ" style="display: none;" class="quizContainer">
+        <div class="quizQuestionContainer">
             <h1 id="quizQuestion" contenteditable="plaintext-only" class="preview quizQuestion">{ Question }*</h1>
         </div>
-        <div class="options" style="display: grid; grid-template-columns: 1fr 1fr; grid-auto-flow: row; gap: 30px; width: 100%; margin-top: 30px;">
-            <div style="background-color: var(--card-bg-color); border-radius: 10px; padding: 20px 30px; display: flex; justify-content: space-between;">
+        <div class="quizOptions">
+            <div class="quizOption">
                 <h2 id="quizAnswer1" contenteditable="plaintext-only" class="preview quizAnswer1">{ Answer 1 }*</h2>
-                <input type="radio" name="quizAnswer" id="quizAnswer1Radio" value="1" form="quizForm" style="height: 20px; width: 20px; margin: auto 0; cursor: pointer;">
+                <input type="radio" name="quizAnswer" id="quizAnswer1Radio" value="1" form="quizForm" class="quizSelectBtn">
             </div>
         
-            <div style="background-color: var(--card-bg-color); border-radius: 10px; padding: 20px 30px; display: flex; justify-content: space-between;">
+            <div class="quizOption">
                 <h2 id="quizAnswer2" contenteditable="plaintext-only" class="preview quizAnswer2">{ Answer 2 }*</h2>
-                <input type="radio" name="quizAnswer" id="quizAnswer2Radio" value="2" form="quizForm" style="height: 20px; width: 20px; margin: auto 0; cursor: pointer;">
+                <input type="radio" name="quizAnswer" id="quizAnswer2Radio" value="2" form="quizForm" class="quizSelectBtn">
             </div>
         
-            <div style="background-color: var(--card-bg-color); border-radius: 10px; padding: 20px 30px; display: flex; justify-content: space-between;">
+            <div class="quizOption">
                 <h2 id="quizAnswer3" contenteditable="plaintext-only" class="preview quizAnswer3">{ Answer 3 }*</h2>
-                <input type="radio" name="quizAnswer" id="quizAnswer3Radio" value="3" form="quizForm" style="height: 20px; width: 20px; margin: auto 0; cursor: pointer;">
+                <input type="radio" name="quizAnswer" id="quizAnswer3Radio" value="3" form="quizForm" class="quizSelectBtn">
             </div>
         
-            <div style="background-color: var(--card-bg-color); border-radius: 10px; padding: 20px 30px; display: flex; justify-content: space-between;">
+            <div class="quizOption">
                 <h2 id="quizAnswer4" contenteditable="plaintext-only" class="preview quizAnswer4">{ Answer 4 }*</h2>
-                <input type="radio" name="quizAnswer" id="quizAnswer4Radio" value="4" form="quizForm" style="height: 20px; width: 20px; margin: auto 0; cursor: pointer;">
+                <input type="radio" name="quizAnswer" id="quizAnswer4Radio" value="4" form="quizForm" class="quizSelectBtn">
             </div>
         </div>
     </div>
 
     <!-- true/false -->
-    <div id="TF" style="display: none; width: 80%; margin: auto;" class="quizContainer">
-        <div style="width: 100%; background-color: var(--card-bg-color); border-radius: 10px; text-align: center; padding: 20px;">
+    <div id="TF" style="display: none;" class="quizContainer">
+        <div class="quizQuestionContainer">
             <h1 id="tfQuestion" contenteditable="plaintext-only" class="preview tfQuestion">{ Question }*</h1>
         </div>
 
-        <div class="TFOptions" style="display: grid; grid-template-columns: 1fr 1fr; grid-auto-flow: row; gap: 30px; width: 100%; margin-top: 30px;">
-            <div id="tfOption1" style="background-color: var(--card-bg-color); border-radius: 10px; padding: 20px 30px; display: flex; justify-content: space-between; cursor: pointer;" onclick="document.getElementById('tfAnswer1Radio').checked = true;">
+        <div class="TFOptions">
+            <div id="tfOption1" class="tfOption" onclick="document.getElementById('tfAnswer1Radio').checked = true;">
                 <h2>TRUE</h2>
-                <input type="radio" name="tfAnswer" id="tfAnswer1Radio" value="1" form="tfForm" style="height: 20px; width: 20px; margin: auto 0;">
+                <input type="radio" name="tfAnswer" id="tfAnswer1Radio" value="1" form="tfForm" class="tfSelectBtn">
             </div>
         
-            <div id="tfOption2" style="background-color: var(--card-bg-color); border-radius: 10px; padding: 20px 30px; display: flex; justify-content: space-between; cursor: pointer;" onclick="document.getElementById('tfAnswer2Radio').checked = true;">
+            <div id="tfOption2" class="tfOption" onclick="document.getElementById('tfAnswer2Radio').checked = true;">
                 <h2>FALSE</h2>
-                <input type="radio" name="tfAnswer" id="tfAnswer2Radio" value="2" form="tfForm" style="height: 20px; width: 20px; margin: auto 0;">
+                <input type="radio" name="tfAnswer" id="tfAnswer2Radio" value="2" form="tfForm" class="tfSelectBtn">
             </div>
         </div>
 
@@ -134,7 +136,7 @@
 </div>
 
 <br><div class="tooltip">
-    Hint💡<span id="hint" class="tooltiptext preview hint", style="visibility: visible; opacity: 1;" contenteditable="plaintext-only">{ Hint text }</span>
+    Hint💡<span id="hint" class="tooltiptext preview hint" style="visibility: visible; opacity: 1;" contenteditable="plaintext-only">{ Hint text }</span>
 </div>
 
 <!-- MathJax Rendering Toggle -->

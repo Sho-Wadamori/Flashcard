@@ -22,10 +22,10 @@
         <option value="unlisted" {% if visibility == 'unlisted' %}selected{% endif %}>Unlisted</option>
         <option value="public" {% if visibility == 'public' %}selected{% endif %}>Public</option>
     </select>
-    <p style="color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%); text-align: center; position: absolute; inset: 0; margin: 0;">* Making decks with illegal, harmful, or sensitive information is not allowed.</p>
+    <p class="grey-message" style="position: absolute; inset: 0; margin: 0;">* Making decks with illegal, harmful, or sensitive information is not allowed.</p>
 </form>
 
-<div style="text-align:center; margin-bottom: 20px;">
+<div class="editor-buttons">
   <button type="button" onclick="togglePanel()">⌨ Special Characters</button>
   <button type="button" onclick="openPopupTab('mathjax')">🛈 MathJax Help</button>
 </div>

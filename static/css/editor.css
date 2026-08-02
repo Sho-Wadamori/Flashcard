@@ -155,6 +155,11 @@
   justify-content: center;
 }
 
+.editor-buttons {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
 /* character panel */
 .characterPanel {
   /* width: 20vw;
@@ -187,7 +192,8 @@
 }
 .quizContainer,
 .tfContainer {
-  width: 60%;
+  width: 80%;
+  margin: auto;
   transition: width 0.3s ease-in-out; /* animate width and delay visibility change */
   transition-delay: 0.1s; /* delay the transition to make it smoother */
 }
