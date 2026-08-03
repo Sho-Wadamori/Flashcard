@@ -11,7 +11,7 @@
 
 <!-- Deck creation form -->
 <form id="deckForm" action="{{ url_for('editDeck', id=results[0][0]) }}" method="POST" autocomplete="off">
-    <p style="color: var(--warning-color);">* Indicates required question</p>
+    <p class="warningTXT"">* Indicates required question</p>
     <input id="deckInput" name="deckName" value="{{ results[0][1] }}" type="hidden" required>
     <input id="descriptionInput" name="deckDescription" value="{{ results[0][2] }}" type="hidden">
     <button type="submit">Submit</button>
@@ -44,7 +44,7 @@
     </div>
 </div>
 
-<p style="color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%); text-align: center;">* deck description defaults to "No description."</p>
+<p class="grey-message">* deck description defaults to "No description."</p>
 
 <!-- MathJax Rendering Toggle -->
 <input type="checkbox" id="MathJaxCheck" onclick="toggleMathJax()" checked>

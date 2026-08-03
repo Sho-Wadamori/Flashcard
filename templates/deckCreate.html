@@ -11,7 +11,7 @@
 
 <!-- Deck creation form -->
 <form id="deckForm" action="{{ url_for('createDeck') }}" method="POST" autocomplete="off" style="position: relative;">
-    <p style="color: var(--warning-color);">* Indicates required question</p>
+    <p class="warningTXT">* Indicates required question</p>
     <input id="deckInput" name="deckName" type="hidden" required>
     <input id="descriptionInput" name="deckDescription" type="hidden">
     <button type="submit">Submit</button>
@@ -22,7 +22,7 @@
         <option value="unlisted" {% if visibility == 'unlisted' %}selected{% endif %}>Unlisted</option>
         <option value="public" {% if visibility == 'public' %}selected{% endif %}>Public</option>
     </select>
-    <p class="grey-message" style="position: absolute; inset: 0; margin: 0;">* Making decks with illegal, harmful, or sensitive information is not allowed.</p>
+    <p class="grey-message grey-top">* Making decks with illegal, harmful, or sensitive information is not allowed.</p>
 </form>
 
 <div class="editor-buttons">
@@ -45,7 +45,7 @@
     </div>
 </div>
 
-<p style="color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%); text-align: center;">* deck description defaults to "No description."</p>
+<p class="grey-message">* deck description defaults to "No description."</p>
 
 <!-- MathJax Rendering Toggle -->
 <input type="checkbox" id="MathJaxCheck" onclick="toggleMathJax()" checked>

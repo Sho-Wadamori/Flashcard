@@ -156,6 +156,11 @@ button:not(.button-ignore):not(.btn-ignore-all) {
   text-align: center;
   color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%);
 }
+.grey-top {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+}
 
 /* card container used in login and card listing */
 .w3-card-4 {

@@ -59,6 +59,10 @@
   left: 40px;
 }
 
+.study-progress {
+  text-align: center;
+}
+
 /* Quiz/TrueFalse Card */
 .quizContainerStudy {
   width: 60%;
@@ -122,10 +126,14 @@
   margin: auto 0;
 }
 
+.study-bottomDiv {
+  position: relative;
+}
 
 /* ----- Next/Prev Buttons ----- */
 .card-container {
   position: relative;
+  width: 100%;
 }
 /* position next/prev buttons relative to the card container */
 #prev_button, #next_button {
@@ -180,6 +188,10 @@
   cursor: help;
   text-align: center;
   width: fit-content;
+}
+
+.tooltip-help { 
+  cursor: help;
 }
 
 .tooltiptext {

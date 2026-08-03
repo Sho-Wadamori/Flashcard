@@ -12,7 +12,7 @@
 <div class="deck-header">
     <!-- Flashcard form -->
     <form id="cardForm" action="{{ url_for('editCard', id=deck_info[1], card_id=cards[0]) }}" method="POST" autocomplete="off" style="display: none;">
-        <p style="color: var(--warning-color);">* Indicates required question</p>
+        <p class="warningTXT">* Indicates required question</p>
         
         <input type="hidden" name="cardType" value="flashcard">
         <input id="cardQuestionInput" name="cardQuestion" type="hidden" value="{{ cards[4] }}" required>
@@ -26,7 +26,7 @@
 	
     <!-- Quiz form -->
     <form id="quizForm" action="{{ url_for('editCard', id=deck_info[1], card_id=cards[0]) }}" method="POST" autocomplete="off" style="display: none;">
-        <p style="color: var(--warning-color);">* Indicates required question</p>
+        <p class="warningTXT">* Indicates required question</p>
         <input type="hidden" name="cardType" value="quiz">
         <input id="quizQuestionInput" name="quizQuestion" type="hidden" value="{{ cards[6] }}" required>
         <input id="quizAnswer1Input" name="quizAnswer1" type="hidden" value="{{ cards[7] }}" required>
@@ -40,7 +40,7 @@
 
     <!-- TF form -->
     <form id="tfForm" action="{{ url_for('editCard', id=deck_info[1], card_id=cards[0]) }}" method="POST" autocomplete="off" style="display: none;">
-        <p style="color: var(--warning-color);">* Indicates required question</p>
+        <p class="warningTXT">* Indicates required question</p>
         <input type="hidden" name="cardType" value="TF">
         <input id="tfQuestionInput" name="tfQuestion" type="hidden" value="{{ cards[12] }}" required>
         <input id="tfHintInput" name="tfHint" type="hidden" value="{{ cards[3] }}">
@@ -64,7 +64,7 @@
     <button type="button" onclick="openPopupTab('mathjax')">🛈 MathJax Help</button>
 </div>
 
-<div style="display: flex;">
+<div class="editor-container">
     <!-- left side -->
     <div class="left-layout" id="characterPanel">
         <!-- Character Panel -->
@@ -116,12 +116,12 @@
         <div class="TFOptions">
             <div id="tfOption1" class="tfOption" onclick="document.getElementById('tfAnswer1Radio').checked = true;">
                 <h2>TRUE</h2>
-                <input type="radio" name="tfAnswer" id="tfAnswer1Radio" value="1" form="tfForm" style="height: 20px; width: 20px; margin: auto 0;"{% if cards[13] == 1 %} checked{% endif %}>
+                <input type="radio" name="tfAnswer" id="tfAnswer1Radio" value="1" form="tfForm" class="tfSelectBtn"{% if cards[13] == 1 %} checked{% endif %}>
             </div>
         
             <div id="tfOption2" class="tfOption" onclick="document.getElementById('tfAnswer2Radio').checked = true;">
                 <h2>FALSE</h2>
-                <input type="radio" name="tfAnswer" id="tfAnswer2Radio" value="2" form="tfForm" style="height: 20px; width: 20px; margin: auto 0;"{% if cards[13] == 2 %} checked{% endif %}>
+                <input type="radio" name="tfAnswer" id="tfAnswer2Radio" value="2" form="tfForm" class="tfSelectBtn"{% if cards[13] == 2 %} checked{% endif %}>
             </div>
         </div>
 
@@ -129,7 +129,7 @@
 </div>
 
 <br><div class="tooltip">
-    Hint💡<span id="hint" class="tooltiptext preview hint", style="visibility: visible; opacity: 1;" contenteditable="plaintext-only">{{ cards[3] }}</span>
+    Hint💡<span id="hint" class="tooltiptext preview hint" contenteditable="plaintext-only">{{ cards[3] }}</span>
 </div>
 
 <!-- MathJax Rendering Toggle -->

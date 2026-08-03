@@ -9,10 +9,10 @@
 
 <div id="characterPopup-overlay" class="characterPopup-overlay" onclick="closeDropdownPanel()"></div>
 
-<div class="deck-header" style="margin-bottom: 0 !important; position: relative;">
+<div class="deck-header">
     <!-- Flashcard form -->
     <form id="cardForm" action="{{ url_for('createCard', id=deck_info[1]) }}" method="POST" autocomplete="off">
-        <p style="color: var(--warning-color);">* Indicates required question</p>
+        <p class="warningTXT">* Indicates required question</p>
 
         <input type="hidden" name="cardType" value="flashcard">
         <input id="cardQuestionInput" name="cardQuestion" type="hidden" required>
@@ -21,12 +21,12 @@
 
         <button type="submit">Submit</button>
         <button type="reset">Reset</button><br><br>
-        <p class="grey-message" style="position: absolute; inset: 0; margin: 0;">* Card content is not encrypted. Please do not input any sensitive information.</p>
+        <p class="grey-message grey-top">* Card content is not encrypted. Please do not input any sensitive information.</p>
     </form>
 
     <!-- Quiz form -->
-    <form id="quizForm" action="{{ url_for('createCard', id=deck_info[1]) }}" method="POST" autocomplete="off" style="display: none; margin-bottom: 0 !important; position: relative;">
-        <p style="color: var(--warning-color);">* Indicates required question</p>
+    <form id="quizForm" action="{{ url_for('createCard', id=deck_info[1]) }}" method="POST" autocomplete="off">
+        <p class="warningTXT">* Indicates required question</p>
 
         <input type="hidden" name="cardType" value="quiz">
         <input id="quizQuestionInput" name="quizQuestion" type="hidden" required>
@@ -38,12 +38,12 @@
 
         <button type="submit">Submit</button>
         <button type="reset">Reset</button><br><br>
-        <p class="grey-message" style="position: absolute; inset: 0; margin: 0;">* Card content is not encrypted. Please do not input any sensitive information.</p>
+        <p class="grey-message grey-top">* Card content is not encrypted. Please do not input any sensitive information.</p>
     </form>
 
     <!-- TF form -->
-    <form id="tfForm" action="{{ url_for('createCard', id=deck_info[1]) }}" method="POST" autocomplete="off" style="display: none; margin-bottom: 0 !important; position: relative;">
-        <p style="color: var(--warning-color);">* Indicates required question</p>
+    <form id="tfForm" action="{{ url_for('createCard', id=deck_info[1]) }}" method="POST" autocomplete="off">
+        <p class="warningTXT">* Indicates required question</p>
 
         <input type="hidden" name="cardType" value="TF">
         <input id="tfQuestionInput" name="tfQuestion" type="hidden" required>
@@ -51,7 +51,7 @@
 
         <button type="submit">Submit</button>
         <button type="reset">Reset</button><br><br>
-        <p class="grey-message" style="position: absolute; inset: 0; margin: 0;">* Card content is not encrypted. Please do not input any sensitive information.</p>
+        <p class="grey-message grey-top">* Card content is not encrypted. Please do not input any sensitive information.</p>
     </form>
 
     <!-- mode changer -->
@@ -71,7 +71,7 @@
 </div>
 
 
-<div style="display: flex;">
+<div class="editor-container">
     <!-- left side -->
     <div class="left-layout" id="characterPanel">
         <!-- Character Panel -->
@@ -136,7 +136,7 @@
 </div>
 
 <br><div class="tooltip">
-    Hint💡<span id="hint" class="tooltiptext preview hint" style="visibility: visible; opacity: 1;" contenteditable="plaintext-only">{ Hint text }</span>
+    Hint💡<span id="hint" class="tooltiptext preview hint" contenteditable="plaintext-only">{ Hint text }</span>
 </div>
 
 <!-- MathJax Rendering Toggle -->

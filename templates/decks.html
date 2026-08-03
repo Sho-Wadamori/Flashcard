@@ -14,7 +14,7 @@
     {% if results or bookmarkResult %}
     <h6 style="margin-bottom: 20px;">Select a deck to view its cards.</h6>
 
-    <form action="{{ url_for('Decks') }}" method="GET" class='sort-form' style="top: 18px;">
+    <form action="{{ url_for('Decks') }}" method="GET" class='sort-form sort-top'>
         <!-- filtering and sorting -->
         <label for="filter">Filter:</label>
         <select name="filter" id="filter">
@@ -52,7 +52,7 @@
             <h6>You have no decks yet.</h6>
         {% endif %}
 
-        <form action="{{ url_for('Decks') }}" method="GET" class='sort-form' style="top: 18px;">
+        <form action="{{ url_for('Decks') }}" method="GET" class='sort-form sort-top' style="top: 18px;">
             <label for="filter">Filter:</label>
             <select name="filter" id="filter">
                 <option value="none" {% if filter == 'none' %}selected{% endif %}>None</option>
@@ -284,9 +284,9 @@
 <!-- confirmation overlay -->
 <div id="overlay" onclick="off()"> <!-- Turn off overlay when clicking outside -->
 <div class="confirmation-box" onclick="event.stopPropagation()">
-    <p style="color: var(--text-color);">Are you sure you want to delete this deck?</p>
-    <button onclick="confirmDelete()" class="button-ignore" style="background-color: var(--warning-color); color: white;">Yes</button> 
-    <button onclick="off()" class="button-ignore" style="border: 2px solid var(--warning-color); color: var(--warning-color); background-color: white">No</button>
+    <p class="confirm-txt">Are you sure you want to delete this deck?</p>
+    <button onclick="confirmDelete()" class="button-ignore confirm-yes">Yes</button> 
+    <button onclick="off()" class="button-ignore confirm-no">No</button>
 </div>
 </div>
 

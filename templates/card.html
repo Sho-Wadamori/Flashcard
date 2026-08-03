@@ -53,7 +53,7 @@
 </div>
 {% endif %}
 
-<h3 style="text-align: center;">Card {{ index + 1 }} of {{ total }}</h3>
+<h3 class="study-progress">Card {{ index + 1 }} of {{ total }}</h3>
 {% if index + 1 >= total  %}
 <div class="w3-round-xlarge studyProgressOuter progressFull"></div>
 {% else %}
@@ -75,7 +75,7 @@
 {% endif %}
 
 
-<div class="card-container" style="width: 100%;">
+<div class="card-container">
   <!-- Previous card button -->
   {% if index > 0 %}
     <a href="{{ url_for('Study', id=deck_id, index=index - 1) }}">
@@ -166,7 +166,7 @@
 
 <!-- if hint exists -->
 {% if cards and cards[3] %}
-  <br><div class="tooltip" style="cursor: help;">
+  <br><div class="tooltip-help">
     Hint💡<span class="tooltiptext scientific" id="hint">{{ cards[3] }}</span>
   </div>
 {% endif %}
@@ -192,7 +192,7 @@
 
 <br>
 
-<div style="position: relative;">
+<div class="study-bottomDiv">
   <!-- Keybinds Help -->
   <button onclick="openPopupTab('studykeys');" class="keybindBtn">Keybinds</button>
   

@@ -128,9 +128,9 @@
 <!-- confirmation overlay -->
 <div id="overlay" onclick="off()"> <!-- Turn off overlay when clicking outside -->
   <div class="confirmation-box" onclick="event.stopPropagation()">
-    <p style="color: var(--text-color);">Are you sure you want to delete your account?</p>
-    <button onclick="confirmDelete()" class="button-ignore" style="background-color: var(--warning-color); color: white;">Yes</button> 
-    <button onclick="off()" class="button-ignore" style="border: 2px solid var(--warning-color); color: var(--warning-color); background-color: white">No</button>
+    <p class="confirm-txt">Are you sure you want to delete your account?</p>
+    <button onclick="confirmDelete()" class="button-ignore confirm-yes">Yes</button> 
+    <button onclick="off()" class="button-ignore confirm-no">No</button>
   </div>
 </div>
 

@@ -76,6 +76,20 @@
   padding: 10px 20px;
 }
 
+.confirm-txt {
+  color: var(--text-color);
+}
+.confirm-yes {
+  background-color: var(--warning-color);
+  color: white;
+}
+.confirm-no {
+  border: 2px solid var(--warning-color);
+  color: var(--warning-color);
+  background-color: white
+}
+
+
 
 /* ----- Preview Editor ----- */
 .preview {
@@ -85,6 +99,8 @@
 
 .preview.hint {
   color: #fff;
+  visibility: visible;
+  opacity: 1;
 }
 
 /* placeholder text for input fields */
@@ -148,6 +164,10 @@
   color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%);
 }
 
+.warningTXT {
+  color: var(--warning-color);
+}
+
 
 /* ----- Editor Layout & Character Inputter ----- */
 .editor-layout {
@@ -183,6 +203,10 @@
   column-gap: 0px;
 }
 
+.editor-container {
+  display: flex;
+}
+
 /* container of character panel */
 .left-layout {
   width: 0; /* 0 width to not interfere w/ card */
@@ -206,6 +230,13 @@
 .quizContainer.open,
 .tfContainer.open {
   width: 60% !important;
+}
+
+#quizForm,
+#tfForm {
+  display: none;
+  margin-bottom: 0 !important;
+  position: relative;
 }
 
 /* animate inner content (use > * so we can reuse open class) */

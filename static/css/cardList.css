@@ -56,6 +56,11 @@
   overflow: hidden;
 }
 
+.deck-txt {
+  margin-bottom: 20px;
+  padding: 0 30px;
+}
+
 
 /* ----- sorting and ordering ----- */
 .sort-form {
@@ -64,6 +69,9 @@
   right: 30px;
   padding: 6px;
   text-align: right;
+}
+.sort-top {
+  top: 18px;
 }
 /* header in deck/s pages */
 .deck-header {
