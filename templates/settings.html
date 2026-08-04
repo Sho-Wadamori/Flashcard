@@ -15,69 +15,64 @@
 <h2>Customise Appearance</h2>
 
 <!-- colour picker -->
-<form class="colourPickerGrid" action="{{ url_for('settings') }}" method="POST">
-    <div style="grid-template-columns: 1fr 1fr 1fr; display: grid; grid-auto-flow: row; gap: 10px;">
-        <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+<form class="colourPickerContainer" action="{{ url_for('settings') }}" method="POST">
+    <div class="colourPickerGrid">
+        <div class="colourPickerItems">
             <label for="bg">Background Colour</label>
             <input type="color" class="colorPick" value="{{ settings[0] }}" name="bg" id="bg" oninput="document.documentElement.style.setProperty('--primary-bg-color', this.value)">
         </div>
     
-        <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+        <div class="colourPickerItems">
             <label for="bg2">Secondary Background Colour</label>
             <input type="color" class="colorPick" value="{{ settings[1] }}" name="bg2" id="bg2" oninput="document.documentElement.style.setProperty('--secondary-bg-color', this.value)">
         </div>
     
-        <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+        <div class="colourPickerItems">
             <label for="text">Text Colour</label>
             <input type="color" class="colorPick" value="{{ settings[2] }}" name="text" id="text" oninput="document.documentElement.style.setProperty('--text-color', this.value)">
         </div>
     
-        <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
-            <label for="accent">Accent Colour</label>
-            <input type="color" class="colorPick" value="{{ settings[3] }}" name="accent" id="accent" oninput="document.documentElement.style.setProperty('--accent-color', this.value)">
-        </div>
-    
-        <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+        <div class="colourPickerItems">
             <label for="accentTXT">Accent Text Colour</label>
             <input type="color" class="colorPick" value="{{ settings[4] }}" name="accentTXT" id="accentTXT" oninput="document.documentElement.style.setProperty('--accent-text-color', this.value)">
         </div>
     
-        <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+        <div class="colourPickerItems">
             <label for="card">Card Background Colour</label>
             <input type="color" class="colorPick" value="{{ settings[5] }}" name="card" id="card" oninput="document.documentElement.style.setProperty('--card-bg-color', this.value)">
         </div>
     
-        <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+        <div class="colourPickerItems">
             <label for="cardTXT">Card Text Colour</label>
             <input type="color" class="colorPick" value="{{ settings[6] }}" name="cardTXT" id="cardTXT" oninput="document.documentElement.style.setProperty('--card-text-color', this.value)">
         </div>
     
-        <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+        <div class="colourPickerItems">
             <label for="warning">Error/Warning Text Colour</label>
             <input type="color" class="colorPick" value="{{ settings[7] }}" name="warning" id="warning" oninput="document.documentElement.style.setProperty('--warning-color', this.value)">
         </div>
     
-        <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+        <div class="colourPickerItems">
             <label for="shadow">Shadow Colour</label>
             <input type="color" class="colorPick" value="{{ settings[8] }}" name="shadow" id="shadow" oninput="updateshadow()">
         </div>
     
-        <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+        <div class="colourPickerItems">
             <label for="shadow-alpha">Shadow Opacity</label>
             <input type="range" class="colorPick alphaSlider" value="{{ shadow_alpha }}" name="shadow-alpha" id="shadow-alpha" min="0" max="1" step="0.1" oninput="updateshadow()">
         </div>
     
-        <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+        <div class="colourPickerItems">
             <label for="fontSize">Font Size</label>
             <input type="number" class="colorPick" name="fontSize" id="fontSize" min="10" max="30" value="{{ settings[9] }}" oninput="document.body.style.fontSize = this.value + 'px'">
         </div>
     
-        <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+        <div class="colourPickerItems">
             <label for="animToggle">Animations</label>
             <input type="checkbox" name="animToggle" id="animToggle" oninput="document.body.style.fontSize = this.value + 'px'" {% if settings[10] == 1 %} checked{% endif %}>
         </div>
     
-        <div style="display: none; align-items: center; justify-content: center; gap: 10px;">
+        <div class="colourPickerItems">
             <input type="hidden" style="display: none; visibility: hidden;" name="shadowFull" id="shadowFull">
         </div>
     
@@ -179,7 +174,7 @@
                 <div class="three-column">
                     {% for i in range(2) %}
                     <!-- deck List -->
-                    <div style="text-decoration: none; cursor: pointer;">
+                    <div class="pointerElm">
                         <div class="w3-card-4">
                             <div class="bookmark">
                                 <div>
@@ -256,7 +251,7 @@
                             <!-- the name then the description -->
                             <h1 class="scientific ellipse-multi">DECK NAME</h1>
                             <p>---------------</p>
-                            <p style="color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%);" class="scientific ellipse-multi">description here</p>
+                            <p class="scientific ellipse-multi grey-message">description here</p>
                         </div>
                     </div>
                     {% endfor %}
@@ -265,13 +260,13 @@
                 <h3>All Flashcards</h3>
 
                 <div class="three-column">
-                    <div class="w3-card-4" style="cursor: pointer;">
+                    <div class="w3-card-4 pointerElm">
                         <h1 class="plus">+</h1>
                     </div>
     
                     {% for i in range(8) %}
                     <!-- Deck List -->
-                    <div style="text-decoration: none; cursor: pointer;"> <!-- Make it div to stop conflicts w/ buttons inside -->
+                    <div class="pointerElm">
                         <div class="w3-card-4">
                             <div class="bookmark">
                                 <input name="bookmarkID" type="hidden" value="0">
@@ -347,7 +342,7 @@
                             <!-- the name then the description -->
                             <h1 class="scientific ellipse-multi">DECK NAME</h1>
                             <p>---------------</p>
-                            <p style="color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%);" class="scientific ellipse-multi">description here</p>
+                            <p class="scientific ellipse-multi grey-message">description here</p>
                         </div>
                     </div>
                     {% endfor %}
@@ -560,7 +555,7 @@
                     </div>
                 </div>
 
-                <p style="color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%); text-align: center;">* deck description defaults to "No description."</p>
+                <p class="grey-message" style="text-align: center;">* deck description defaults to "No description."</p>
 
                 <!-- MathJax Rendering Toggle -->
                 <input type="checkbox" id="MathJaxCheck" onclick="toggleMathJax()" checked>
@@ -641,7 +636,7 @@
                     <input type="radio" id="skip" name="response" value="skip">
                     <label for="skip">Skip [3]</label>
                 </div>
-                <p id="keybindhint" style="text-align: center; color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%);">* press the corresponding number on your keyboard to change response</p>
+                <p id="keybindhint" class="grey-message">* press the corresponding number on your keyboard to change response</p>
 
                 <!-- Keybinds Help -->
                 <button onclick="openPopupTab('studykeys');">Keybinds</button>
@@ -778,7 +773,7 @@
                     <div class="three-column">
                         {% for i in range(3) %}
                         <!-- Deck List -->
-                        <div style="text-decoration: none; cursor: pointer;"> <!-- Make it div to stop conflicts w/ buttons inside -->
+                        <div class="pointerElm">
                             <div class="w3-card-4">
                                 <div class="dropdown">
                                     <button class="dropdown-btn btn-ignore-all" onclick="event.preventDefault(); event.stopPropagation(); toggleDropdown(this)">
@@ -820,7 +815,7 @@
                                 <!-- the name then the description -->
                                 <h1 class="scientific ellipse-multi">DECK NAME</h1>
                                 <p>---------------</p>
-                                <p style="color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%);" class="scientific ellipse-multi">description here</p>
+                                <p class="scientific ellipse-multi grey-message">description here</p>
                             </div>
                         </div>
                         {% endfor %}

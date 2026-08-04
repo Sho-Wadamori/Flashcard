@@ -46,6 +46,10 @@
   gap: 20px;
 }
 
+.linkText {
+  color: color-mix(in hsl, var(--accent-color), rgb(130, 130, 130) 40%) !important;
+}
+
 .statsContainer {
   display: flex;
   flex-direction: row;
@@ -81,4 +85,32 @@
   display: flex;
   align-items: center;
   flex-direction: column;
+}
+
+.streakCount {
+  font-size: 8rem;
+  margin-top: -20px;
+  margin-bottom: -20px;
+}
+
+.statsAllTimeTitle {
+  text-align: center;
+}
+
+.statsAllTimeInner {
+  display: grid;
+  grid-auto-flow: row;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.statsAllTimeSubheader {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.statsAllTimeValues {
+  margin-bottom: 0;
 }

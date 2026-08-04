@@ -10,7 +10,7 @@
 <div id="characterPopup-overlay" class="characterPopup-overlay" onclick="closeDropdownPanel()"></div>
 
 <!-- Deck creation form -->
-<form id="deckForm" action="{{ url_for('createDeck') }}" method="POST" autocomplete="off" style="position: relative;">
+<form id="deckForm" action="{{ url_for('createDeck') }}" method="POST" autocomplete="off" class="deckCreationForm">
     <p class="warningTXT">* Indicates required question</p>
     <input id="deckInput" name="deckName" type="hidden" required>
     <input id="descriptionInput" name="deckDescription" type="hidden">

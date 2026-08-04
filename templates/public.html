@@ -12,7 +12,7 @@
     
     <!-- If decks exist -->
     {% if results %}
-    <h6 style="margin-bottom: 20px;">Select a deck to view its cards.</h6>
+    <h6 class="deckHintText">Select a deck to view its cards.</h6>
 
     <form action="{{ url_for('public') }}" method="GET" class='sort-form sort-top'>
         <!-- sorting and ordering -->
@@ -46,7 +46,7 @@
 <div class="three-column">
     {% for deck in results %}
     <!-- Deck List -->
-    <div onclick="window.location='{{ url_for('Deck', id=deck[0]) }}'" style="text-decoration: none; cursor: pointer;"> <!-- Make it div to stop conflicts w/ buttons inside -->
+    <div onclick="window.location='{{ url_for('Deck', id=deck[0]) }}'" class="pointerElm"> <!-- Make it div to stop conflicts w/ buttons inside -->
         <div class="w3-card-4">
             <div class="dropdown">
                 <button class="dropdown-btn btn-ignore-all" onclick="event.preventDefault(); event.stopPropagation(); toggleDropdown(this)">
@@ -89,9 +89,9 @@
             <h1 class="scientific ellipse-multi">{{ deck[1] }}</h1>
             <p>---------------</p>
             {% if deck[2] %}
-                <p style="color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%);" class="scientific ellipse-multi">{{ deck[2] }}</p>
+                <p class="scientific ellipse-multi grey-message">{{ deck[2] }}</p>
             {% else %}
-                <p style="color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%);">No description</p>
+                <p class="grey-message">No description</p>
             {% endif %}
         </div>
     </div>

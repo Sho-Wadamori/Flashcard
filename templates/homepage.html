@@ -21,7 +21,7 @@
     </div>
         <div class="resume-container w3-card-4">
             <h2 class="resume-title ellipse-single">{{ deck_name }}</h2>
-            <div class="w3-round-xlarge resume-progress-outer" style="height: 20px;">
+            <div class="w3-round-xlarge resume-progress-outer statsProgressOuter">
                 {% if percent > 0 %}
                 <div class="w3-container w3-blue w3-round-xlarge resume-progress-inner" style="width: {{ percent }}%;"></div>
                 {% endif %}
@@ -34,7 +34,7 @@
     {% if username != 'Guest' %}
     <div class="categoryHeaders">
         {% include "icons/statistics.html" %}
-        <h2>Your Progress</h2> <a href="{{ url_for('stats') }}"><h6 style="color: color-mix(in hsl, var(--accent-color), rgb(130, 130, 130) 40%) !important;">View more ></h6></a>
+        <h2>Your Progress</h2> <a href="{{ url_for('stats') }}"><h6 class="linkText">View more ></h6></a>
     </div>
     <div class="statsContainer">
         <!-- streaks -->
@@ -45,7 +45,7 @@
                 <h4>Study a deck to begin a streak!</h4>
                 {% else %}
                 <h2>I'm on a</h2>
-                <h1 style="font-size: 8rem; margin-top: -20px; margin-bottom: -20px;">{{ currentStreak }}</h1>
+                <h1 class="streakCount">{{ currentStreak }}</h1>
                 <h2>day streak!!</h2>
                 {% endif %}
             </div>
@@ -53,22 +53,22 @@
 
         <!-- all time stats (need to change class name) -->
         <div class="statsWeekly">
-            <h3 style="text-align: center;">All Time Stats</h3>
-            <div class="statsInner" style="display: grid; grid-auto-flow: row; grid-template-columns: 1fr 1fr; gap: 20px;">
-                <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                    <h5 style="margin-bottom: 0;">Time Studied</h5>
+            <h3 class="statsAllTimeTitle">All Time Stats</h3>
+            <div class="statsAllTimeInner">
+                <div class="statsAllTimeSubheader">
+                    <h5 class="statsAllTimeValues">Time Studied</h5>
                     <h4>{{ totalDuration }}</h4>
                 </div>
-                <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                    <h5 style="margin-bottom: 0;">Cards Studied</h5>
+                <div class="statsAllTimeSubheader">
+                    <h5 class="statsAllTimeValues">Cards Studied</h5>
                     <h4>{{ totalSessions }} cards</h4>
                 </div>
-                <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                    <h5 style="margin-bottom: 0;">Correct:</h5>
+                <div class="statsAllTimeSubheader">
+                    <h5 class="statsAllTimeValues">Correct:</h5>
                     <h4>{{ answer_stats[0] }}</h4>
                 </div>
-                <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                    <h5 style="margin-bottom: 0;">Incorrect:</h5>
+                <div class="statsAllTimeSubheader">
+                    <h5 class="statsAllTimeValues">Incorrect:</h5>
                     <h4>{{ answer_stats[1] }}</h4>
                 </div>
             </div><br>
@@ -79,12 +79,12 @@
     
     <div class="categoryHeaders">
         {% include "icons/world.html" %}
-        <h2>Public Decks</h2> <a href="{{ url_for('public') }}"><h6 style="color: color-mix(in hsl, var(--accent-color), rgb(130, 130, 130) 40%) !important;">View all ></h6></a>
+        <h2>Public Decks</h2> <a href="{{ url_for('public') }}"><h6 class="linkText">View all ></h6></a>
     </div>
     <div class="three-column">
         {% for deck in publicDecks %}
         <!-- Deck List -->
-        <div onclick="window.location='{{ url_for('Deck', id=deck[0]) }}'" style="text-decoration: none; cursor: pointer;"> <!-- Make it div to stop conflicts w/ buttons inside -->
+        <div onclick="window.location='{{ url_for('Deck', id=deck[0]) }}'" class="pointerElm">
             <div class="w3-card-4">
                 <div class="dropdown">
                     <button class="dropdown-btn btn-ignore-all" onclick="event.preventDefault(); event.stopPropagation(); toggleDropdown(this)">
@@ -127,9 +127,9 @@
                 <h1 class="scientific ellipse-multi">{{ deck[1] }}</h1>
                 <p>---------------</p>
                 {% if deck[2] %}
-                    <p style="color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%);" class="scientific ellipse-multi">{{ deck[2] }}</p>
+                    <p class="scientific ellipse-multi grey-message">{{ deck[2] }}</p>
                 {% else %}
-                    <p style="color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%);">No description</p>
+                    <p class="grey-message">No description</p>
                 {% endif %}
             </div>
         </div>

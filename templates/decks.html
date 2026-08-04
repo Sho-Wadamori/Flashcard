@@ -12,7 +12,7 @@
     
     <!-- If decks exist -->
     {% if results or bookmarkResult %}
-    <h6 style="margin-bottom: 20px;">Select a deck to view its cards.</h6>
+    <h6 class="deckHintText">Select a deck to view its cards.</h6>
 
     <form action="{{ url_for('Decks') }}" method="GET" class='sort-form sort-top'>
         <!-- filtering and sorting -->
@@ -52,7 +52,7 @@
             <h6>You have no decks yet.</h6>
         {% endif %}
 
-        <form action="{{ url_for('Decks') }}" method="GET" class='sort-form sort-top' style="top: 18px;">
+        <form action="{{ url_for('Decks') }}" method="GET" class='sort-form sort-top'>
             <label for="filter">Filter:</label>
             <select name="filter" id="filter">
                 <option value="none" {% if filter == 'none' %}selected{% endif %}>None</option>
@@ -80,7 +80,7 @@
     <div class="three-column">
         {% for deck in bookmarkResult[:3] %}
         <!-- deck List -->
-        <div onclick="window.location='{{ url_for('Deck', id=deck[0]) }}'" style="text-decoration: none; cursor: pointer;">
+        <div onclick="window.location='{{ url_for('Deck', id=deck[0]) }}'" class="pointerElm">
             <div class="w3-card-4">
                 <div class="bookmark">
                     <form action="{{ request.url }}" method="POST">
@@ -162,9 +162,9 @@
                 <h1 class="scientific ellipse-multi">{{ deck[1] }}</h1>
                 <p>---------------</p>
                 {% if deck[2] %}
-                    <p style="color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%);" class="scientific ellipse-multi">{{ deck[2] }}</p>
+                    <p class="scientific ellipse-multi grey-message">{{ deck[2] }}</p>
                 {% else %}
-                    <p style="color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%);">No description</p>
+                    <p class="grey-message">No description</p>
                 {% endif %}
             </div>
         </div>
@@ -185,7 +185,7 @@
 
     {% for deck in results %}
     <!-- Deck List -->
-    <div onclick="window.location='{{ url_for('Deck', id=deck[0]) }}'" style="text-decoration: none; cursor: pointer;"> <!-- Make it div to stop conflicts w/ buttons inside -->
+    <div onclick="window.location='{{ url_for('Deck', id=deck[0]) }}'" class="pointerElm">
         <div class="w3-card-4">
             {% if userID %}
             <div class="bookmark">
@@ -270,9 +270,9 @@
             <h1 class="scientific ellipse-multi">{{ deck[1] }}</h1>
             <p>---------------</p>
             {% if deck[2] %}
-                <p style="color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%);" class="scientific ellipse-multi">{{ deck[2] }}</p>
+                <p class="scientific ellipse-multi grey-message">{{ deck[2] }}</p>
             {% else %}
-                <p style="color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%);">No description</p>
+                <p class="grey-message">No description</p>
             {% endif %}
         </div>
     </div>

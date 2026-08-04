@@ -18,16 +18,16 @@
     <!-- account info -->
     <div class="statsUserInfo">
 
-        <div style="display: flex; gap: 30px;">
+        <div class="statsUserProfileContainer">
             <img src="{{ url_for('static', filename='assets/profile.png') }}" alt="profile pic" height="120px">
             <div class="userNameStats">
-                <h1 style="width: 450px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">{{ username }}</h1>
+                <h1 class="statsUsername">{{ username }}</h1>
                 <p>Joined {{ joinDate }}</p>
             </div>
         </div>
         
         <!-- progress bar -->
-        <div class="w3-round-xlarge resume-progress-outer" style="height: 20px; width: 100%;">
+        <div class="w3-round-xlarge resume-progress-outer statsProgressOuter">
             {% if correctPercent != 0 %}
                 <div class="w3-container w3-blue w3-round-xlarge resume-progress-inner" style="width: {{ correctPercent }}%;">Correct %</div>
             {% else %}
@@ -102,7 +102,7 @@
 </div>
 
 <!-- stats grid -->
-<br><br><h1 style="text-align: center;">More Statistics:</h1>
+<br><br><h1 class="moreStatsHeader">More Statistics:</h1>
 
 <div class="statsGridContainer">
     <div class="statsGrid">
@@ -160,7 +160,7 @@
     <h1>Study History</h1>
 </div>
 
-<table class="historyTable" style="width: stretch;">
+<table class="historyTable">
     <tr>
         <th style="width: 40%;">deck name</th>
         <th>correct</th>

@@ -175,6 +175,10 @@
   justify-content: center;
 }
 
+.deckCreationForm {
+  position: relative;
+}
+
 .editor-buttons {
   text-align: center;
   margin-bottom: 20px;

@@ -89,6 +89,17 @@ button:not(.button-ignore):not(.btn-ignore-all) {
 
 .logo {
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.logoImg {
+  height: 2em;
+}
+
+.loginIcon {
+  height: 3em;
 }
 
 /* ensure that navbar spans full width */

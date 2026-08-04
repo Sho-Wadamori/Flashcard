@@ -72,6 +72,10 @@
     grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 40px;
 }
+.removeEmailButton {
+    width: 100%;
+    height: 100%;
+}
 
 
 .logoutContainer {
@@ -139,9 +143,26 @@
     width: fit-content;
 }
 
+.statsUserProfileContainer {
+    display: flex;
+    gap: 30px;
+}
+
 .userNameStats {
     display: flex;
     flex-direction: column;
+}
+
+.statsUsername {
+    width: 450px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.statsProgressOuter {
+    height: 20px;
+    width: 100%;
 }
 
 .responseStatsContainer {
@@ -162,6 +183,10 @@
     align-items: center;
 }
 
+
+.moreStatsHeader {
+    text-align: center;
+}
 
 .statsGridContainer {
     display: grid;
@@ -213,14 +238,24 @@
 
 /* ----- Theme ----- */
 
-.colourPickerGrid {
-    /* display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-auto-flow: row; */
+.colourPickerContainer {
     width: 60%;
     text-align: center;
     margin: auto;
-    /* gap: 10px; */
+}
+
+.colourPickerGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 10px;
+    grid-auto-flow: row;
+}
+
+.colourPickerItems {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
 }
 
 
