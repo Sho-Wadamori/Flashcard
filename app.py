@@ -492,9 +492,12 @@ def Deck(id):
         TrueFalseContent.tf_question,
         TrueFalseContent.tf_correct
         FROM Flashcards
-        LEFT JOIN FlashcardContent ON Flashcards.card_ID = FlashcardContent.card_ID
-        LEFT JOIN QuizContent ON Flashcards.card_ID = QuizContent.card_ID
-        LEFT JOIN TrueFalseContent ON Flashcards.card_ID = TrueFalseContent.card_ID
+        LEFT JOIN FlashcardContent
+            ON Flashcards.card_ID = FlashcardContent.card_ID
+        LEFT JOIN QuizContent
+            ON Flashcards.card_ID = QuizContent.card_ID
+        LEFT JOIN TrueFalseContent
+            ON Flashcards.card_ID = TrueFalseContent.card_ID
         WHERE Flashcards.card_deckID = ?
         {filterSQL};
     """
@@ -744,9 +747,12 @@ def Study(id, index):
         TrueFalseContent.tf_question,
         TrueFalseContent.tf_correct
         FROM Flashcards
-        LEFT JOIN FlashcardContent ON Flashcards.card_ID = FlashcardContent.card_ID
-        LEFT JOIN QuizContent ON Flashcards.card_ID = QuizContent.card_ID
-        LEFT JOIN TrueFalseContent ON Flashcards.card_ID = TrueFalseContent.card_ID
+        LEFT JOIN FlashcardContent
+            ON Flashcards.card_ID = FlashcardContent.card_ID
+        LEFT JOIN QuizContent
+            ON Flashcards.card_ID = QuizContent.card_ID
+        LEFT JOIN TrueFalseContent
+            ON Flashcards.card_ID = TrueFalseContent.card_ID
         WHERE Flashcards.card_deckID = ?;
     """
     results = query_db(card_sql, (id,))
@@ -825,7 +831,7 @@ def Study(id, index):
                 if result is not None:
                     updateCardStats(result, card_id)
 
-                    # return to same card but w/ correct ans info & answed = True
+                    # return w/ correct correct info & answed = True
                     return render_template(
                         "card.html",
                         cards=card,
@@ -855,7 +861,7 @@ def Study(id, index):
                 if result is not None:
                     updateCardStats(result, card_id)
 
-                    # return to same card but w/ correct ans info & answed = True
+                    # return w/ correct info & answed = True
                     return render_template(
                         "card.html",
                         cards=card,
@@ -1106,7 +1112,13 @@ def createCard(id):
                     deck_info=deck_info[0]
                 )
 
-            elif not quiz_question or not quiz_answer1 or not quiz_answer2 or not quiz_answer3 or not quiz_answer4:
+            elif (
+                not quiz_question
+                or not quiz_answer1
+                or not quiz_answer2
+                or not quiz_answer3
+                or not quiz_answer4
+            ):
                 flash("⚠ Question and Answer Fields Are Required.", "error")
                 return render_template(
                     "cardCreate.html",
@@ -1354,7 +1366,13 @@ def editCard(id, card_id):
                 flash("⚠ Please Select the Correct Answer.", "error")
                 return redirect(url_for('editCard', id=id, card_id=card_id))
 
-            elif not quiz_question or not quiz_answer1 or not quiz_answer2 or not quiz_answer3 or not quiz_answer4:
+            elif (
+                not quiz_question
+                or not quiz_answer1
+                or not quiz_answer2
+                or not quiz_answer3
+                or not quiz_answer4
+            ):
                 flash("⚠ Question and Answer Fields Are Required.", "error")
                 return redirect(url_for('editCard', id=id, card_id=card_id))
 
@@ -1464,9 +1482,12 @@ def editCard(id, card_id):
             TrueFalseContent.tf_question,
             TrueFalseContent.tf_correct
             FROM Flashcards
-            LEFT JOIN FlashcardContent ON Flashcards.card_ID = FlashcardContent.card_ID
-            LEFT JOIN QuizContent ON Flashcards.card_ID = QuizContent.card_ID
-            LEFT JOIN TrueFalseContent ON Flashcards.card_ID = TrueFalseContent.card_ID
+            LEFT JOIN FlashcardContent
+                ON Flashcards.card_ID = FlashcardContent.card_ID
+            LEFT JOIN QuizContent
+                ON Flashcards.card_ID = QuizContent.card_ID
+            LEFT JOIN TrueFalseContent
+                ON Flashcards.card_ID = TrueFalseContent.card_ID
             WHERE Flashcards.card_ID = ?;
         """
         card = query_db(card_sql, (card_id,))
