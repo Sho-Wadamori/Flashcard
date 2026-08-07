@@ -4,11 +4,9 @@ This is a flashcard making app that allows users to:
 - create flashcards with a question and answer
 - edit and delete decks and flashcards
 - study flashcards indervidually
-- delete decks and flashcards
 - login and sign up to save their decks
 - view their profile and stats
 - track how many times they got a flashcard correct or incorrect
-- Upload images to flashcards
 - Type with mathematical symbols using LaTeX in flashcards
 """
 
@@ -17,35 +15,34 @@ from flask import (
     Flask,
     g,
     request,  # used to get method
-    session,  # used to store user data
+    session,  # used to store user data (for login & study)
     redirect,  # used to redirect users to another page
     render_template,  # used to render html pages
     url_for,  # used to redirect users
-    flash  # used for error messages (NOT SETUP YET)
+    flash  # used for error messages
 )
 
 import random  # for randomising card list
-import time  # for timer
+import time  # for study timer
 
-# from werkzeug.utils import secure_filename  # for file uploads
 from datetime import (
     datetime,
     timezone
-)  # for time formatting
+)  # for time formatting and converting
 
 from werkzeug.security import (
     generate_password_hash,
     check_password_hash
 )  # for user login password encryption
 
-import sqlite3
+import sqlite3  # for database connection
 
 DATABASE = 'database.db'  # relative path to the database file
 
 # initialise app
 app = Flask(__name__)
 
-# set a secret key for sessions
+# set a secret key for sessions (should be in a seperate secure file)
 app.config['SECRET_KEY'] = "8y9awhDWdhHfw8ghgrgdgGRgDEgwndaiundIUDNu1823892e8h"
 
 
@@ -86,13 +83,16 @@ def time_ago(date_string):
 
     diff = now - local_dt
 
+    # if difference bigger than a day
     if diff.days > 0:
         return f"{diff.days} days ago"
 
+    # if difference bigger than an hour
     hours = diff.seconds // 3600
     if hours > 0:
         return f"{hours} hours ago"
 
+    # if difference bigger than a minute
     minutes = diff.seconds // 60
     if minutes > 0:
         return f"{minutes} minutes ago"
@@ -102,13 +102,15 @@ def time_ago(date_string):
 def is_streak_eligible(last_datetime):
     # convert str to datetime
     dt = datetime.strptime(last_datetime, "%Y-%m-%d %H:%M:%S")
-    dt = dt.replace(tzinfo=timezone.utc)
+    dt = dt.replace(tzinfo=timezone.utc)  # set timezone to UTC
     dt = dt.astimezone()
     # convert datetime to day
     last_date = dt.date()
 
+    # get today
     today = datetime.now().astimezone().date()
 
+    # calculate difference in days
     diff = (today - last_date).days
 
     return diff
@@ -116,16 +118,19 @@ def is_streak_eligible(last_datetime):
 
 # ---------- update streak counter ----------
 def updateStreak():
+    # get current streak & last studied
     get_streak = """
         SELECT user_lastStudied, user_streak
         FROM Users
         WHERE user_ID = ?;
     """
     streaks = query_db(get_streak, (userID(),))
+    # get days since last studied
     diff = is_streak_eligible(streaks[0][0])
 
     current_streak = int(streaks[0][1])
 
+    # if difference is 2+ days, set streak to 0
     if diff >= 2:
         update_streaks = """
             UPDATE Users
@@ -137,6 +142,7 @@ def updateStreak():
 
         current_streak = 0
 
+    # return current streak
     return current_streak
 
 
@@ -152,18 +158,22 @@ def format_date(date_string):
 
 # ---------- get user ID ----------
 def userID():
+    # return the session userID
     return session.get('userID', 0)
 
 
 # ---------- obfuscate email using astrisk ----------
 def obfuscate_email(email):
+    # split email to {firstpart} + @ + {domain}
     fistPart, domain = email.split('@')
+    # return with first part obfiscated
     return fistPart[0] + '*****@' + domain
 
 
 # ---------- layout page ----------
 @app.context_processor
 def uservar():
+    # get all settings
     settingsSQL = """
         SELECT settings_bg1, settings_bg2, settings_text,
         settings_accentBG, settings_accentTXT, settings_cardBG,
@@ -184,17 +194,17 @@ def uservar():
 # ---------- homepage ----------
 @app.route('/')
 def home():
-    # check if unfinished study session exists
-    can_resume = bool(
-        session.get('study_deckID') and session.get('shuffled_cards')
-    )
-
     # give message to users not logged in
     if not userID():
         flash("""
             🛈 You have limited Access.
             Please Login to create your own decks!
         """, "info")
+
+    # check if unfinished study session exists
+    can_resume = bool(
+        session.get('study_deckID') and session.get('shuffled_cards')
+    )
 
     # get info of the unfishished study session
     if can_resume:
@@ -235,6 +245,7 @@ def home():
         """
         answer_stats = query_db(userAnswerStats, (userID(),))[0]
 
+        # calculate time studied
         if totalDuration[0] is not None:
             if totalDuration[0] >= 3600:
                 hours = totalDuration[0] // 3600
@@ -350,7 +361,9 @@ def Decks():
 
         return redirect(request.url)
 
+    # if request is GET
     else:
+        # get filtering and sorting info
         filter = request.args.get('filter')
         sort_by = request.args.get('sort_by')
         order = request.args.get('order')
@@ -399,7 +412,7 @@ def Decks():
 
             bookmarkResult = query_db(bookmark_sql, filter_args)
 
-        # if user not logged in
+        # if user not logged in show public decks
         else:
             sql = f"""
                 SELECT deck_ID, deck_name, deck_description, deck_creation
@@ -461,11 +474,11 @@ def Deck(id):
     }
     allowed_order = {'ASC', 'DESC'}
 
-    # fallback for invalid sort/order (not really necessary)
+    # fallback for invalid sort/order
     if filter not in allowed_filter:
         filter = 'none'  # default filter none
     if sort_by not in allowed_sort:
-        sort_by = 'card_creation'  # default sort by creation date
+        sort_by = 'card_creation'  # default sort creation date
     if order not in allowed_order:
         order = 'DESC'  # default order descending
 
@@ -503,6 +516,7 @@ def Deck(id):
     """
     cards = query_db(card_sql, (id,))
 
+    # format results
     results = []
     for card in cards:
         if card[2] == 'flashcard':
@@ -542,6 +556,7 @@ def Deck(id):
     # handeling sorting and ordering
     ordering = order == "DESC"
 
+    # sort the list using lambda
     if sort_by == "card_answer":
         results.sort(key=lambda x: x[4], reverse=ordering)
 
@@ -1050,6 +1065,7 @@ def createCard(id):
         card_type = request.form.get("cardType")
 
         if card_type == "flashcard":
+            # get form info
             flashcard_question = request.form['cardQuestion']
             flashcard_answer = request.form['cardAnswer']
             flashcard_hint = request.form['cardHint']
@@ -1064,6 +1080,7 @@ def createCard(id):
                 )
 
             else:
+                # insert info into Flashcards
                 sql = """
                     INSERT INTO Flashcards (
                         card_deckID, card_creation,
@@ -1076,8 +1093,10 @@ def createCard(id):
                     flashcard_hint,
                     "flashcard"
                 ))
+                # get id of last row
                 cardid = cursor.lastrowid
 
+                # insert info into FlashcardContent
                 flashcardContent = """
                     INSERT INTO FlashcardContent (
                         card_ID, flashcard_question, flashcard_answer
@@ -1096,6 +1115,7 @@ def createCard(id):
                 return redirect(url_for('Deck', id=id))
 
         if card_type == "quiz":
+            # get form info
             quizCorrect = request.form.get('quizAnswer')
 
             quiz_question = request.form['quizQuestion']
