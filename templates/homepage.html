@@ -139,10 +139,17 @@
 
     <br><div class="categoryHeaders">
         {% include "icons/questionMark.html" %}
-        <h2>Did you know?</h2>
+        <h2>Need Help?</h2>
     </div>
-    <div>
-        TRIVIA HERE
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2em;">
+        <div style="display: flex; flex-direction: column; text-align: center; gap: 20px; background-color: var(--secondary-bg-color); border-radius: 10px; box-shadow: 0 4px 10px 0 var(--shadow-color), 0 4px 20px 0 var(--shadow-color); padding: 40px;">
+            <h4>Have any questions?</h3>
+            <a href="mailto:23196@burnside.school.nz"><button>Email 23196@burnside.school.nz</button></a>
+        </div>
+        <div style="display: flex; flex-direction: column; text-align: center; gap: 20px; background-color: var(--secondary-bg-color); border-radius: 10px; box-shadow: 0 4px 10px 0 var(--shadow-color), 0 4px 20px 0 var(--shadow-color); padding: 40px;">
+            <h4>Found a bug?</h4>
+            <a href="https://github.com/Sho-Wadamori/Flashcard/issues" target="_blank"><button>Open an issue on Github!</button></a>
+        </div>
     </div>
 </div>
 

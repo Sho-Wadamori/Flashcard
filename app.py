@@ -2088,7 +2088,7 @@ def settings():
         session.pop('username', None)
         session.pop('userID', None)
         flash("""
-            ⚠ You Are Not Logged In. Please Log In to Change Themes.
+            ⚠ You Are Not Logged In. Please Log In to Change Settings.
         """, "error")
         return redirect(url_for('home'))
 

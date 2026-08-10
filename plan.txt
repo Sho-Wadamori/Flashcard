@@ -118,19 +118,6 @@ homepage
  - fun trivia? (cycle through trivia list daily)
 
 
-study goal
-achievements/motivation
-autosave
-further character and styling support
- - markdown
- - spell correct
-export decks
-maybe encrypt/hash/salt deck and card ids
- - make UUID for deck urls so users cant see what-th deck they have. 
-translation (google translate API)
-draggable cards to reorder
-colourblind mode
-
 ---------------------------------------------------
 
 Appearances:

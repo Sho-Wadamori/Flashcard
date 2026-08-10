@@ -1,12 +1,12 @@
 /* ----- Profile ----- */
 .profileTabContainer {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2em;
 }
 .profileTabs {
     height: 50px;
-    width: 25%;
+    width: 100%;
 }
 
 
@@ -135,7 +135,7 @@
     align-items: center;
     gap: 150px;
     margin: 0px 14px;
-    margin-top: 30px;
+    margin-top: 2.5em;
 }
 .statsUserInfo {
     display: flex;
@@ -168,9 +168,9 @@
 .responseStatsContainer {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 30px;
+    gap: 2em;
     margin: 0px 14px;
-    margin-top: 30px;
+    margin-top: 2em;
 }
 .responseStats{
     display: grid;
@@ -224,7 +224,7 @@
 }
 .historyTable {
     margin: 0px 14px;
-    margin-top: 30px;
+    margin-top: 2em;
     width: auto;
     border-collapse: collapse;
 }

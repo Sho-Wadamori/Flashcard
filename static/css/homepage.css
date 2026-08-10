@@ -53,7 +53,7 @@
 .statsContainer {
   display: flex;
   flex-direction: row;
-  gap: 50px;
+  gap: 2em;
   padding: 0 30px;
   justify-content: center;
 }
