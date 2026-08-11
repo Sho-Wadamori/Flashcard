@@ -223,11 +223,12 @@
     align-items: center;
 }
 .historyTable {
+    width: 100%;
     margin: 0px 14px;
     margin-top: 2em;
-    width: auto;
     border-collapse: collapse;
 }
+/* all tr's inside historyTable */
 .historyTable tr > * {
     text-align: center;
 }
@@ -235,8 +236,6 @@
 
 
 /* ----- Settings ----- */
-
-/* ----- Theme ----- */
 
 .colourPickerContainer {
     width: 60%;

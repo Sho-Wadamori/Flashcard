@@ -31,7 +31,7 @@
             {% if correctPercent != 0 %}
                 <div class="w3-container w3-blue w3-round-xlarge resume-progress-inner" style="width: {{ correctPercent }}%;">Correct %</div>
             {% else %}
-                <div class="w3-round-xlarge w3-blue resume-progress-none">Correct %</div>
+                <div class="w3-round-xlarge resume-progress-none">Correct %</div>
             {% endif %}
         </div>
 
@@ -160,41 +160,43 @@
     <h1>Study History</h1>
 </div>
 
-<table class="historyTable">
-    <tr>
-        <th style="width: 40%;">deck name</th>
-        <th>correct</th>
-        <th>incorrect</th>
-        <th>skipped</th>
-        <th>total cards</th>
-        <th>study duration</th>
-        <th>ownership</th>
-        <th>date</th>
-    </tr>
-    {% if study_history %}
-    {% for history in study_history %}
-    <tr>
-        <td>{{ history[5] }}</td>
-        <td>{{ history[2] }}</td>
-        <td>{{ history[3] }}</td>
-        <td>{{ history[1] - history[2] - history[3] }}</td>
-        <td>{{ history[1] }}</td>
-        <td>{{ history[4] }}s</td>
-        <td>
-            {% if history[6] == userID %}
-                Owned by me
-            {% else %}
-                Not owned by me
-            {% endif %}
-        </td>
-        <td>{{ history[0] }}</td>
-    </tr>
-    {% endfor %}
-    {% else %}
-    <p>you have no study history yet. Decks that you have finished studying will show up here!.</p>
-    {% endif %}
+<div class="historyTableContainer" style="display: flex; align-items: center; align-content: center; justify-content: center;">
+    <table class="historyTable">
+        <tr>
+            <th style="width: 40%;">deck name</th>
+            <th>correct</th>
+            <th>incorrect</th>
+            <th>skipped</th>
+            <th>total cards</th>
+            <th>study duration</th>
+            <th>ownership</th>
+            <th>date</th>
+        </tr>
+        {% if study_history %}
+        {% for history in study_history %}
+        <tr>
+            <td>{{ history[5] }}</td>
+            <td>{{ history[2] }}</td>
+            <td>{{ history[3] }}</td>
+            <td>{{ history[1] - history[2] - history[3] }}</td>
+            <td>{{ history[1] }}</td>
+            <td>{{ history[4] }}s</td>
+            <td>
+                {% if history[6] == userID %}
+                    Owned by me
+                {% else %}
+                    Not owned by me
+                {% endif %}
+            </td>
+            <td>{{ history[0] }}</td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <p>you have no study history yet. Decks that you have finished studying will show up here!.</p>
+        {% endif %}
 
-</table>
+    </table>
+</div>
 
 <br>
 

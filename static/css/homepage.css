@@ -18,7 +18,7 @@
 /* studied progress bar */
 .resume-progress-outer {
   width: 80%;
-  background-color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%);
+  background-color: color-mix(in hsl, var(--text-color), rgb(205, 205, 205) 70%);
 }
 
 /* total progress bar */
@@ -32,7 +32,7 @@
 }
 
 .resume-progress-none {
-  background-color: transparent !important;
+  background-color: color-mix(in hsl, var(--text-color), rgb(205, 205, 205) 70%);
   height: 20px;
   display:flex;
   align-items: center;
