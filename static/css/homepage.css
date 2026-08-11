@@ -114,3 +114,29 @@
 .statsAllTimeValues {
   margin-bottom: 0;
 }
+
+.helpContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2em;
+}
+
+.helpCards {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  gap: 20px;
+  background-color: var(--secondary-bg-color);
+  border-radius: 10px;
+  box-shadow: 0 4px 10px 0 var(--shadow-color), 0 4px 20px 0 var(--shadow-color);
+  padding: 40px;
+}
+
+.helpMessage {
+  margin-top: 0;
+}
+
+.helpButtons {
+  width: 100%;
+}

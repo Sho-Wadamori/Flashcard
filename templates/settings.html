@@ -40,6 +40,11 @@
         </div>
     
         <div class="colourPickerItems">
+            <label for="accent">Accent Colour</label>
+            <input type="color" class="colorPick" value="{{ settings[3] }}" name="accent" id="accent" oninput="document.documentElement.style.setProperty('--accent-color', this.value)">
+        </div>
+
+        <div class="colourPickerItems">
             <label for="accentTXT">Accent Text Colour</label>
             <input type="color" class="colorPick" value="{{ settings[4] }}" name="accentTXT" id="accentTXT" oninput="document.documentElement.style.setProperty('--accent-text-color', this.value)">
         </div>
@@ -353,7 +358,7 @@
                         </div>
                     </div>
                     {% endfor %}
-                </div>
+                </div><br>
             </div>
         </div>
     </div>
@@ -721,7 +726,7 @@
         </div>
         <div class="pageMini">
             <div class="pageMiniInner">
-                <div>
+                <div class="homepage-body">
                     <h1>Welcome back User!</h1>
                     
                     <div class="categoryHeaders">
@@ -828,14 +833,30 @@
                         {% endfor %}
                     </div>
 
-
                     <br><div class="categoryHeaders">
                         {% include "icons/questionMark.html" %}
-                        <h2>Did you know?</h2>
+                        <h2>Need Help?</h2>
                     </div>
-                    <div>
-                        TRIVIA HERE
-                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2em;">
+                        <div style="display: flex; flex-direction: column; text-align: center; align-items: center; gap: 20px; background-color: var(--secondary-bg-color); border-radius: 10px; box-shadow: 0 4px 10px 0 var(--shadow-color), 0 4px 20px 0 var(--shadow-color); padding: 40px;">
+                            {% include "icons/email.html" %}
+                            <div>
+                                <h4>EMAIL</h3>
+                                <p class="grey-message" style="margin-top: 0;">23196@burnside.school.com</p>
+                            </div>
+                            <a href="mailto:23196@burnside.school.nz" style="width: 100%;"><button style="width: 100%;">Email me!</button></a>
+                        </div>
+
+
+                        <div style="display: flex; flex-direction: column; text-align: center; align-items: center; gap: 20px; background-color: var(--secondary-bg-color); border-radius: 10px; box-shadow: 0 4px 10px 0 var(--shadow-color), 0 4px 20px 0 var(--shadow-color); padding: 40px;">
+                            {% include "icons/github.html" %}
+                            <div>
+                                <h4>GITHUB</h4>
+                                <p class="grey-message" style="margin-top: 0;">https://github.com/Sho-Wadamori/Flashcard</p>
+                            </div>
+                            <a href="https://github.com/Sho-Wadamori/Flashcard/issues" target="_blank" style="width: 100%;"><button style="width: 100%;">Open an issue on Github!</button></a>
+                        </div>
+                    </div><br>
                 </div>
             </div>
         </div>
