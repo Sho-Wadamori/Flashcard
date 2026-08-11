@@ -166,11 +166,13 @@ button:not(.button-ignore):not(.btn-ignore-all) {
 .grey-message {
   text-align: center;
   color: color-mix(in hsl, var(--text-color), rgb(155, 155, 155) 70%);
+  pointer-events: none;
 }
 .grey-top {
   position: absolute;
   inset: 0;
   margin: 0;
+  pointer-events: none;
 }
 
 /* card container used in login and card listing */

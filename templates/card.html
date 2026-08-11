@@ -172,7 +172,7 @@
 {% endif %}
 
 <!-- Correct/Incorrect/Skip -->
-<form action="{{ url_for('Study', id=deck_id, index=index) }}" method="POST" id="responseForm"{% if cards[2] != 'flashcards' %} style="display: none;"{% endif %}>
+<form action="{{ url_for('Study', id=deck_id, index=index) }}" method="POST" id="responseForm"{% if cards[2] != 'flashcard' %} style="display: none;"{% endif %}>
   <input type="hidden" name="answered" value="{{ 'true' if answered else 'false' }}">
   
   {% if cards[2] == 'flashcard' %}
