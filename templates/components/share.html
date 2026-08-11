@@ -64,9 +64,6 @@
 <!-- Copied URL Toast -->
 <div id="toast"></div>
 
-
-
-
 <script>
 
 // ----- Share Popup -----
@@ -86,7 +83,7 @@ const shareLinkedIn = document.getElementById('share-linkedin');
 
 // when share button is clicked
 function openSharePopup(deckID, deckName) {
-    const deckURL = `${window.location.origin}/deck/${deckID}`; // make deck url
+    const deckURL = `${window.location.origin}/decks/${deckID}`; // make deck url
     // share message converted to url format
     const message = encodeURIComponent(`Check out my ${deckName} flashcards! ${deckURL}\n${deckURL}`);
     

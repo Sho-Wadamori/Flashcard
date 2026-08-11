@@ -160,6 +160,10 @@
     <h1>Study History</h1>
 </div>
 
+{% if not study_history %}
+<p style="text-align: center;">You have no study history yet. Decks that you have finished studying will show up here!</p>
+{% endif %}
+
 <div class="historyTableContainer" style="display: flex; align-items: center; align-content: center; justify-content: center;">
     <table class="historyTable">
         <tr>
@@ -191,8 +195,6 @@
             <td>{{ history[0] }}</td>
         </tr>
         {% endfor %}
-        {% else %}
-        <p>you have no study history yet. Decks that you have finished studying will show up here!.</p>
         {% endif %}
 
     </table>
