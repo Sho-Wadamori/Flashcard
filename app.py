@@ -414,15 +414,11 @@ def Decks():
 
         # if user not logged in show public decks
         else:
-            sql = f"""
-                SELECT deck_ID, deck_name, deck_description, deck_creation
-                FROM Decks
-                WHERE deck_visibility = 'public'
-                ORDER BY {sort_by} {order};
-            """
-            result = query_db(sql)
-
-            bookmarkResult = ""
+            flash("""
+            🛈 You are viewing public decks.
+            Please Login to create your own decks!
+        """, "info")
+            return redirect(url_for("public"))
 
         bookmarkLength = len(bookmarkResult)
 
