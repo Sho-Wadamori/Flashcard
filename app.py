@@ -923,7 +923,7 @@ def Study(id, index):
                     get_db().commit()
 
                     # update longest streak if current larger than longest
-                    if streaks[1] > streaks[2]:
+                    if streaks[0][1] > streaks[0][2]:
                         update_streak = """
                             UPDATE Users
                             SET user_longestStreak = user_streak
