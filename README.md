@@ -1,6 +1,12 @@
 # Flashcard Maker
 A website where you can create your own flashcards and study them.
 
+> [!CAUTION]
+> Please change the SECRET_KEY in the app.py file to your own long and random string.
+```
+app.config['SECRET_KEY'] = "YOUR-STRING-HERE"
+```
+
 ## Features:
 - create flashcards with a question and answer
 - create quiz with a question and 4 possible answers
