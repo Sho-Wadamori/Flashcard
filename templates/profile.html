@@ -94,7 +94,7 @@
     <form action="{{ url_for('profile') }}" method="POST" id="changePassword" class="changePasswordForm">
         <label><h3>Password: </h3></label>
         <input type="hidden" name="actionPassword" value="changePassword">
-        <input type="text" name="newPassword" placeholder="New Password">
+        <input type="text" name="newPassword" placeholder="New Password" minlength="8">
         <button type="submit">Save</button>
         <button type="button" onclick="
             document.getElementById('changePassword').style.display = 'none';

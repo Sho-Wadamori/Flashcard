@@ -231,6 +231,7 @@
 /* all tr's inside historyTable */
 .historyTable tr > * {
     text-align: center;
+    word-wrap: anywhere;
 }
 
 
