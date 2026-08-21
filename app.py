@@ -3,7 +3,7 @@ This is a flashcard making app that allows users to:
 - create decks of flashcards
 - create flashcards with a question and answer
 - edit and delete decks and flashcards
-- study flashcards indervidually
+- study flashcards individually
 - login and sign up to save their decks
 - view their profile and stats
 - track how many times they got a flashcard correct or incorrect
@@ -72,7 +72,7 @@ def query_db(query, args=(), one=False):
     return (rv[0] if rv else None) if one else rv
 
 
-# ---------- convet YYYY-MM-DD HH:MM:SS to x minutes/hours/days ago ----------
+# ---------- convert YYYY-MM-DD HH:MM:SS to x minutes/hours/days ago ----------
 def time_ago(date_string):
     dt = datetime.strptime(date_string, "%Y-%m-%d %H:%M:%S")
     dt = dt.replace(tzinfo=timezone.utc)
@@ -165,9 +165,9 @@ def userID():
 # ---------- obfuscate email using astrisk ----------
 def obfuscate_email(email):
     # split email to {firstpart} + @ + {domain}
-    fistPart, domain = email.split('@')
+    firstPart, domain = email.split('@')
     # return with first part obfiscated
-    return fistPart[0] + '*****@' + domain
+    return firstPart[0] + '*****@' + domain
 
 
 # ---------- layout page ----------
@@ -480,7 +480,7 @@ def Deck(id):
 
     # create filter query that we will inject
     if filter != 'none':
-        filterSQL = f"AND (Flashcards.card_mode != '{filter}') "
+        filterSQL = f"AND (Flashcards.card_mode = '{filter}') "
     else:
         filterSQL = ""
 
@@ -559,7 +559,7 @@ def Deck(id):
     elif sort_by == "card_question":
         results.sort(key=lambda x: x[3], reverse=ordering)
 
-    elif sort_by == "mode":
+    elif sort_by == "card_mode":
         results.sort(key=lambda x: x[2], reverse=ordering)
 
     else:
@@ -796,6 +796,12 @@ def Study(id, index):
     card_list = session['shuffled_cards']
 
     total = len(card_list)  # total num of cards
+
+    # check if index is valid
+    if index < 0 or index >= total:
+        flash("⚠ Invalid Card Index...", "error")
+        return redirect(url_for('Deck', id=id))
+
     card = card_list[index]  # current card onfo
     card_id = card[0]  # cardID
 
@@ -1253,7 +1259,7 @@ def editDeck(id):
         if not deck_name:
             # reload the page with the error message
             flash("⚠ A Deck Name is Required.", "error")
-            return render_template("deck.html", id=id)
+            return redirect(url_for('editDeck', id=id))
 
         else:
             sql = """
@@ -1325,14 +1331,6 @@ def editCard(id, card_id):
             if not flashcard_question or not flashcard_answer:
                 # reload the page with the error message
                 flash("⚠ Question and Answer Fields Are Required.", "error")
-                sql_card = """
-                    SELECT card_ID, card_question,
-                    card_answer, card_creation, card_hint
-                    FROM Flashcards
-                    WHERE card_ID = ?
-                    AND card_deckID = ?;
-                """
-                card = query_db(sql_card, (card_id, id), one=True)
                 return redirect(url_for('editCard', id=id, card_id=card_id))
 
             else:
@@ -2195,4 +2193,4 @@ def public():
 
 # only run the app if app.py is executed directly
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
