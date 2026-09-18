@@ -49,7 +49,7 @@
 
 {% if index + 1 < total %}
 <div class="studyHomeContainer">
-  <button onclick="window.location='{{ url_for('Deck', id=deck_id) }}'" class="study-homeBtn">Home</button>
+  <button onclick="window.location='{{ url_for('deck', deck_id=deck_id) }}'" class="study-homeBtn">Home</button>
 </div>
 {% endif %}
 
@@ -78,7 +78,7 @@
 <div class="card-container">
   <!-- Previous card button -->
   {% if index > 0 %}
-    <a href="{{ url_for('Study', id=deck_id, index=index - 1) }}">
+    <a href="{{ url_for('study', deck_id=deck_id, index=index - 1) }}">
       <button class="btn-ignore-all" id="prev_button"><</button>
     </a>
   {% else %}
@@ -172,7 +172,7 @@
 {% endif %}
 
 <!-- Correct/Incorrect/Skip -->
-<form action="{{ url_for('Study', id=deck_id, index=index) }}" method="POST" id="responseForm"{% if cards[2] != 'flashcard' %} style="display: none;"{% endif %}>
+<form action="{{ url_for('study', deck_id=deck_id, index=index) }}" method="POST" id="responseForm"{% if cards[2] != 'flashcard' %} style="display: none;"{% endif %}>
   <input type="hidden" name="answered" value="{{ 'true' if answered else 'false' }}">
   
   {% if cards[2] == 'flashcard' %}

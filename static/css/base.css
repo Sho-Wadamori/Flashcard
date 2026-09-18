@@ -198,6 +198,7 @@ button:not(.button-ignore):not(.btn-ignore-all) {
 input[type="color"] {
   -webkit-appearance: none;
   -moz-appearance: none;
+  appearance: none;
   width: 30px;
   height: 34px;
   border: none;

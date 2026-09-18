@@ -14,7 +14,7 @@
     {% if results or bookmarkResult %}
     <h6 class="deckHintText">Select a deck to view its cards.</h6>
 
-    <form action="{{ url_for('Decks') }}" method="GET" class='sort-form sort-top'>
+    <form action="{{ url_for('decks') }}" method="GET" class='sort-form sort-top'>
         <!-- filtering and sorting -->
         <label for="filter">Filter:</label>
         <select name="filter" id="filter">
@@ -41,18 +41,18 @@
     </form>
 
     {% if filter != 'none' %}
-        <h6>Some decks may be hidden. <a href="{{ url_for('Decks') }}" class="blue-text">Clear filters</a></h6>
+        <h6>Some decks may be hidden. <a href="{{ url_for('decks') }}" class="blue-text">Clear filters</a></h6>
     {% endif %}
 
     <!-- No deck message -->
     {% else %}
         {% if filter != 'none' %}
-            <h6>Some decks may be hidden. <a href="{{ url_for('Decks') }}" class="blue-text">Clear filters</a></h6>
+            <h6>Some decks may be hidden. <a href="{{ url_for('decks') }}" class="blue-text">Clear filters</a></h6>
         {% else %}
             <h6>You have no decks yet.</h6>
         {% endif %}
 
-        <form action="{{ url_for('Decks') }}" method="GET" class='sort-form sort-top'>
+        <form action="{{ url_for('decks') }}" method="GET" class='sort-form sort-top'>
             <label for="filter">Filter:</label>
             <select name="filter" id="filter">
                 <option value="none" {% if filter == 'none' %}selected{% endif %}>None</option>
@@ -64,7 +64,7 @@
             <button type="submit">Apply</button>
         </form>
 
-        <a href="{{ url_for('createDeck') }}">
+        <a href="{{ url_for('create_deck') }}">
             <div class="w3-card-4">
                 <h1 class="plus">+</h1>
             </div>
@@ -80,7 +80,7 @@
     <div class="three-column">
         {% for deck in bookmarkResult[:3] %}
         <!-- deck List -->
-        <div onclick="window.location='{{ url_for('Deck', id=deck[0]) }}'" class="pointerElm">
+        <div onclick="window.location='{{ url_for('deck', deck_id=deck[0]) }}'" class="pointerElm">
             <div class="w3-card-4">
                 <div class="bookmark">
                     <form action="{{ request.url }}" method="POST">
@@ -115,12 +115,12 @@
                     <div class="dropdown-content">
                         {% if userID %}
                         <!-- edit deck -->
-                        <a href="{{ url_for('editDeck', id=deck[0]) }}">
+                        <a href="{{ url_for('edit_deck', deck_id=deck[0]) }}">
                             {% include "icons/edit.html" %} Edit
                         </a>
 
                         <!-- delete deck -->
-                        <form action="{{ url_for('deleteDeck', id=deck[0]) }}" method="POST">
+                        <form action="{{ url_for('delete_deck', deck_id=deck[0]) }}" method="POST">
                             <input type="hidden" name="deck_id" value="{{ deck[0] }}">
                             <a onclick="event.preventDefault(); event.stopPropagation(); showConfirm(this.parentElement); console.log(this.parentElement)">
                                 {% include "icons/bin.html" %} Delete
@@ -129,7 +129,7 @@
                         {% endif %}
 
                         <!-- study deck -->
-                        <a href="{{ url_for('start_study', id=deck[0]) }}">
+                        <a href="{{ url_for('start_study', deck_id=deck[0]) }}">
                             {% include "icons/book.html" %} Study
                         </a>
 
@@ -177,7 +177,7 @@
 <!-- a 3 column grid -->
 <div class="three-column">
     <!-- Create Deck button -->
-    <a href="{{ url_for('createDeck') }}">
+    <a href="{{ url_for('create_deck') }}">
         <div class="w3-card-4">
             <h1 class="plus">+</h1>
         </div>
@@ -185,7 +185,7 @@
 
     {% for deck in results %}
     <!-- Deck List -->
-    <div onclick="window.location='{{ url_for('Deck', id=deck[0]) }}'" class="pointerElm">
+    <div onclick="window.location='{{ url_for('deck', deck_id=deck[0]) }}'" class="pointerElm">
         <div class="w3-card-4">
             {% if userID %}
             <div class="bookmark">
@@ -223,12 +223,12 @@
                 <div class="dropdown-content">
                     {% if userID %}
                     <!-- edit deck -->
-                    <a href="{{ url_for('editDeck', id=deck[0]) }}">
+                    <a href="{{ url_for('edit_deck', deck_id=deck[0]) }}">
                         {% include "icons/edit.html" %} Edit
                     </a>
 
                     <!-- delete deck -->
-                    <form action="{{ url_for('deleteDeck', id=deck[0]) }}" method="POST">
+                    <form action="{{ url_for('delete_deck', deck_id=deck[0]) }}" method="POST">
                         <a href="" onclick="event.preventDefault(); event.stopPropagation(); showConfirm(this.parentElement); console.log(this.parentElement)">
                             {% include "icons/bin.html" %} Delete
                         </a>
@@ -236,7 +236,7 @@
                     {% endif %}
 
                     <!-- study deck -->
-                    <a href="{{ url_for('start_study', id=deck[0]) }}">
+                    <a href="{{ url_for('start_study', deck_id=deck[0]) }}">
                         {% include "icons/book.html" %} Study
                     </a>
 

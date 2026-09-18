@@ -11,7 +11,7 @@
 
 <div class="deck-header">
     <!-- Flashcard form -->
-    <form id="cardForm" action="{{ url_for('createCard', id=deck_info[1]) }}" method="POST" autocomplete="off">
+    <form id="cardForm" action="{{ url_for('create_card', deck_id=deck_info[1]) }}" method="POST" autocomplete="off">
         <p class="warningTXT">* Indicates required question</p>
 
         <input type="hidden" name="cardType" value="flashcard">
@@ -25,7 +25,7 @@
     </form>
 
     <!-- Quiz form -->
-    <form id="quizForm" action="{{ url_for('createCard', id=deck_info[1]) }}" method="POST" autocomplete="off">
+    <form id="quizForm" action="{{ url_for('create_card', deck_id=deck_info[1]) }}" method="POST" autocomplete="off">
         <p class="warningTXT">* Indicates required question</p>
 
         <input type="hidden" name="cardType" value="quiz">
@@ -42,7 +42,7 @@
     </form>
 
     <!-- TF form -->
-    <form id="tfForm" action="{{ url_for('createCard', id=deck_info[1]) }}" method="POST" autocomplete="off">
+    <form id="tfForm" action="{{ url_for('create_card', deck_id=deck_info[1]) }}" method="POST" autocomplete="off">
         <p class="warningTXT">* Indicates required question</p>
 
         <input type="hidden" name="cardType" value="TF">

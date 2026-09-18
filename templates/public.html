@@ -46,7 +46,7 @@
 <div class="three-column">
     {% for deck in results %}
     <!-- Deck List -->
-    <div onclick="window.location='{{ url_for('Deck', id=deck[0]) }}'" class="pointerElm"> <!-- Make it div to stop conflicts w/ buttons inside -->
+    <div onclick="window.location='{{ url_for('deck', deck_id=deck[0]) }}'" class="pointerElm"> <!-- Make it div to stop conflicts w/ buttons inside -->
         <div class="w3-card-4">
             <div class="dropdown">
                 <button class="dropdown-btn btn-ignore-all" onclick="event.preventDefault(); event.stopPropagation(); toggleDropdown(this)">
@@ -66,7 +66,7 @@
                 </button>
                 <div class="dropdown-content">
                     <!-- study deck -->
-                    <a href="{{ url_for('start_study', id=deck[0]) }}">
+                    <a href="{{ url_for('start_study', deck_id=deck[0]) }}">
                         {% include "icons/book.html" %} Study
                     </a>
 
