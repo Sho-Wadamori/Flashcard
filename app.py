@@ -1598,6 +1598,7 @@ def login():
         elif username_list[0][0] == username:
             # check if the password is correct
             if check_password_hash(username_list[0][1], password):
+                session.clear()
                 # logged in successfully, redirect to homepage
                 session['username'] = username
                 session['userID'] = query_db(
