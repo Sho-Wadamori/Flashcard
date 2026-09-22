@@ -373,7 +373,7 @@ def decks():
 
     # if request is GET
     else:
-        # get filtering and sorting info
+        # get filtering and sorting info (must use f-string for sorting)
         filter_value = request.args.get('filter')
         sort_by = request.args.get('sort_by')
         order = request.args.get('order')
@@ -589,7 +589,7 @@ def deck(deck_id):
 
     # return the results
     return render_template(
-        "deck.html",
+        "cards.html",
         results=results,
         deck_info=deck_info,
         time_ago=time_ago,
@@ -870,7 +870,7 @@ def study(deck_id, index):
 
                     # return w/ correct correct info & answed = True
                     return render_template(
-                        "card.html",
+                        "study.html",
                         cards=card,
                         deck_id=deck_id,
                         total=total,
@@ -900,7 +900,7 @@ def study(deck_id, index):
 
                     # return w/ correct info & answed = True
                     return render_template(
-                        "card.html",
+                        "study.html",
                         cards=card,
                         deck_id=deck_id,
                         total=total,
@@ -1008,7 +1008,7 @@ def study(deck_id, index):
     # return the results for GET
     else:
         return render_template(
-            "card.html",
+            "study.html",
             cards=card,
             deck_id=deck_id,
             total=total,
