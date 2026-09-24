@@ -761,34 +761,15 @@ def study(deck_id, index):
         flash("⚠ You Do Not Have Permission to Study This Deck...", "error")
         return redirect(url_for("decks"))
 
-    # get card info
+    # get card IDs
     card_sql = """
-        SELECT Flashcards.card_ID,
-        Flashcards.card_creation,
-        Flashcards.card_mode,
-        Flashcards.card_hint,
-        FlashcardContent.flashcard_question,
-        FlashcardContent.flashcard_answer,
-        QuizContent.quiz_question,
-        QuizContent.quiz_answer1,
-        QuizContent.quiz_answer2,
-        QuizContent.quiz_answer3,
-        QuizContent.quiz_answer4,
-        QuizContent.quiz_correct,
-        TrueFalseContent.tf_question,
-        TrueFalseContent.tf_correct
+        SELECT card_ID
         FROM Flashcards
-        LEFT JOIN FlashcardContent
-            ON Flashcards.card_ID = FlashcardContent.card_ID
-        LEFT JOIN QuizContent
-            ON Flashcards.card_ID = QuizContent.card_ID
-        LEFT JOIN TrueFalseContent
-            ON Flashcards.card_ID = TrueFalseContent.card_ID
-        WHERE Flashcards.card_deckID = ?;
+        WHERE card_deckID = ?;
     """
     results = query_db(card_sql, (deck_id,))
 
-    # check if card is not empty
+    # check if deck is not empty
     if not results:
         flash("⚠ Invalid Deck...", "error")
         return redirect(url_for('deck', deck_id=deck_id))
@@ -812,25 +793,95 @@ def study(deck_id, index):
     else:
         session['current_index'] = index
 
-    # set card_list to the session list
-    card_list = session['shuffled_cards']
+    # set cardid_list to the session list
+    cardid_list = session['shuffled_cards']
 
-    total = len(card_list)  # total num of cards
+    total = len(cardid_list)  # total num of cards
 
     # check if index is valid
     if index < 0 or index >= total:
         flash("⚠ Invalid Card Index...", "error")
         return redirect(url_for('deck', deck_id=deck_id))
 
-    card = card_list[index]  # current card info
-    card_id = card[0]  # cardID
+    # get current card info
+    card_sql2 = """
+        SELECT Flashcards.card_ID,
+        Flashcards.card_creation,
+        Flashcards.card_mode,
+        Flashcards.card_hint,
+        FlashcardContent.flashcard_question,
+        FlashcardContent.flashcard_answer,
+        QuizContent.quiz_question,
+        QuizContent.quiz_answer1,
+        QuizContent.quiz_answer2,
+        QuizContent.quiz_answer3,
+        QuizContent.quiz_answer4,
+        QuizContent.quiz_correct,
+        TrueFalseContent.tf_question,
+        TrueFalseContent.tf_correct
+        FROM Flashcards
+        LEFT JOIN FlashcardContent
+            ON Flashcards.card_ID = FlashcardContent.card_ID
+        LEFT JOIN QuizContent
+            ON Flashcards.card_ID = QuizContent.card_ID
+        LEFT JOIN TrueFalseContent
+            ON Flashcards.card_ID = TrueFalseContent.card_ID
+        WHERE Flashcards.card_ID = ?;
+    """
+    card_result = query_db(card_sql2, (cardid_list[index][0],))
+
+    # check if card exists (eg, deleted card)
+    if not card_result:
+        flash("⚠ A card was skipped during the study session.", "error")
+        # remove card from session list
+        cardid_list.pop(index)
+        session['shuffled_cards'] = cardid_list
+
+        # check if there are no more cards in deck
+        if not cardid_list:
+            session.pop('shuffled_cards', None)
+            session.pop('study_deckID', None)
+            session.pop('current_index', None)
+            session.pop('correct', None)
+            session.pop('incorrect', None)
+            session.pop('study_startTime', None)
+
+            flash("⚠ No More Cards in This Deck...", "error")
+            return redirect(url_for('deck', deck_id=deck_id))
+
+        # exit if card is last one
+        if index >= len(cardid_list):
+            session.pop('shuffled_cards', None)
+            session.pop('study_deckID', None)
+            session.pop('current_index', None)
+            session.pop('correct', None)
+            session.pop('incorrect', None)
+            session.pop('study_startTime', None)
+
+            # redirect to deck page
+            flash("✔ You Have Finished Studying This Deck!", "success")
+            flash("""
+                🛈 Some cards have been skipped as they were removed.
+            """, "info")
+            return redirect(url_for('deck', deck_id=deck_id))
+
+        # redirect to the next card
+        return redirect(url_for(
+            'study',
+            deck_id=deck_id,
+            index=index
+        ))
+
+    card_full_list = card_result[0]
+
+    card_id = card_full_list[0]  # cardID
 
     # request is POST, get the form data and add to database
     if request.method == 'POST':
         # process responses if user is logged in
         if user_id():
             # get card mode
-            response_type = card_list[index][2]
+            response_type = card_full_list[2]
             # get already answered or not
             answered = request.form.get('answered') == 'true'
 
@@ -854,7 +905,7 @@ def study(deck_id, index):
             # if mode is quiz and not alr answered
             elif response_type == 'quiz' and not answered:
                 selected = request.form.get('quizAnswer')  # get response
-                correct = card[11]  # get correct
+                correct = card_full_list[11]  # get correct
                 is_correct = str(selected) == str(correct)  # check if correct
                 skipped = selected is None  # check if skipped
 
@@ -871,7 +922,7 @@ def study(deck_id, index):
                     # return w/ correct correct info & answed = True
                     return render_template(
                         "study.html",
-                        cards=card,
+                        cards=card_full_list,
                         deck_id=deck_id,
                         total=total,
                         index=index,
@@ -884,7 +935,7 @@ def study(deck_id, index):
             # if mode is true/false and not alr answered
             elif response_type == 'TF' and not answered:
                 selected = request.form.get('tfAnswer')  # get response
-                correct = card[13]  # get correct ans
+                correct = card_full_list[13]  # get correct ans
                 is_correct = str(selected) == str(correct)  # check if correct
                 skipped = selected is None  # check if skipped
 
@@ -901,7 +952,7 @@ def study(deck_id, index):
                     # return w/ correct info & answed = True
                     return render_template(
                         "study.html",
-                        cards=card,
+                        cards=card_full_list,
                         deck_id=deck_id,
                         total=total,
                         index=index,
@@ -1009,7 +1060,7 @@ def study(deck_id, index):
     else:
         return render_template(
             "study.html",
-            cards=card,
+            cards=card_full_list,
             deck_id=deck_id,
             total=total,
             index=index,
